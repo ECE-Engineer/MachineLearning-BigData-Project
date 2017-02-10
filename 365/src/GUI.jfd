@@ -1,0 +1,105 @@
+JFDML JFormDesigner: "5.2.5.1.342" Java: "1.8.0_112-release" encoding: "UTF-8"
+
+new FormModel {
+	contentType: "form/swing"
+	root: new FormRoot {
+		add( new FormWindow( "javax.swing.JFrame", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+			"$horizontalGroup": "par l {seq l {space :::p, comp panel1:::p::p, space :::x, comp panel2:::p::p, space :::p}}"
+			"$verticalGroup": "par l {seq l {space :::p, par l {comp panel2:::p::p, comp panel1:::::x}, space :::x}}"
+		} ) {
+			name: "this"
+			"$sizePolicy": 1
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq {par l {seq {space :p:152:p, comp label1:::p::p}, seq l {space :p:131:p, comp label7:::p:191:p, space s:::p, comp textField2:::p:99:p}}, space ::151:x}, seq t {space :0:45:x, par l {seq {comp label4:::p:114:p, space u:::p, comp checkBox1:::p:201:p, space s:::p, comp label5:::p:200:p}, comp label6:::p:554:p, seq {space :p:60:p, par l {seq t {comp button1:::p::p, space :p:267:p}, seq t {par l {seq l {comp label2:::p:196:p, space s:::p, comp typeSelect:::p:115:p}, seq l {comp label3:::p:249:p, space s:::p, comp textField1:::p:90:p}}, space :p:119:p}}}}}}"
+				"$verticalGroup": "par l {seq l {space :::p, comp label1:::p::p, space :p:81:p, par l:::p {comp typeSelect:::::x, comp label2:::p:26:p}, space s:::p, par b {comp textField1::b:p::p, comp label3::b:p:24:p}, space :::x, par b {comp label4::b:p:24:p, comp checkBox1::b:p::p, comp label5::b:p::p}, space s:::p, comp label6:::p::p, space s:::p, par l {comp textField2:::p::p, comp label7:::p:24:p}, space :::x, comp button1:::p::p, space :::p}}"
+			} ) {
+				name: "panel1"
+				"background": new java.awt.Color( 51, 204, 255, 255 )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label1"
+					"text": "Welcome to StarLabs"
+					"horizontalAlignment": 0
+					"font": new java.awt.Font( "Segoe UI", 1, 30 )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label2"
+					"text": "Please Select A Classifier Type:"
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
+				} )
+				add( new FormComponent( "javax.swing.JComboBox" ) {
+					name: "typeSelect"
+					"model": new javax.swing.DefaultComboBoxModel {
+						selectedItem: "None"
+						addElement( "None" )
+						addElement( "A" )
+						addElement( "DEC" )
+						addElement( "RSTAR" )
+						addElement( "TSTAR" )
+						addElement( "KMAG" )
+						addElement( "TPLANET" )
+						addElement( "T0" )
+						addElement( "UT0" )
+						addElement( "PER" )
+						addElement( "RA" )
+						addElement( "MSTAR" )
+					}
+				} )
+				add( new FormComponent( "javax.swing.JButton" ) {
+					name: "button1"
+					"text": "OK"
+					"background": new java.awt.Color( 51, 204, 255, 255 )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label3"
+					"text": "Please Select An Object Limit (1 - 2500):"
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "textField1"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label4"
+					"text": "Simularity Metric:"
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
+				} )
+				add( new FormComponent( "javax.swing.JCheckBox" ) {
+					name: "checkBox1"
+					"text": "Compares Interstellar Objects"
+					"background": new java.awt.Color( 51, 204, 255, 255 )
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label5"
+					"text": "Please Set Classifier Type to None"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label6"
+					"text": "The comparisons are made by: {period, planet size, star size, star temperature, and stellar mass}"
+				} )
+				add( new FormComponent( "javax.swing.JLabel" ) {
+					name: "label7"
+					"text": "Please Provide An Object Key:"
+					"font": new com.jformdesigner.model.SwingDerivedFont( null, 1, 0, false )
+				} )
+				add( new FormComponent( "javax.swing.JTextField" ) {
+					name: "textField2"
+				} )
+			} )
+			add( new FormContainer( "javax.swing.JPanel", new FormLayoutManager( class org.jdesktop.layout.GroupLayout ) {
+				"$horizontalGroup": "par l {seq l {comp scrollPane1:::p:559:p, space :0:408:x}}"
+				"$verticalGroup": "par l {comp scrollPane1::t::609:x}"
+			} ) {
+				name: "panel2"
+				add( new FormContainer( "javax.swing.JScrollPane", new FormLayoutManager( class javax.swing.JScrollPane ) ) {
+					name: "scrollPane1"
+					add( new FormComponent( "javax.swing.JTextArea" ) {
+						name: "textArea1"
+						"editable": false
+					} )
+				} )
+			} )
+		}, new FormLayoutConstraints( null ) {
+			"location": new java.awt.Point( 0, 0 )
+			"size": new java.awt.Dimension( 1205, 660 )
+		} )
+	}
+}

@@ -1,0 +1,412 @@
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.GroupLayout;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/*
+ * Created by JFormDesigner on Sun Feb 05 01:12:06 EST 2017
+ */
+
+
+
+/**
+ * @author kzeller
+ */
+public class GUI extends JFrame {
+    public GUI() {
+        initComponents();
+    }
+
+    private void initComponents() {
+        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        // Generated using JFormDesigner Evaluation license - Kyle Zeller
+        panel1 = new JPanel();
+        label1 = new JLabel();
+        label2 = new JLabel();
+        typeSelect = new JComboBox<>();
+        button1 = new JButton();
+        label3 = new JLabel();
+        textField1 = new JTextField();
+        label4 = new JLabel();
+        checkBox1 = new JCheckBox();
+        label5 = new JLabel();
+        label6 = new JLabel();
+        label7 = new JLabel();
+        textField2 = new JTextField();
+        panel2 = new JPanel();
+        scrollPane1 = new JScrollPane();
+        textArea1 = new JTextArea();
+
+        //======== this ========
+        Container contentPane = getContentPane();
+
+        //======== panel1 ========
+        {
+            panel1.setBackground(new Color(51, 204, 255));
+
+            // JFormDesigner evaluation mark
+            panel1.setBorder(new javax.swing.border.CompoundBorder(
+                new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
+                    "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
+                    javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
+                    java.awt.Color.red), panel1.getBorder())); panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+
+
+            //---- label1 ----
+            label1.setText("Welcome to StarLabs");
+            label1.setHorizontalAlignment(SwingConstants.CENTER);
+            label1.setFont(new Font("Segoe UI", Font.BOLD, 30));
+
+            //---- label2 ----
+            label2.setText("Please Select A Classifier Type:");
+            label2.setFont(label2.getFont().deriveFont(label2.getFont().getStyle() | Font.BOLD));
+
+            //---- typeSelect ----
+            typeSelect.setModel(new DefaultComboBoxModel<>(new String[] {
+                "None",
+                "A",
+                "DEC",
+                "RSTAR",
+                "TSTAR",
+                "KMAG",
+                "TPLANET",
+                "T0",
+                "UT0",
+                "PER",
+                "RA",
+                "MSTAR"
+            }));
+
+            //---- button1 ----
+            button1.setText("OK");
+            button1.setBackground(new Color(51, 204, 255));
+
+            //---- label3 ----
+            label3.setText("Please Select An Object Limit (1 - 2500):");
+            label3.setFont(label3.getFont().deriveFont(label3.getFont().getStyle() | Font.BOLD));
+
+            //---- label4 ----
+            label4.setText("Simularity Metric:");
+            label4.setFont(label4.getFont().deriveFont(label4.getFont().getStyle() | Font.BOLD));
+
+            //---- checkBox1 ----
+            checkBox1.setText("Compares Interstellar Objects");
+            checkBox1.setBackground(new Color(51, 204, 255));
+
+            //---- label5 ----
+            label5.setText("Please Set Classifier Type to None");
+
+            //---- label6 ----
+            label6.setText("The comparisons are made by: {period, planet size, star size, star temperature, and stellar mass}");
+
+            //---- label7 ----
+            label7.setText("Please Provide An Object Key:");
+            label7.setFont(label7.getFont().deriveFont(label7.getFont().getStyle() | Font.BOLD));
+
+            GroupLayout panel1Layout = new GroupLayout(panel1);
+            panel1.setLayout(panel1Layout);
+            panel1Layout.setHorizontalGroup(
+                panel1Layout.createParallelGroup()
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addGroup(panel1Layout.createParallelGroup()
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addGap(152, 152, 152)
+                                .addComponent(label1))
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addGap(131, 131, 131)
+                                .addComponent(label7, GroupLayout.PREFERRED_SIZE, 191, GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(textField2, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap(151, Short.MAX_VALUE))
+                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addGap(0, 45, Short.MAX_VALUE)
+                        .addGroup(panel1Layout.createParallelGroup()
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addComponent(label4, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(checkBox1, GroupLayout.PREFERRED_SIZE, 201, GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(label5, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
+                            .addComponent(label6, GroupLayout.PREFERRED_SIZE, 554, GroupLayout.PREFERRED_SIZE)
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addGap(60, 60, 60)
+                                .addGroup(panel1Layout.createParallelGroup()
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                        .addComponent(button1)
+                                        .addGap(267, 267, 267))
+                                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                        .addGroup(panel1Layout.createParallelGroup()
+                                            .addGroup(panel1Layout.createSequentialGroup()
+                                                .addComponent(label2, GroupLayout.PREFERRED_SIZE, 196, GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(typeSelect, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(panel1Layout.createSequentialGroup()
+                                                .addComponent(label3, GroupLayout.PREFERRED_SIZE, 249, GroupLayout.PREFERRED_SIZE)
+                                                .addGap(18, 18, 18)
+                                                .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
+                                        .addGap(119, 119, 119))))))
+            );
+            panel1Layout.setVerticalGroup(
+                panel1Layout.createParallelGroup()
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(label1)
+                        .addGap(81, 81, 81)
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                            .addComponent(typeSelect)
+                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label3, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(label4, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(checkBox1)
+                            .addComponent(label5))
+                        .addGap(18, 18, 18)
+                        .addComponent(label6)
+                        .addGap(18, 18, 18)
+                        .addGroup(panel1Layout.createParallelGroup()
+                            .addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label7, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(button1)
+                        .addContainerGap())
+            );
+        }
+
+        //======== panel2 ========
+        {
+
+            //======== scrollPane1 ========
+            {
+
+                //---- textArea1 ----
+                textArea1.setEditable(false);
+                scrollPane1.setViewportView(textArea1);
+            }
+
+            GroupLayout panel2Layout = new GroupLayout(panel2);
+            panel2.setLayout(panel2Layout);
+            panel2Layout.setHorizontalGroup(
+                panel2Layout.createParallelGroup()
+                    .addGroup(panel2Layout.createSequentialGroup()
+                        .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 559, GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 408, Short.MAX_VALUE))
+            );
+            panel2Layout.setVerticalGroup(
+                panel2Layout.createParallelGroup()
+                    .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+            );
+        }
+
+        GroupLayout contentPaneLayout = new GroupLayout(contentPane);
+        contentPane.setLayout(contentPaneLayout);
+        contentPaneLayout.setHorizontalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addContainerGap())
+        );
+        contentPaneLayout.setVerticalGroup(
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+        setSize(1205, 660);
+        setLocationRelativeTo(getOwner());
+        // JFormDesigner - End of component initialization  //GEN-END:initComponents
+    }
+
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // Generated using JFormDesigner Evaluation license - Kyle Zeller
+    private JPanel panel1;
+    private JLabel label1;
+    private JLabel label2;
+    private JComboBox<String> typeSelect;
+    private JButton button1;
+    private JLabel label3;
+    private JTextField textField1;
+    private JLabel label4;
+    private JCheckBox checkBox1;
+    private JLabel label5;
+    private JLabel label6;
+    private JLabel label7;
+    private JTextField textField2;
+    private JPanel panel2;
+    private JScrollPane scrollPane1;
+    private JTextArea textArea1;
+    // JFormDesigner - End of variables declaration  //GEN-END:variables
+
+
+
+    JSONParser http = new JSONParser();
+
+    private void okButton(java.awt.event.ActionEvent evt) throws Exception {
+        http.exoplanets.clear();
+        textArea1.setText("");
+        String text = textField1.getText();
+        String keplerObject = typeSelect.getSelectedItem().toString();
+
+        if (!text.equalsIgnoreCase("")) {
+            int amount = Integer.parseInt(text);    //it will look at this many interstellar objects
+
+            if (keplerObject.equals("None")) {
+                if (checkBox1.isSelected()) {
+                    String obj1 = "PER";
+//                    String param1 = "100";
+                    String obj2 = "TPLANET";
+//                    String param2 = "5";
+                    String obj3 = "RSTAR";
+//                    String param3 = "2";
+                    String obj4 = "TSTAR";
+//                    String param4 = "6000";
+                    String obj5 = "MSTAR";
+//                    String param5 = "1";
+
+                    if (amount > 2000) {////////////////////////////////////////period, planet temperature, stellar mass, star temperature, & star size
+                        //give them 3 parts of 1000 each
+                        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+                        http.sendGet(url);
+                        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+                        http.sendGet(url);
+                        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+                        http.sendGet(url);
+                    } else if (amount > 1000) {
+                        //give then 2 parts of 1000 each
+                        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+                        http.sendGet(url);
+                        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+                        http.sendGet(url);
+                    } else {
+                        //give the user 1 parts of 1000 each
+                        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\""+ obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+                        http.sendGet(url);
+                    }
+                    //RETURN THE 2 COMMONMOST OBJECTS by the period
+                    ArrayList<String> temp = http.exoplanets.keySet();
+
+                    if (temp.size() != 0){
+                        String[] sim = simularityMetric(temp);
+
+                        for(int i = 0; i < sim.length; i++){
+                            textArea1.append("KEY IS: \t" + sim[i] + " DATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
+                        }
+                    }
+                }
+                else {
+                    if (amount > 2000) {
+                        //give them 3 parts of 1000 each
+                        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000}}&limit=" + amount;
+                        http.sendGet(url);
+                        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000}}&limit=" + amount;
+                        http.sendGet(url);
+                        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + amount;
+                        http.sendGet(url);
+                    } else if (amount > 1000) {
+                        //give then 2 parts of 1000 each
+                        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000}}&limit=" + amount;
+                        http.sendGet(url);
+                        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + amount;
+                        http.sendGet(url);
+                    } else {
+                        //give the user 1 parts of 1000 each
+                        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + amount;
+                        http.sendGet(url);
+                    }
+                    ArrayList<String> temp = http.exoplanets.keySet();
+
+                    if (temp.size() != 0){
+                        for(String elements : temp){
+                            textArea1.append("KEY IS: \t" + elements + " DATA IS: \n" + http.exoplanets.getValue(elements).toString() + "\n");
+                        }
+                    }
+                }
+            }
+            else {
+                if (amount > 2000) {
+                    //give them 3 parts of 1000 each
+                    String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
+                    http.sendGet(url);
+                    url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
+                    http.sendGet(url);
+                    url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
+                    http.sendGet(url);
+                } else if (amount > 1000) {
+                    //give then 2 parts of 1000 each
+                    String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
+                    http.sendGet(url);
+                    url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
+                    http.sendGet(url);
+                } else {
+                    //give the user 1 parts of 1000 each
+                    String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
+                    http.sendGet(url);
+                }
+                ArrayList<String> temp = http.exoplanets.keySet();
+
+                if (temp.size() != 0){
+                    for(String elements : temp){
+                        textArea1.append("KEY IS: \t" + elements + " DATA IS: \n" + http.exoplanets.getValue(elements).toString() + "\n");
+                    }
+                }
+            }
+        }
+    }
+
+    public String[] simularityMetric(ArrayList<String> keys){    //EUCLIDEAN DISTANCE
+        ArrayList<String[]> largeList = new ArrayList<String[]>();
+        double pastVal = 0;
+        double currentVal;
+        int counter = 0;
+
+        for(int i = 0; i < keys.size(); i++) {
+            for (int j = 0; j < keys.size(); j++) {
+                if(j == 0){
+                    pastVal = compare(keys.get(j), keys.get(i));
+                    largeList.add(new String[]{keys.get(i), keys.get(j)});
+                    counter++;
+                }
+                else {
+                    currentVal = compare(keys.get(j), keys.get(i));
+
+                    if (currentVal > pastVal) {
+                        largeList.remove((counter-1));
+                        largeList.add(new String[]{keys.get(i), keys.get(j)});
+                    }
+
+                    pastVal = currentVal;
+                }
+            }
+        }
+
+        System.out.println(largeList.size());
+        return largeList.get(0);
+    }
+
+    public double compare(String key1, String key2) {   //returns the score value for the 2 objects based on their features
+        return Math.sqrt(Math.pow(http.exoplanets.getValue(key2).getPER()-http.exoplanets.getValue(key1).getPER(), 2) + Math.pow(http.exoplanets.getValue(key2).getTPLANET()-http.exoplanets.getValue(key1).getTPLANET(), 2) + Math.pow(http.exoplanets.getValue(key2).getRSTAR()-http.exoplanets.getValue(key1).getRSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getTSTAR()-http.exoplanets.getValue(key1).getTSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getMSTAR()-http.exoplanets.getValue(key1).getMSTAR(), 2));
+    }
+
+
+    public static void main(String[] args) {
+        //make the gui visible
+        //make the assignments in the list visible
+        EventQueue.invokeLater(() -> {
+            GUI gui = new GUI();
+            gui.setVisible(true);
+        });
+    }
+}
