@@ -81,8 +81,8 @@
       <file leaf-file-name="GUI.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/GUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1171">
-              <caret line="305" column="51" lean-forward="true" selection-start-line="305" selection-start-column="51" selection-end-line="305" selection-end-column="51" />
+            <state relative-caret-position="122">
+              <caret line="428" column="93" lean-forward="false" selection-start-line="428" selection-start-column="93" selection-end-line="428" selection-end-column="93" />
               <folding />
             </state>
           </provider>
@@ -1332,8 +1332,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/GUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1171">
-          <caret line="305" column="51" lean-forward="true" selection-start-line="305" selection-start-column="51" selection-end-line="305" selection-end-column="51" />
+        <state relative-caret-position="122">
+          <caret line="428" column="93" lean-forward="false" selection-start-line="428" selection-start-column="93" selection-end-line="428" selection-end-column="93" />
           <folding />
         </state>
       </provider>
