@@ -316,7 +316,7 @@ public class GUI extends JFrame {
                         ArrayList<String> temp = http.exoplanets.keySet();
 
                         if (temp.size() != 0){
-                            String[] sim = euclideanDistance(temp, text2);
+                            String[] sim = pearsonCorrelationCoefficient(temp, text2);
 
                             for(int i = 0; i < sim.length; i++){
                                 textArea1.append("KEY IS: \t" + sim[i] + " DATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
@@ -358,7 +358,7 @@ public class GUI extends JFrame {
                         ArrayList<String> temp = http.exoplanets.keySet();
 
                         if (temp.size() != 0){
-                            String[] sim = euclideanDistance(temp);
+                            String[] sim = pearsonCorrelationCoefficient(temp);
 
                             for(int i = 0; i < sim.length; i++){
                                 textArea1.append("KEY IS: \t" + sim[i] + " DATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
@@ -426,6 +426,82 @@ public class GUI extends JFrame {
         }
     }
 
+    public double ED(String key1, String key2) {   //returns the score value for the 2 objects based on their features
+        return Math.sqrt(Math.pow(http.exoplanets.getValue(key2).getPER()-http.exoplanets.getValue(key1).getPER(), 2) + Math.pow(http.exoplanets.getValue(key2).getTPLANET()-http.exoplanets.getValue(key1).getTPLANET(), 2) + Math.pow(http.exoplanets.getValue(key2).getRSTAR()-http.exoplanets.getValue(key1).getRSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getTSTAR()-http.exoplanets.getValue(key1).getTSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getMSTAR()-http.exoplanets.getValue(key1).getMSTAR(), 2));
+    }
+
+    public double PCC(String key1, String key2) {   //returns the score value for the 2 objects based on their features
+        //sum the product of the features between the objects
+        double SOP = (http.exoplanets.getValue(key2).getPER() * http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key2).getTPLANET() * http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR() * http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR() * http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR() * http.exoplanets.getValue(key1).getMSTAR());
+        //sum the features of the first object
+        double sum1 = (http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key1).getMSTAR());
+        //sum the features of the second object
+        double sum2 = (http.exoplanets.getValue(key2).getPER())+(http.exoplanets.getValue(key2).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR());
+        //square of the sum the features of the first object
+        double squareSum1 = (Math.pow(http.exoplanets.getValue(key1).getPER(), 2)+Math.pow((http.exoplanets.getValue(key1).getTPLANET()), 2)+Math.pow((http.exoplanets.getValue(key1).getRSTAR()), 2)+Math.pow((http.exoplanets.getValue(key1).getTSTAR()), 2)+Math.pow((http.exoplanets.getValue(key1).getMSTAR()), 2));
+        //square of the sum the features of the second object
+        double squareSum2 = (Math.pow(http.exoplanets.getValue(key2).getPER(), 2)+Math.pow((http.exoplanets.getValue(key2).getTPLANET()), 2)+Math.pow((http.exoplanets.getValue(key2).getRSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getTSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getMSTAR()), 2));
+
+        return ((SOP)-((sum1)*(sum2)/5))/(Math.sqrt(((squareSum1)-(Math.pow(sum1, 2)/5))*((squareSum2)-(Math.pow(sum2, 2)/5))));
+    }
+
+    public String[] pearsonCorrelationCoefficient(ArrayList<String> keys, String testKey){  //Pearson Correlation Coefficient
+        ArrayList<String[]> largeList = new ArrayList<String[]>();
+        double pastVal = 0;
+        double currentVal;
+        int counter = 0;
+
+        for(int i = 0; i < keys.size(); i++) {
+            if(i == 0){
+                pastVal = PCC(testKey, keys.get(i));
+                largeList.add(new String[]{testKey, keys.get(i)});
+                counter++;
+            }
+            else {
+                currentVal = PCC(testKey, keys.get(i));
+
+                if (currentVal > pastVal) {
+                    largeList.remove((counter-1));
+                    largeList.add(new String[]{testKey, keys.get(i)});
+                }
+                pastVal = currentVal;
+            }
+        }
+
+        System.out.println(largeList.size());
+        return largeList.get(0);
+    }
+
+    public String[] pearsonCorrelationCoefficient(ArrayList<String> keys){  //Pearson Correlation Coefficient
+        ArrayList<String[]> largeList = new ArrayList<String[]>();
+        double pastVal = 0;
+        double currentVal;
+        int counter = 0;
+
+        for(int i = 0; i < keys.size(); i++) {
+            for (int j = 0; j < keys.size(); j++) {
+                if(j == 0){
+                    pastVal = PCC(keys.get(j), keys.get(i));
+                    largeList.add(new String[]{keys.get(i), keys.get(j)});
+                    counter++;
+                }
+                else {
+                    currentVal = PCC(keys.get(j), keys.get(i));
+
+                    if (currentVal > pastVal) {
+                        largeList.remove((counter-1));
+                        largeList.add(new String[]{keys.get(i), keys.get(j)});
+                    }
+
+                    pastVal = currentVal;
+                }
+            }
+        }
+
+        System.out.println(largeList.size());
+        return largeList.get(0);
+    }
+
     public String[] euclideanDistance(ArrayList<String> keys, String testKey){    //EUCLIDEAN DISTANCE
         ArrayList<String[]> largeList = new ArrayList<String[]>();
         double pastVal = 0;
@@ -434,12 +510,12 @@ public class GUI extends JFrame {
 
         for(int i = 0; i < keys.size(); i++) {
             if(i == 0){
-                pastVal = compare(testKey, keys.get(i));
+                pastVal = ED(testKey, keys.get(i));
                 largeList.add(new String[]{testKey, keys.get(i)});
                 counter++;
             }
             else {
-                currentVal = compare(testKey, keys.get(i));
+                currentVal = ED(testKey, keys.get(i));
 
                 if (currentVal > pastVal) {
                     largeList.remove((counter-1));
@@ -462,12 +538,12 @@ public class GUI extends JFrame {
         for(int i = 0; i < keys.size(); i++) {
             for (int j = 0; j < keys.size(); j++) {
                 if(j == 0){
-                    pastVal = compare(keys.get(j), keys.get(i));
+                    pastVal = ED(keys.get(j), keys.get(i));
                     largeList.add(new String[]{keys.get(i), keys.get(j)});
                     counter++;
                 }
                 else {
-                    currentVal = compare(keys.get(j), keys.get(i));
+                    currentVal = ED(keys.get(j), keys.get(i));
 
                     if (currentVal > pastVal) {
                         largeList.remove((counter-1));
@@ -481,10 +557,6 @@ public class GUI extends JFrame {
 
         System.out.println(largeList.size());
         return largeList.get(0);
-    }
-
-    public double compare(String key1, String key2) {   //returns the score value for the 2 objects based on their features
-        return Math.sqrt(Math.pow(http.exoplanets.getValue(key2).getPER()-http.exoplanets.getValue(key1).getPER(), 2) + Math.pow(http.exoplanets.getValue(key2).getTPLANET()-http.exoplanets.getValue(key1).getTPLANET(), 2) + Math.pow(http.exoplanets.getValue(key2).getRSTAR()-http.exoplanets.getValue(key1).getRSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getTSTAR()-http.exoplanets.getValue(key1).getTSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getMSTAR()-http.exoplanets.getValue(key1).getMSTAR(), 2));
     }
 
 
