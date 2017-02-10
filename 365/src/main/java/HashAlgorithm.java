@@ -52,17 +52,17 @@ public class HashAlgorithm {
 
         for (Entry e = t[i]; e != null; e = e.next){
             //get the value from the end of the list
-            if (e.hash == h && s.equals(e.key));{
+            if (e.hash == h && s.equals(e.key)){
                 return e.value;
             }
         }
 
         //look for the value on the tuple array
-        for (int k = 0; k < t.length; ++k){
+        /*for (int k = 0; k < t.length; ++k){
             if (t[k].hash == h && s.equals(t[k].key)){
                 return t[k].value;
             }
-        }
+        }*/
 
         return null;
     }
@@ -171,6 +171,21 @@ public class HashAlgorithm {
         int h = hashCode(key);
         Entry[] t = tab;
         int i = h & (tab.length-1);
+/*        Entry pred = null;
+        Node p = t[i];
+
+        while (p != null) {
+            if (p.hash == null && key.equals(p.key)) {
+                if (pred == null)
+                    t[i] = p.next;
+                else
+                    pred.next = p.next;
+                --count;
+                return;
+            }
+            pred = p;
+            p = p.next;
+        }*/
 
         for (Entry e = t[i]; e != null; e = e.next){
             //check to see if there is ALREADY a value at this key
