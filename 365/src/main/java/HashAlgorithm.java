@@ -7,10 +7,16 @@ import java.util.ArrayList;
 
 public class HashAlgorithm {
 
+    /**
+     * Initializes the size of the HashTable.
+     */
     HashAlgorithm() {
         this.HT();
     }
 
+    /**
+     * .............................................................PUT ONLY THE STUFF THE USER WILL CARE ABOUT IN THE DOCUMENTATION
+     */
     static class Entry {
         final String key;
         Exoplanets value;
@@ -56,13 +62,6 @@ public class HashAlgorithm {
                 return e.value;
             }
         }
-
-        //look for the value on the tuple array
-        /*for (int k = 0; k < t.length; ++k){
-            if (t[k].hash == h && s.equals(t[k].key)){
-                return t[k].value;
-            }
-        }*/
 
         return null;
     }
@@ -171,11 +170,11 @@ public class HashAlgorithm {
         int h = hashCode(key);
         Entry[] t = tab;
         int i = h & (tab.length-1);
-/*        Entry pred = null;
-        Node p = t[i];
+        Entry pred = null;
+        Entry p = t[i];
 
         while (p != null) {
-            if (p.hash == null && key.equals(p.key)) {
+            if (p.hash == h && key.equals(p.key)) {
                 if (pred == null)
                     t[i] = p.next;
                 else
@@ -185,15 +184,6 @@ public class HashAlgorithm {
             }
             pred = p;
             p = p.next;
-        }*/
-
-        for (Entry e = t[i]; e != null; e = e.next){
-            //check to see if there is ALREADY a value at this key
-            if (e.hash == h && key.equals(e.key)){
-                //shorten the list
-                e.next = null;
-                return;
-            }
         }
 
         //remove --- remove an entry for a key, value tuple

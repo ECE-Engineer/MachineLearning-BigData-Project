@@ -431,6 +431,9 @@ public class GUI extends JFrame {
     }
 
     public double PCC(String key1, String key2) {   //returns the score value for the 2 objects based on their features
+        //The number of features
+        final int FEATURE_AMOUNT = 5;
+
         //sum the product of the features between the objects
         double SOP = (http.exoplanets.getValue(key2).getPER() * http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key2).getTPLANET() * http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR() * http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR() * http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR() * http.exoplanets.getValue(key1).getMSTAR());
         //sum the features of the first object
@@ -442,7 +445,7 @@ public class GUI extends JFrame {
         //square of the sum the features of the second object
         double squareSum2 = (Math.pow(http.exoplanets.getValue(key2).getPER(), 2)+Math.pow((http.exoplanets.getValue(key2).getTPLANET()), 2)+Math.pow((http.exoplanets.getValue(key2).getRSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getTSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getMSTAR()), 2));
 
-        return ((SOP)-((sum1)*(sum2)/5))/(Math.sqrt(((squareSum1)-(Math.pow(sum1, 2)/5))*((squareSum2)-(Math.pow(sum2, 2)/5))));
+        return ((SOP)-((sum1)*(sum2)/FEATURE_AMOUNT))/(Math.sqrt(((squareSum1)-(Math.pow(sum1, 2)/FEATURE_AMOUNT))*((squareSum2)-(Math.pow(sum2, 2)/FEATURE_AMOUNT))));
     }
 
     public String[] pearsonCorrelationCoefficient(ArrayList<String> keys, String testKey){  //Pearson Correlation Coefficient
