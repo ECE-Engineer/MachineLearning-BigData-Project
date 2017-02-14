@@ -3,7 +3,7 @@
  */
 public class Exoplanets {
     private double A;   //Semi-major axis (AU)
-    private double DEC; //Planetary radius (Earth radii)
+    private double DEC; //Declination (@J200)
     private double RSTAR;   //Stellar radius (Sol radii)
     private int TSTAR;  //Effective temperature of host star as reported in KIC (k)
     private double KMAG;    //	Kepler magnitude (kmag)
@@ -15,6 +15,9 @@ public class Exoplanets {
     private double RPLANET; //Stellar radius (Sol radii)
     private double MSTAR;   //Derived stellar mass (msol)
 
+    /**
+     * Creates an Exoplanet object
+     */
     Exoplanets(double au, double d, double rs, int ts, double km, int tp, double t, double u, double p, double r, double rp, double ms){
         A = au;
         DEC = d;
@@ -30,6 +33,9 @@ public class Exoplanets {
         MSTAR = ms;
     }
 
+    /**
+     * Creates a formatted string of all the properties of the Exoplanet object
+     */
     public String toString(){return "Semi-major axis (AU):\t\t\t" + A + "\n" +
                                     "Declination (@J200):\t\t\t" + DEC + "\n" +
                                     "Stellar radius (Sol radii):\t\t\t" + RSTAR + "\n" +
@@ -43,27 +49,63 @@ public class Exoplanets {
                                     "Stellar radius (Sol radii):\t\t\t" + RPLANET + "\n" +
                                     "Derived stellar mass (msol):\t\t\t" + MSTAR + "\n";}
 
+    /**
+     * Returns the Semi-major axis (AU)
+     */
     public double getA(){return A;}
 
+    /**
+     * Returns the Planetary radius (Earth radii)
+     */
     public double getDEC(){return DEC;}
 
+    /**
+     * Returns the Stellar radius (Sol radii)
+     */
     public double getRSTAR(){return RSTAR;}
 
+    /**
+     * Returns the Returns the Effective temperature of host star as reported in KIC (k)
+     */
     public int getTSTAR(){return TSTAR;}
 
+    /**
+     * Returns the Kepler magnitude (kmag)
+     */
     public double getKMAG(){return KMAG;}
 
+    /**
+     * Returns the Equilibrium temperature of planet, per Borucki et al. (k)
+     */
     public int getTPLANET(){return TPLANET;}
 
+    /**
+     * Returns the Time of transit center (BJD-2454900)
+     */
     public double getT0(){return T0;}
 
+    /**
+     * Returns the Uncertainty in time of transit center (+-jd)
+     */
     public double getUT0(){return UT0;}
 
+    /**
+     * Returns the Period (days)
+     */
     public double getPER(){return PER;}
 
+    /**
+     * Returns the Right ascension (@J200)
+     */
     public double getRA(){return RA;}
 
+    /**
+     * Returns the Stellar radius (Sol radii)
+     */
     public double getRPLANET(){return RPLANET;}
 
+    /**
+     * Returns the Derived stellar mass (msol)
+     */
     public double getMSTAR(){return MSTAR;}
 }

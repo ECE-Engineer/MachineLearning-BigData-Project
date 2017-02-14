@@ -12,6 +12,9 @@ public class JSONParser {
     public HashAlgorithm exoplanets = new HashAlgorithm();
     private final String USER_AGENT = "Mozilla/5.0";
 
+    /**
+     * Pulls in the Kepler Object data, creates Exoplanet objects, and stores them in the hash table
+     */
     // HTTP GET request
     public void sendGet(String u) throws Exception {
         URL obj = new URL(u);

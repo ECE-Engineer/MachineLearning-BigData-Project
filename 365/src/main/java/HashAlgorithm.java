@@ -8,14 +8,14 @@ import java.util.ArrayList;
 public class HashAlgorithm {
 
     /**
-     * Initializes the size of the HashTable.
+     * The constructor calls HT() to initialize the size of the HashTable.
      */
     HashAlgorithm() {
         this.HT();
     }
 
     /**
-     * .............................................................PUT ONLY THE STUFF THE USER WILL CARE ABOUT IN THE DOCUMENTATION
+     * Creates the key / value pairs
      */
     static class Entry {
         final String key;
@@ -34,10 +34,17 @@ public class HashAlgorithm {
     /*tab.length should always be a power of 2*/
     Entry[] tab;
 
+    /**
+     * Initializes the size of the HashTable.
+     */
     public void HT() {
         tab = new Entry[16];    // selected to be a good starting size
     }
 
+    /**
+     *
+     * Looks for a key already present in the hash table
+     */
     public boolean containsKey(String key){
         int h = hashCode(key);
         Entry[] t = tab;
@@ -50,6 +57,9 @@ public class HashAlgorithm {
         return false;
     }
 
+    /**
+     * Retrieves an Exoplanet from the given key in the hash table
+     */
     public Exoplanets getValue(String s) {
         //update --- handle collisions
         int h = hashCode(s);
@@ -66,6 +76,9 @@ public class HashAlgorithm {
         return null;
     }
 
+    /**
+     * Retrieves all the keys in the hash table
+     */
     public ArrayList<String> keySet(){
         ArrayList<String> temp = new ArrayList<String>();
 
@@ -83,6 +96,9 @@ public class HashAlgorithm {
         return temp;
     }
 
+    /**
+     * Clears everything in the hash table
+     */
     public void clear() {   // remove all tuples
         //look for the values on the tuple array
         for (int k = 0; k < tab.length; ++k){
@@ -111,12 +127,18 @@ public class HashAlgorithm {
         return count;
     }
 
+    /**
+     * Checks to see if there is nothing in the hash table
+     */
     public boolean isEmpty() {
         return this.size() == 0;
     }
 
     int count = 0;
 
+    /**
+     * Adds an Exoplanet to the hash table
+     */
     public void put(String key, Exoplanets value){
         //update
         int h = hashCode(key);
@@ -124,11 +146,8 @@ public class HashAlgorithm {
         int i = h & (tab.length-1);
 
         for (Entry e = t[i]; e != null; e = e.next){
-            System.out.println("HASH KEY IS:\t" + e.hash);
             //check to see if there is ALREADY a value at this key
             if (e.hash == h && key.equals(e.key)){
-                System.out.println("KEY ALREADY HERE and size : " + t.length + " the hash is " + e.hash);
-                System.out.println(key + "       e  :  " + e.key);
                 //lengthen the list
                 e.value = value;
                 return;
@@ -165,6 +184,9 @@ public class HashAlgorithm {
         }
     }
 
+    /**
+     * Removes an Exoplanet at the specified key
+     */
     public void remove(String key){
         //update --- handle collisions
         int h = hashCode(key);
@@ -213,6 +235,9 @@ public class HashAlgorithm {
         }
     }
 
+    /**
+     * Creates a unique hash value for the given
+     */
     public int hashCode(String s){
         char[] info = s.toCharArray();
 

@@ -17,6 +17,9 @@ import java.util.logging.Logger;
  * @author kzeller
  */
 public class GUI extends JFrame {
+    /**
+     * The constructor calls initComponents() to initialize all of the components of the graphical user interface
+     */
     public GUI() {
         initComponents();
     }
@@ -269,6 +272,9 @@ public class GUI extends JFrame {
 
     JSONParser http = new JSONParser();
 
+    /**
+     * Handles the requests of the user: including the type & amount of data to retrieve and toggling the similarity metric
+     */
     private void okButton(java.awt.event.ActionEvent evt) throws Exception {
         http.exoplanets.clear();
         textArea1.setText("");
@@ -283,15 +289,10 @@ public class GUI extends JFrame {
                 if (checkBox1.isSelected()) {
                     if (!text2.equalsIgnoreCase("")) {
                         String obj1 = "PER";
-//                    String param1 = "100";
                         String obj2 = "TPLANET";
-//                    String param2 = "5";
                         String obj3 = "RSTAR";
-//                    String param3 = "2";
                         String obj4 = "TSTAR";
-//                    String param4 = "6000";
                         String obj5 = "MSTAR";
-//                    String param5 = "1";
 
                         if (amount > 2000) {////////////////////////////////////////period, planet temperature, stellar mass, star temperature, & star size
                             //give them 3 parts of 1000 each
@@ -325,15 +326,10 @@ public class GUI extends JFrame {
                     }
                     else {
                         String obj1 = "PER";
-//                    String param1 = "100";
                         String obj2 = "TPLANET";
-//                    String param2 = "5";
                         String obj3 = "RSTAR";
-//                    String param3 = "2";
                         String obj4 = "TSTAR";
-//                    String param4 = "6000";
                         String obj5 = "MSTAR";
-//                    String param5 = "1";
 
                         if (amount > 2000) {////////////////////////////////////////period, planet temperature, stellar mass, star temperature, & star size
                             //give them 3 parts of 1000 each
@@ -426,11 +422,20 @@ public class GUI extends JFrame {
         }
     }
 
+    /**
+     * Retrieves the comparison score value between 2 Exoplanet objects using EUCLIDEAN DISTANCE
+     */
     public double ED(String key1, String key2) {   //returns the score value for the 2 objects based on their features
         return Math.sqrt(Math.pow(http.exoplanets.getValue(key2).getPER()-http.exoplanets.getValue(key1).getPER(), 2) + Math.pow(http.exoplanets.getValue(key2).getTPLANET()-http.exoplanets.getValue(key1).getTPLANET(), 2) + Math.pow(http.exoplanets.getValue(key2).getRSTAR()-http.exoplanets.getValue(key1).getRSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getTSTAR()-http.exoplanets.getValue(key1).getTSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getMSTAR()-http.exoplanets.getValue(key1).getMSTAR(), 2));
     }
 
+    /**
+     * Retrieves the comparison score value between 2 Exoplanet objects using Pearson Correlation Coefficient
+     */
     public double PCC(String key1, String key2) {   //returns the score value for the 2 objects based on their features
+        //The number of features
+        final int FEATURE_AMOUNT = 5;
+
         //sum the product of the features between the objects
         double SOP = (http.exoplanets.getValue(key2).getPER() * http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key2).getTPLANET() * http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR() * http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR() * http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR() * http.exoplanets.getValue(key1).getMSTAR());
         //sum the features of the first object
@@ -442,9 +447,12 @@ public class GUI extends JFrame {
         //square of the sum the features of the second object
         double squareSum2 = (Math.pow(http.exoplanets.getValue(key2).getPER(), 2)+Math.pow((http.exoplanets.getValue(key2).getTPLANET()), 2)+Math.pow((http.exoplanets.getValue(key2).getRSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getTSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getMSTAR()), 2));
 
-        return ((SOP)-((sum1)*(sum2)/5))/(Math.sqrt(((squareSum1)-(Math.pow(sum1, 2)/5))*((squareSum2)-(Math.pow(sum2, 2)/5))));
+        return ((SOP)-((sum1)*(sum2)/FEATURE_AMOUNT))/(Math.sqrt(((squareSum1)-(Math.pow(sum1, 2)/FEATURE_AMOUNT))*((squareSum2)-(Math.pow(sum2, 2)/FEATURE_AMOUNT))));
     }
 
+    /**
+     * Retrieves the most similar Exoplanet object to the one selected
+     */
     public String[] pearsonCorrelationCoefficient(ArrayList<String> keys, String testKey){  //Pearson Correlation Coefficient
         ArrayList<String[]> largeList = new ArrayList<String[]>();
         double pastVal = 0;
@@ -468,10 +476,12 @@ public class GUI extends JFrame {
             }
         }
 
-        System.out.println(largeList.size());
         return largeList.get(0);
     }
 
+    /**
+     * Retrieves the 2 most similar Exoplanet objects in the data set specified
+     */
     public String[] pearsonCorrelationCoefficient(ArrayList<String> keys){  //Pearson Correlation Coefficient
         ArrayList<String[]> largeList = new ArrayList<String[]>();
         double pastVal = 0;
@@ -498,10 +508,12 @@ public class GUI extends JFrame {
             }
         }
 
-        System.out.println(largeList.size());
         return largeList.get(0);
     }
 
+    /**
+     * Retrieves the most similar Exoplanet object to the one selected
+     */
     public String[] euclideanDistance(ArrayList<String> keys, String testKey){    //EUCLIDEAN DISTANCE
         ArrayList<String[]> largeList = new ArrayList<String[]>();
         double pastVal = 0;
@@ -525,10 +537,12 @@ public class GUI extends JFrame {
             }
         }
 
-        System.out.println(largeList.size());
         return largeList.get(0);
     }
 
+    /**
+     * Retrieves the 2 most similar Exoplanet objects in the data set specified
+     */
     public String[] euclideanDistance(ArrayList<String> keys){    //EUCLIDEAN DISTANCE
         ArrayList<String[]> largeList = new ArrayList<String[]>();
         double pastVal = 0;
@@ -555,11 +569,12 @@ public class GUI extends JFrame {
             }
         }
 
-        System.out.println(largeList.size());
         return largeList.get(0);
     }
 
-
+    /**
+     * This invokes the graphical user interface, which displays it to the screen and listens for the button actions to be pressed
+     */
     public static void main(String[] args) {
         //make the gui visible
         //make the assignments in the list visible
