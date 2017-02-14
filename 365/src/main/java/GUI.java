@@ -423,7 +423,7 @@ public class GUI extends JFrame {
     }
 
     /**
-     * Retrieves the comparison score value between 2 Exoplanet objects using EUCLIDEAN DISTANCE
+     * Retrieves the comparison score value between 2 Exoplanet objects using Euclidean Distance
      */
     public double ED(String key1, String key2) {   //returns the score value for the 2 objects based on their features
         return Math.sqrt(Math.pow(http.exoplanets.getValue(key2).getPER()-http.exoplanets.getValue(key1).getPER(), 2) + Math.pow(http.exoplanets.getValue(key2).getTPLANET()-http.exoplanets.getValue(key1).getTPLANET(), 2) + Math.pow(http.exoplanets.getValue(key2).getRSTAR()-http.exoplanets.getValue(key1).getRSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getTSTAR()-http.exoplanets.getValue(key1).getTSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getMSTAR()-http.exoplanets.getValue(key1).getMSTAR(), 2));
