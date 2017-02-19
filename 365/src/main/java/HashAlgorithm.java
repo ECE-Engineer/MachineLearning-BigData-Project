@@ -1,7 +1,7 @@
 /**
- * Created by Kyle Z on 2/1/2017.
+ * @author Kyle Zeller
+ * This class provides a way to store and access all of the exoplanet objects in an efficient manner.
  */
-
 
 import java.util.ArrayList;
 
@@ -14,15 +14,19 @@ public class HashAlgorithm {
         this.HT();
     }
 
-    /**
-     * Creates the key / value pairs
-     */
     static class Entry {
         final String key;
         Exoplanets value;
         Entry next;
         int hash;
 
+        /**
+         *Creates the key / value pairs
+         * @param k is the unique identification value that the object has
+         * @param v is the Exoplanet object
+         * @param n is the Entry tuple
+         * @param h is the unique hashing value to the unique key that was given
+         */
         Entry(String k, Exoplanets v, Entry n, int h) {
             key = k;
             value = v;
@@ -59,6 +63,8 @@ public class HashAlgorithm {
 
     /**
      * Retrieves an Exoplanet from the given key in the hash table
+     * @param s is a key that will be used to access it's respective exoplanet object
+     * @return returns an exoplanet object corresponding to the key given
      */
     public Exoplanets getValue(String s) {
         //update --- handle collisions
@@ -78,6 +84,7 @@ public class HashAlgorithm {
 
     /**
      * Retrieves all the keys in the hash table
+     * @return returns the keys in the hash table
      */
     public ArrayList<String> keySet(){
         ArrayList<String> temp = new ArrayList<String>();
@@ -110,6 +117,10 @@ public class HashAlgorithm {
         }
     }
 
+    /**
+     * Determines how many exoplanet objects are currently being stored in the hashtable
+     * @return returns the amount of exoplanet objects currently stored in the hashtable
+     */
     public int size() {
         int count = 0;
 
@@ -128,7 +139,8 @@ public class HashAlgorithm {
     }
 
     /**
-     * Checks to see if there is nothing in the hash table
+     * Checks to see if there is nothing in the hashtable
+     * @return returns true if the hashtable is empty
      */
     public boolean isEmpty() {
         return this.size() == 0;
@@ -138,6 +150,8 @@ public class HashAlgorithm {
 
     /**
      * Adds an Exoplanet to the hash table
+     * @param key is the unique identification value that the object has
+     * @param value is the exoplanet that is going to be stored
      */
     public void put(String key, Exoplanets value){
         //update
@@ -186,6 +200,7 @@ public class HashAlgorithm {
 
     /**
      * Removes an Exoplanet at the specified key
+     * @param key is the unique identification value that the object has
      */
     public void remove(String key){
         //update --- handle collisions
@@ -237,6 +252,8 @@ public class HashAlgorithm {
 
     /**
      * Creates a unique hash value for the given
+     * @param s is the unique identification value that the object has
+     * @return returns the unique hashing value to the unique key that was given
      */
     public int hashCode(String s){
         char[] info = s.toCharArray();

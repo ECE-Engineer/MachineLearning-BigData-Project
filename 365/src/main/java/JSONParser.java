@@ -1,6 +1,9 @@
 /**
- * Created by Kyle Z on 2/4/2017.
+ * @author Kyle Zeller
+ * This class provides a way to retrieve and parse the JSON formatted information coming from the database.
+ * It after it parses the data, it will create Exoplanet objects, and store them in the hash table.
  */
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -14,6 +17,8 @@ public class JSONParser {
 
     /**
      * Pulls in the Kepler Object data, creates Exoplanet objects, and stores them in the hash table
+     * @param u is the url with what and how much information to retrieve from the database
+     * @throws Exception
      */
     // HTTP GET request
     public void sendGet(String u) throws Exception {
@@ -39,6 +44,7 @@ public class JSONParser {
             }
             in.close();
 
+            //parse the data out of the JSON object
             JsonParser parser = new JsonParser();
             JsonObject obj1 = parser.parse("{         \"dataArray\": " + response.toString() + "         }").getAsJsonObject();
             JsonArray array = obj1.getAsJsonArray("dataArray");
@@ -121,6 +127,7 @@ public class JSONParser {
                     else
                         MSTAR = 0;
 
+                    //create an exoplanet and add it to the hashtable
                     Exoplanets exoplanet = new Exoplanets(A, DEC, RSTAR, TSTAR, KMAG, TPLANET, T0, UT0, PER, RA, RPLANET, MSTAR);
                     exoplanets.put(KOI, exoplanet);
                 }
@@ -210,6 +217,7 @@ public class JSONParser {
                     else
                         MSTAR = 0;
 
+                    //create an exoplanet and add it to the hashtable
                     Exoplanets exoplanet = new Exoplanets(A, DEC, RSTAR, TSTAR, KMAG, TPLANET, T0, UT0, PER, RA, RPLANET, MSTAR);
                     exoplanets.put(KOI, exoplanet);
                 }

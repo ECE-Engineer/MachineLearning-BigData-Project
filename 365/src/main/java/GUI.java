@@ -7,15 +7,16 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-/*
- * Created by JFormDesigner on Sun Feb 05 01:12:06 EST 2017
- */
-
-
-
 /**
- * @author kzeller
+ * @author Kyle Zeller
+ * This project is about providing a GUI that interfaces with a custom implementation of a HashTable Algorithm,
+ * different similarity metrics used in big data analytics and machine learning, and very large data sets from
+ * the Kepler Object API. The GUI will allow the user to display all the Kepler Objects of Interest, display only
+ * Kepler Objects of Interest with selected features, or finding the most similar Kepler Object of Interest to the
+ * one selected. An additional feature was also added to find the 2 most similar Kepler Objects of Interest in the
+ * entire data set if needed.
  */
+
 public class GUI extends JFrame {
     /**
      * The constructor calls initComponents() to initialize all of the components of the graphical user interface
@@ -24,6 +25,9 @@ public class GUI extends JFrame {
         initComponents();
     }
 
+    /**
+     * Initializes all the components within the GUI
+     */
     private void initComponents() {
         // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
         // Generated using JFormDesigner Evaluation license - Kyle Zeller
@@ -294,7 +298,7 @@ public class GUI extends JFrame {
                         String obj4 = "TSTAR";
                         String obj5 = "MSTAR";
 
-                        if (amount > 2000) {////////////////////////////////////////period, planet temperature, stellar mass, star temperature, & star size
+                        if (amount > 2000) {//This will compare period, planet temperature, stellar mass, star temperature, & star size
                             //give them 3 parts of 1000 each
                             String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
                             http.sendGet(url);
@@ -331,7 +335,7 @@ public class GUI extends JFrame {
                         String obj4 = "TSTAR";
                         String obj5 = "MSTAR";
 
-                        if (amount > 2000) {////////////////////////////////////////period, planet temperature, stellar mass, star temperature, & star size
+                        if (amount > 2000) {//This will compare period, planet temperature, stellar mass, star temperature, & star size
                             //give them 3 parts of 1000 each
                             String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
                             http.sendGet(url);
@@ -424,13 +428,19 @@ public class GUI extends JFrame {
 
     /**
      * Retrieves the comparison score value between 2 Exoplanet objects using Euclidean Distance
+     * @param key1 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @return returns the score value for the 2 objects based on their features
      */
-    public double ED(String key1, String key2) {   //returns the score value for the 2 objects based on their features
+    private double ED(String key1, String key2) {   //returns the score value for the 2 objects based on their features
         return Math.sqrt(Math.pow(http.exoplanets.getValue(key2).getPER()-http.exoplanets.getValue(key1).getPER(), 2) + Math.pow(http.exoplanets.getValue(key2).getTPLANET()-http.exoplanets.getValue(key1).getTPLANET(), 2) + Math.pow(http.exoplanets.getValue(key2).getRSTAR()-http.exoplanets.getValue(key1).getRSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getTSTAR()-http.exoplanets.getValue(key1).getTSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getMSTAR()-http.exoplanets.getValue(key1).getMSTAR(), 2));
     }
 
     /**
      * Retrieves the comparison score value between 2 Exoplanet objects using Pearson Correlation Coefficient
+     * @param key1 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @return returns the score value for the 2 objects based on their features
      */
     public double PCC(String key1, String key2) {   //returns the score value for the 2 objects based on their features
         //The number of features
@@ -452,8 +462,11 @@ public class GUI extends JFrame {
 
     /**
      * Retrieves the most similar Exoplanet object to the one selected
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @param testKey is a key to a specified exoplanet
+     * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
      */
-    public String[] pearsonCorrelationCoefficient(ArrayList<String> keys, String testKey){  //Pearson Correlation Coefficient
+    private String[] pearsonCorrelationCoefficient(ArrayList<String> keys, String testKey){  //Pearson Correlation Coefficient
         ArrayList<String[]> largeList = new ArrayList<String[]>();
         double pastVal = 0;
         double currentVal;
@@ -481,8 +494,10 @@ public class GUI extends JFrame {
 
     /**
      * Retrieves the 2 most similar Exoplanet objects in the data set specified
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @@return returns a list of the 2 most similar exoplanets in the list
      */
-    public String[] pearsonCorrelationCoefficient(ArrayList<String> keys){  //Pearson Correlation Coefficient
+    private String[] pearsonCorrelationCoefficient(ArrayList<String> keys){  //Pearson Correlation Coefficient
         ArrayList<String[]> largeList = new ArrayList<String[]>();
         double pastVal = 0;
         double currentVal;
@@ -513,8 +528,11 @@ public class GUI extends JFrame {
 
     /**
      * Retrieves the most similar Exoplanet object to the one selected
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @param testKey is a key to a specified exoplanet
+     * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
      */
-    public String[] euclideanDistance(ArrayList<String> keys, String testKey){    //EUCLIDEAN DISTANCE
+    private String[] euclideanDistance(ArrayList<String> keys, String testKey){    //EUCLIDEAN DISTANCE
         ArrayList<String[]> largeList = new ArrayList<String[]>();
         double pastVal = 0;
         double currentVal;
@@ -542,8 +560,10 @@ public class GUI extends JFrame {
 
     /**
      * Retrieves the 2 most similar Exoplanet objects in the data set specified
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @@return returns a list of the 2 most similar exoplanets in the list
      */
-    public String[] euclideanDistance(ArrayList<String> keys){    //EUCLIDEAN DISTANCE
+    private String[] euclideanDistance(ArrayList<String> keys){    //EUCLIDEAN DISTANCE
         ArrayList<String[]> largeList = new ArrayList<String[]>();
         double pastVal = 0;
         double currentVal;

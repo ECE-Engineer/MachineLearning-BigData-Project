@@ -1,6 +1,8 @@
 /**
- * Created by Kyle Z on 2/1/2017.
+ * @author Kyle Zeller
+ * This class provides a way to store all of the features of the kepler objects of interest.
  */
+
 public class Exoplanets {
     private double A;   //Semi-major axis (AU)
     private double DEC; //Declination (@J200)
@@ -12,11 +14,23 @@ public class Exoplanets {
     private double UT0; //Uncertainty in time of transit center (+-jd)
     private double PER; //Period (days)
     private double RA;  //Right ascension (@J200)
-    private double RPLANET; //Stellar radius (Sol radii)
+    private double RPLANET; //Planetary radius (Sol radii)
     private double MSTAR;   //Derived stellar mass (msol)
 
     /**
      * Creates an Exoplanet object
+     * @param au is Semi-major axis (AU)
+     * @param d is Declination (@J200)
+     * @param rs is Stellar radius (Sol radii)
+     * @param ts is Effective temperature of host star as reported in KIC (k)
+     * @param km is Kepler magnitude (kmag)
+     * @param tp is Equilibrium temperature of planet, per Borucki et al. (k)
+     * @param t is Time of transit center (BJD-2454900)
+     * @param u is Uncertainty in time of transit center (+-jd)
+     * @param p is Period (days)
+     * @param r is Right ascension (@J200)
+     * @param rp is Planetary radius (Sol radii)
+     * @param ms is Derived stellar mass (msol)
      */
     Exoplanets(double au, double d, double rs, int ts, double km, int tp, double t, double u, double p, double r, double rp, double ms){
         A = au;
@@ -35,6 +49,7 @@ public class Exoplanets {
 
     /**
      * Creates a formatted string of all the properties of the Exoplanet object
+     * @return returns all the data the exoplanet stores
      */
     public String toString(){return "Semi-major axis (AU):\t\t\t" + A + "\n" +
                                     "Declination (@J200):\t\t\t" + DEC + "\n" +
@@ -51,61 +66,73 @@ public class Exoplanets {
 
     /**
      * Returns the Semi-major axis (AU)
+     * @return returns the Semi-major axis (AU)
      */
     public double getA(){return A;}
 
     /**
      * Returns the Planetary radius (Earth radii)
+     * @return returns the Declination (@J200)
      */
     public double getDEC(){return DEC;}
 
     /**
      * Returns the Stellar radius (Sol radii)
+     * @return returns the Stellar radius (Sol radii)
      */
     public double getRSTAR(){return RSTAR;}
 
     /**
      * Returns the Returns the Effective temperature of host star as reported in KIC (k)
+     * @return returns the Effective temperature of host star as reported in KIC (k)
      */
     public int getTSTAR(){return TSTAR;}
 
     /**
      * Returns the Kepler magnitude (kmag)
+     * @return returns the Kepler magnitude (kmag)
      */
     public double getKMAG(){return KMAG;}
 
     /**
      * Returns the Equilibrium temperature of planet, per Borucki et al. (k)
+     * @return returns the Equilibrium temperature of planet, per Borucki et al. (k)
      */
     public int getTPLANET(){return TPLANET;}
 
     /**
      * Returns the Time of transit center (BJD-2454900)
+     * @return returns the Time of transit center (BJD-2454900)
      */
     public double getT0(){return T0;}
 
     /**
      * Returns the Uncertainty in time of transit center (+-jd)
+     * @return returns the Uncertainty in time of transit center (+-jd)
      */
     public double getUT0(){return UT0;}
 
     /**
      * Returns the Period (days)
+     * @return returns the Period (days)
      */
     public double getPER(){return PER;}
 
     /**
      * Returns the Right ascension (@J200)
+     * @return returns the Right ascension (@J200)
      */
     public double getRA(){return RA;}
 
     /**
-     * Returns the Stellar radius (Sol radii)
+     * Returns the Planetary radius (Sol radii)
+     * @return returns the Planetary radius (Sol radii)
      */
     public double getRPLANET(){return RPLANET;}
 
     /**
      * Returns the Derived stellar mass (msol)
+     * @return returns the Derived stellar mass (msol)
      */
     public double getMSTAR(){return MSTAR;}
 }
