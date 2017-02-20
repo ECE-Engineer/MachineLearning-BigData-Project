@@ -1,9 +1,0 @@
--classpath 'C:\\Users\\Kyle\\Desktop\\Projects\\PROJECT 12 ---GUI hw1 365---\\MachineLearning-BigData-Project\\365\\build\\classes\\main;C:\\Users\\Kyle\\Desktop\\Projects\\PROJECT 12 ---GUI hw1 365---\\MachineLearning-BigData-Project\\365\\build\\resources\\main;C:\\Users\\Kyle\\.gradle\\caches\\modules-2\\files-2.1\\com.google.code.gson\\gson\\2.8.0\\c4ba5371a29ac9b2ad6129b1d39ea38750043eff\\gson-2.8.0.jar'
--d 'C:\\Users\\Kyle\\Desktop\\Projects\\PROJECT 12 ---GUI hw1 365---\\MachineLearning-BigData-Project\\365\\build\\docs\\javadoc'
--doctitle '01 1.0-SNAPSHOT API'
--quiet 
--windowtitle '01 1.0-SNAPSHOT API'
-'C:\\Users\\Kyle\\Desktop\\Projects\\PROJECT 12 ---GUI hw1 365---\\MachineLearning-BigData-Project\\365\\src\\main\\java\\Exoplanets.java'
-'C:\\Users\\Kyle\\Desktop\\Projects\\PROJECT 12 ---GUI hw1 365---\\MachineLearning-BigData-Project\\365\\src\\main\\java\\GUI.java'
-'C:\\Users\\Kyle\\Desktop\\Projects\\PROJECT 12 ---GUI hw1 365---\\MachineLearning-BigData-Project\\365\\src\\main\\java\\HashAlgorithm.java'
-'C:\\Users\\Kyle\\Desktop\\Projects\\PROJECT 12 ---GUI hw1 365---\\MachineLearning-BigData-Project\\365\\src\\main\\java\\JSONParser.java'
