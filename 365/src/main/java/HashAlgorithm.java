@@ -5,7 +5,7 @@
 
 import java.util.ArrayList;
 
-public class HashAlgorithm<V> {
+public class HashAlgorithm<K,V> {
 
     /**
      * The constructor calls HT() to initialize the size of the HashTable.
@@ -14,10 +14,10 @@ public class HashAlgorithm<V> {
         this.HT();
     }
 
-    static class Entry<V> {
-        final String key;
+    static class Entry<K,V> {
+        final K key;
         V value;
-        Entry<V> next;
+        Entry<K,V> next;
         int hash;
 
         /**
@@ -27,7 +27,7 @@ public class HashAlgorithm<V> {
          * @param n is the Entry tuple
          * @param h is the unique hashing value to the unique key that was given
          */
-        Entry(String k, V v, Entry<V> n, int h) {
+        Entry(K k, V v, Entry<K,V> n, int h) {
             key = k;
             value = v;
             next = n;
@@ -36,7 +36,7 @@ public class HashAlgorithm<V> {
     }
 
     /*tab.length should always be a power of 2*/
-    Entry<V>[] tab;
+    Entry<K,V>[] tab;
 
     /**
      * Initializes the size of the HashTable.
@@ -49,11 +49,11 @@ public class HashAlgorithm<V> {
      *
      * Looks for a key already present in the hash table
      */
-    public boolean containsKey(String key){
+    public boolean containsKey(K key){
         int h = hashCode(key);
-        Entry<V>[] t = tab;
+        Entry<K,V>[] t = tab;
         int i = h & (tab.length-1);
-        for (Entry<V> e = t[i]; e != null; e=e.next){
+        for (Entry<K,V> e = t[i]; e != null; e=e.next){
             //see if there is a match
             if (e.hash == h && key.equals(e.key))
                 return true;
@@ -66,13 +66,13 @@ public class HashAlgorithm<V> {
      * @param s is a key that will be used to access it's respective exoplanet object
      * @return returns an exoplanet object corresponding to the key given
      */
-    public V getValue(String s) {
+    public V getValue(K s) {
         //update --- handle collisions
         int h = hashCode(s);
-        Entry<V>[] t = tab;
+        Entry<K,V>[] t = tab;
         int i = h & (tab.length-1);
 
-        for (Entry<V> e = t[i]; e != null; e = e.next){
+        for (Entry<K,V> e = t[i]; e != null; e = e.next){
             //get the value from the end of the list
             if (e.hash == h && s.equals(e.key)){
                 return e.value;
@@ -86,15 +86,15 @@ public class HashAlgorithm<V> {
      * Retrieves all the keys in the hash table
      * @return returns the keys in the hash table
      */
-    public ArrayList<String> keySet(){
-        ArrayList<String> temp = new ArrayList<String>();
+    public ArrayList<K> keySet(){
+        ArrayList<K> temp = new ArrayList<K>();
 
         //look for the values on the tuple array
         for (int k = 0; k < tab.length; ++k){
             //check to see if there is ALREADY a value at this key
             if (tab[k] != null){
                 //add all the values on the linked list (including the first one)
-                for (Entry<V> e = tab[k]; e != null; e = e.next){
+                for (Entry<K,V> e = tab[k]; e != null; e = e.next){
                     temp.add(e.key);
                 }
             }
@@ -129,7 +129,7 @@ public class HashAlgorithm<V> {
             //check to see if there is ALREADY a value at this key
             if (tab[k] != null){
                 //count all the values on the linked list (including the first one)
-                for (Entry<V> e = tab[k]; e != null; e = e.next){
+                for (Entry<K,V> e = tab[k]; e != null; e = e.next){
                     count++;
                 }
             }
@@ -153,13 +153,13 @@ public class HashAlgorithm<V> {
      * @param key is the unique identification value that the object has
      * @param value is the exoplanet that is going to be stored
      */
-    public void put(String key, V value){
+    public void put(K key, V value){
         //update
         int h = hashCode(key);
-        Entry<V>[] t = tab;
+        Entry<K,V>[] t = tab;
         int i = h & (tab.length-1);
 
-        for (Entry<V> e = t[i]; e != null; e = e.next){
+        for (Entry<K,V> e = t[i]; e != null; e = e.next){
             //check to see if there is ALREADY a value at this key
             if (e.hash == h && key.equals(e.key)){
                 //lengthen the list
@@ -171,7 +171,7 @@ public class HashAlgorithm<V> {
 
         //handle collisions
         //add --- make a new entry for a key, value tuple
-        Entry<V> p = new Entry(key, value, t[i], h);
+        Entry<K,V> p = new Entry(key, value, t[i], h);
         t[i] = p;
 
         //resize --- the array
@@ -183,10 +183,10 @@ public class HashAlgorithm<V> {
 
         //double the size of the array
         int newN = n << 1;
-        Entry<V>[] newTab = new Entry[newN];
+        Entry<K,V>[] newTab = new Entry[newN];
 
         for (int k = 0; k < n; ++k){
-            Entry<V> e;
+            Entry<K,V> e;
             while ((e = t[k]) != null){ // add to the linked list
                 t[k] = e.next;
                 int j = e.hash & (newN - 1);
@@ -202,13 +202,13 @@ public class HashAlgorithm<V> {
      * Removes an Exoplanet at the specified key
      * @param key is the unique identification value that the object has
      */
-    public void remove(String key){
+    public void remove(K key){
         //update --- handle collisions
         int h = hashCode(key);
-        Entry<V>[] t = tab;
+        Entry<K,V>[] t = tab;
         int i = h & (tab.length-1);
-        Entry<V> pred = null;
-        Entry<V> p = t[i];
+        Entry<K,V> pred = null;
+        Entry<K,V> p = t[i];
 
         while (p != null) {
             if (p.hash == h && key.equals(p.key)) {
@@ -235,10 +235,10 @@ public class HashAlgorithm<V> {
 
         //halve the size of the array
         int newN = n >>> 1;
-        Entry<V>[] newTab = new Entry[newN];
+        Entry<K,V>[] newTab = new Entry[newN];
 
         for (int k = 0; k < n; ++k){
-            Entry<V> e;
+            Entry<K,V> e;
             while ((e = t[k]) != null){ // add to the linked list
                 t[k] = e.next;
                 int j = e.hash & (newN - 1);
@@ -255,11 +255,11 @@ public class HashAlgorithm<V> {
      * @param s is the unique identification value that the object has
      * @return returns the unique hashing value to the unique key that was given
      */
-    public int hashCode(String s){
-        char[] info = s.toCharArray();
+    public int hashCode(K s){
+        char[] info = (s.toString()).toCharArray();
 
         int temp, i;
-        for (temp = i = 0; i < s.length(); ++i) {
+        for (temp = i = 0; i < (s.toString()).length(); ++i) {
             temp += info[i];
             temp += (temp << 10);
             temp ^= (temp >>> 6);

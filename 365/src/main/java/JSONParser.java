@@ -12,7 +12,7 @@ import java.net.URL;
 import com.google.gson.*;
 
 public class JSONParser {
-    public HashAlgorithm<Exoplanets> exoplanets = new HashAlgorithm<>();
+    public HashAlgorithm<String,Exoplanets> exoplanets = new HashAlgorithm<>();
     private final String USER_AGENT = "Mozilla/5.0";
 
     /**
