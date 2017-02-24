@@ -1,0 +1,607 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>GUI.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">01</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">GUI.java</span></div><h1>GUI.java</h1><pre class="source lang-java linenums">import java.awt.*;
+import javax.swing.*;
+import javax.swing.GroupLayout;
+import java.io.FileNotFoundException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+/**
+ * @author Kyle Zeller
+ * This project is about providing a GUI that interfaces with a custom implementation of a HashTable Algorithm,
+ * different similarity metrics used in big data analytics and machine learning, and very large data sets from
+ * the Kepler Object API. The GUI will allow the user to display all the Kepler Objects of Interest, display only
+ * Kepler Objects of Interest with selected features, or finding the most similar Kepler Object of Interest to the
+ * one selected. An additional feature was also added to find the 2 most similar Kepler Objects of Interest in the
+ * entire data set if needed.
+ */
+
+public class GUI extends JFrame {
+    /**
+     * The constructor calls initComponents() to initialize all of the components of the graphical user interface
+     */
+<span class="nc" id="L24">    public GUI() {</span>
+<span class="nc" id="L25">        initComponents();</span>
+<span class="nc" id="L26">    }</span>
+
+    /**
+     * Initializes all the components within the GUI
+     */
+    private void initComponents() {
+        // JFormDesigner - Component initialization - DO NOT MODIFY  //GEN-BEGIN:initComponents
+        // Generated using JFormDesigner Evaluation license - Kyle Zeller
+<span class="nc" id="L34">        panel1 = new JPanel();</span>
+<span class="nc" id="L35">        label1 = new JLabel();</span>
+<span class="nc" id="L36">        label2 = new JLabel();</span>
+<span class="nc" id="L37">        typeSelect = new JComboBox&lt;&gt;();</span>
+<span class="nc" id="L38">        button1 = new JButton();</span>
+<span class="nc" id="L39">        label3 = new JLabel();</span>
+<span class="nc" id="L40">        textField1 = new JTextField();</span>
+<span class="nc" id="L41">        label4 = new JLabel();</span>
+<span class="nc" id="L42">        checkBox1 = new JCheckBox();</span>
+<span class="nc" id="L43">        label5 = new JLabel();</span>
+<span class="nc" id="L44">        label6 = new JLabel();</span>
+<span class="nc" id="L45">        label7 = new JLabel();</span>
+<span class="nc" id="L46">        textField2 = new JTextField();</span>
+<span class="nc" id="L47">        panel2 = new JPanel();</span>
+<span class="nc" id="L48">        scrollPane1 = new JScrollPane();</span>
+<span class="nc" id="L49">        textArea1 = new JTextArea();</span>
+
+<span class="nc" id="L51">        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);</span>
+
+        //======== this ========
+<span class="nc" id="L54">        Container contentPane = getContentPane();</span>
+
+        //======== panel1 ========
+        {
+<span class="nc" id="L58">            panel1.setBackground(new Color(51, 204, 255));</span>
+
+            // JFormDesigner evaluation mark
+<span class="nc" id="L61">            panel1.setBorder(new javax.swing.border.CompoundBorder(</span>
+                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
+                            &quot;365 HW1&quot;, javax.swing.border.TitledBorder.CENTER,
+                            javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font(&quot;Dialog&quot;, java.awt.Font.BOLD, 12),
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                            java.awt.Color.red), panel1.getBorder())); panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if(&quot;border&quot;.equals(e.getPropertyName()))throw new RuntimeException();}});</span>
+
+
+            //---- label1 ----
+<span class="nc" id="L69">            label1.setText(&quot;Welcome to StarLabs&quot;);</span>
+<span class="nc" id="L70">            label1.setHorizontalAlignment(SwingConstants.CENTER);</span>
+<span class="nc" id="L71">            label1.setFont(new Font(&quot;Segoe UI&quot;, Font.BOLD, 30));</span>
+
+            //---- label2 ----
+<span class="nc" id="L74">            label2.setText(&quot;Please Select A Classifier Type:&quot;);</span>
+<span class="nc" id="L75">            label2.setFont(label2.getFont().deriveFont(label2.getFont().getStyle() | Font.BOLD));</span>
+
+            //---- typeSelect ----
+<span class="nc" id="L78">            typeSelect.setModel(new DefaultComboBoxModel&lt;&gt;(new String[] {</span>
+                    &quot;None&quot;,
+                    &quot;A&quot;,
+                    &quot;DEC&quot;,
+                    &quot;RSTAR&quot;,
+                    &quot;TSTAR&quot;,
+                    &quot;KMAG&quot;,
+                    &quot;TPLANET&quot;,
+                    &quot;T0&quot;,
+                    &quot;UT0&quot;,
+                    &quot;PER&quot;,
+                    &quot;RA&quot;,
+                    &quot;MSTAR&quot;
+            }));
+
+            //---- button1 ----
+<span class="nc" id="L94">            button1.setText(&quot;OK&quot;);</span>
+<span class="nc" id="L95">            button1.setBackground(new Color(51, 204, 255));</span>
+<span class="nc" id="L96">            button1.addActionListener(new java.awt.event.ActionListener() {</span>
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    try {
+<span class="nc" id="L99">                        okButton(evt);</span>
+<span class="nc" id="L100">                    } catch (FileNotFoundException ex) {</span>
+<span class="nc" id="L101">                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L102">                    } catch (UnsupportedEncodingException ex) {</span>
+<span class="nc" id="L103">                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);</span>
+<span class="nc" id="L104">                    } catch (Exception e) {</span>
+<span class="nc" id="L105">                        e.printStackTrace();</span>
+<span class="nc" id="L106">                    }</span>
+<span class="nc" id="L107">                }</span>
+            });
+
+            //---- label3 ----
+<span class="nc" id="L111">            label3.setText(&quot;Please Select An Object Limit (1 - 2500):&quot;);</span>
+<span class="nc" id="L112">            label3.setFont(label3.getFont().deriveFont(label3.getFont().getStyle() | Font.BOLD));</span>
+
+            //---- label4 ----
+<span class="nc" id="L115">            label4.setText(&quot;Simularity Metric:&quot;);</span>
+<span class="nc" id="L116">            label4.setFont(label4.getFont().deriveFont(label4.getFont().getStyle() | Font.BOLD));</span>
+
+            //---- checkBox1 ----
+<span class="nc" id="L119">            checkBox1.setText(&quot;Compares Interstellar Objects&quot;);</span>
+<span class="nc" id="L120">            checkBox1.setBackground(new Color(51, 204, 255));</span>
+
+            //---- label5 ----
+<span class="nc" id="L123">            label5.setText(&quot;Please Set Classifier Type to None&quot;);</span>
+
+            //---- label6 ----
+<span class="nc" id="L126">            label6.setText(&quot;The comparisons are made by: {period, planet size, star size, star temperature, and stellar mass}&quot;);</span>
+
+            //---- label7 ----
+<span class="nc" id="L129">            label7.setText(&quot;Please Provide An Object Key:&quot;);</span>
+<span class="nc" id="L130">            label7.setFont(label7.getFont().deriveFont(label7.getFont().getStyle() | Font.BOLD));</span>
+
+<span class="nc" id="L132">            GroupLayout panel1Layout = new GroupLayout(panel1);</span>
+<span class="nc" id="L133">            panel1.setLayout(panel1Layout);</span>
+<span class="nc" id="L134">            panel1Layout.setHorizontalGroup(</span>
+<span class="nc" id="L135">                    panel1Layout.createParallelGroup()</span>
+<span class="nc" id="L136">                            .addGroup(panel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L137">                                    .addGroup(panel1Layout.createParallelGroup()</span>
+<span class="nc" id="L138">                                            .addGroup(panel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L139">                                                    .addGap(152, 152, 152)</span>
+<span class="nc" id="L140">                                                    .addComponent(label1))</span>
+<span class="nc" id="L141">                                            .addGroup(panel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L142">                                                    .addGap(131, 131, 131)</span>
+<span class="nc" id="L143">                                                    .addComponent(label7, GroupLayout.PREFERRED_SIZE, 191, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L144">                                                    .addGap(18, 18, 18)</span>
+<span class="nc" id="L145">                                                    .addComponent(textField2, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)))</span>
+<span class="nc" id="L146">                                    .addContainerGap(151, Short.MAX_VALUE))</span>
+<span class="nc" id="L147">                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L148">                                    .addGap(0, 45, Short.MAX_VALUE)</span>
+<span class="nc" id="L149">                                    .addGroup(panel1Layout.createParallelGroup()</span>
+<span class="nc" id="L150">                                            .addGroup(panel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L151">                                                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L152">                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)</span>
+<span class="nc" id="L153">                                                    .addComponent(checkBox1, GroupLayout.PREFERRED_SIZE, 201, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L154">                                                    .addGap(18, 18, 18)</span>
+<span class="nc" id="L155">                                                    .addComponent(label5, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))</span>
+<span class="nc" id="L156">                                            .addComponent(label6, GroupLayout.PREFERRED_SIZE, 554, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L157">                                            .addGroup(panel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L158">                                                    .addGap(60, 60, 60)</span>
+<span class="nc" id="L159">                                                    .addGroup(panel1Layout.createParallelGroup()</span>
+<span class="nc" id="L160">                                                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L161">                                                                    .addComponent(button1)</span>
+<span class="nc" id="L162">                                                                    .addGap(267, 267, 267))</span>
+<span class="nc" id="L163">                                                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L164">                                                                    .addGroup(panel1Layout.createParallelGroup()</span>
+<span class="nc" id="L165">                                                                            .addGroup(panel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L166">                                                                                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 196, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L167">                                                                                    .addGap(18, 18, 18)</span>
+<span class="nc" id="L168">                                                                                    .addComponent(typeSelect, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))</span>
+<span class="nc" id="L169">                                                                            .addGroup(panel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L170">                                                                                    .addComponent(label3, GroupLayout.PREFERRED_SIZE, 249, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L171">                                                                                    .addGap(18, 18, 18)</span>
+<span class="nc" id="L172">                                                                                    .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))</span>
+<span class="nc" id="L173">                                                                    .addGap(119, 119, 119))))))</span>
+            );
+<span class="nc" id="L175">            panel1Layout.setVerticalGroup(</span>
+<span class="nc" id="L176">                    panel1Layout.createParallelGroup()</span>
+<span class="nc" id="L177">                            .addGroup(panel1Layout.createSequentialGroup()</span>
+<span class="nc" id="L178">                                    .addContainerGap()</span>
+<span class="nc" id="L179">                                    .addComponent(label1)</span>
+<span class="nc" id="L180">                                    .addGap(81, 81, 81)</span>
+<span class="nc" id="L181">                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)</span>
+<span class="nc" id="L182">                                            .addComponent(typeSelect)</span>
+<span class="nc" id="L183">                                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))</span>
+<span class="nc" id="L184">                                    .addGap(18, 18, 18)</span>
+<span class="nc" id="L185">                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)</span>
+<span class="nc" id="L186">                                            .addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L187">                                            .addComponent(label3, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))</span>
+<span class="nc" id="L188">                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)</span>
+<span class="nc" id="L189">                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)</span>
+<span class="nc" id="L190">                                            .addComponent(label4, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L191">                                            .addComponent(checkBox1)</span>
+<span class="nc" id="L192">                                            .addComponent(label5))</span>
+<span class="nc" id="L193">                                    .addGap(18, 18, 18)</span>
+<span class="nc" id="L194">                                    .addComponent(label6)</span>
+<span class="nc" id="L195">                                    .addGap(18, 18, 18)</span>
+<span class="nc" id="L196">                                    .addGroup(panel1Layout.createParallelGroup()</span>
+<span class="nc" id="L197">                                            .addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L198">                                            .addComponent(label7, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))</span>
+<span class="nc" id="L199">                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)</span>
+<span class="nc" id="L200">                                    .addComponent(button1)</span>
+<span class="nc" id="L201">                                    .addContainerGap())</span>
+            );
+        }
+
+        //======== panel2 ========
+        {
+
+            //======== scrollPane1 ========
+            {
+
+                //---- textArea1 ----
+<span class="nc" id="L212">                textArea1.setEditable(false);</span>
+<span class="nc" id="L213">                scrollPane1.setViewportView(textArea1);</span>
+            }
+
+<span class="nc" id="L216">            GroupLayout panel2Layout = new GroupLayout(panel2);</span>
+<span class="nc" id="L217">            panel2.setLayout(panel2Layout);</span>
+<span class="nc" id="L218">            panel2Layout.setHorizontalGroup(</span>
+<span class="nc" id="L219">                    panel2Layout.createParallelGroup()</span>
+<span class="nc" id="L220">                            .addGroup(panel2Layout.createSequentialGroup()</span>
+<span class="nc" id="L221">                                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 559, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L222">                                    .addGap(0, 408, Short.MAX_VALUE))</span>
+            );
+<span class="nc" id="L224">            panel2Layout.setVerticalGroup(</span>
+<span class="nc" id="L225">                    panel2Layout.createParallelGroup()</span>
+<span class="nc" id="L226">                            .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)</span>
+            );
+        }
+
+<span class="nc" id="L230">        GroupLayout contentPaneLayout = new GroupLayout(contentPane);</span>
+<span class="nc" id="L231">        contentPane.setLayout(contentPaneLayout);</span>
+<span class="nc" id="L232">        contentPaneLayout.setHorizontalGroup(</span>
+<span class="nc" id="L233">                contentPaneLayout.createParallelGroup()</span>
+<span class="nc" id="L234">                        .addGroup(contentPaneLayout.createSequentialGroup()</span>
+<span class="nc" id="L235">                                .addContainerGap()</span>
+<span class="nc" id="L236">                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L237">                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)</span>
+<span class="nc" id="L238">                                .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L239">                                .addContainerGap())</span>
+        );
+<span class="nc" id="L241">        contentPaneLayout.setVerticalGroup(</span>
+<span class="nc" id="L242">                contentPaneLayout.createParallelGroup()</span>
+<span class="nc" id="L243">                        .addGroup(contentPaneLayout.createSequentialGroup()</span>
+<span class="nc" id="L244">                                .addContainerGap()</span>
+<span class="nc" id="L245">                                .addGroup(contentPaneLayout.createParallelGroup()</span>
+<span class="nc" id="L246">                                        .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)</span>
+<span class="nc" id="L247">                                        .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))</span>
+<span class="nc" id="L248">                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))</span>
+        );
+<span class="nc" id="L250">        setSize(1190, 660);</span>
+<span class="nc" id="L251">        setLocationRelativeTo(getOwner());</span>
+        // JFormDesigner - End of component initialization  //GEN-END:initComponents
+<span class="nc" id="L253">    }</span>
+
+    // JFormDesigner - Variables declaration - DO NOT MODIFY  //GEN-BEGIN:variables
+    // Generated using JFormDesigner Evaluation license - Kyle Zeller
+    private JPanel panel1;
+    private JLabel label1;
+    private JLabel label2;
+    private JComboBox&lt;String&gt; typeSelect;
+    private JButton button1;
+    private JLabel label3;
+    private JTextField textField1;
+    private JLabel label4;
+    private JCheckBox checkBox1;
+    private JLabel label5;
+    private JLabel label6;
+    private JLabel label7;
+    private JTextField textField2;
+    private JPanel panel2;
+    private JScrollPane scrollPane1;
+    private JTextArea textArea1;
+    // JFormDesigner - End of variables declaration  //GEN-END:variables
+
+
+
+<span class="nc" id="L277">    JSONParser http = new JSONParser();</span>
+
+    /**
+     * Handles the requests of the user: including the type &amp; amount of data to retrieve and toggling the similarity metric
+     */
+    private void okButton(java.awt.event.ActionEvent evt) throws Exception {
+<span class="nc" id="L283">        http.exoplanets.clear();</span>
+<span class="nc" id="L284">        textArea1.setText(&quot;&quot;);</span>
+<span class="nc" id="L285">        String text = textField1.getText();</span>
+<span class="nc" id="L286">        String keplerObject = typeSelect.getSelectedItem().toString();</span>
+<span class="nc" id="L287">        String text2 = textField2.getText();</span>
+
+<span class="nc bnc" id="L289" title="All 2 branches missed.">        if (!text.equalsIgnoreCase(&quot;&quot;)) {</span>
+<span class="nc" id="L290">            int amount = Integer.parseInt(text);    //it will look at this many interstellar objects</span>
+
+<span class="nc bnc" id="L292" title="All 2 branches missed.">            if (keplerObject.equals(&quot;None&quot;)) {</span>
+<span class="nc bnc" id="L293" title="All 2 branches missed.">                if (checkBox1.isSelected()) {</span>
+<span class="nc bnc" id="L294" title="All 2 branches missed.">                    if (!text2.equalsIgnoreCase(&quot;&quot;)) {</span>
+<span class="nc" id="L295">                        String obj1 = &quot;PER&quot;;</span>
+<span class="nc" id="L296">                        String obj2 = &quot;TPLANET&quot;;</span>
+<span class="nc" id="L297">                        String obj3 = &quot;RSTAR&quot;;</span>
+<span class="nc" id="L298">                        String obj4 = &quot;TSTAR&quot;;</span>
+<span class="nc" id="L299">                        String obj5 = &quot;MSTAR&quot;;</span>
+
+<span class="nc bnc" id="L301" title="All 2 branches missed.">                        if (amount &gt; 2000) {//This will compare period, planet temperature, stellar mass, star temperature, &amp; star size</span>
+                            //give them 3 parts of 1000 each
+<span class="nc" id="L303">                            String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:2000},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L304">                            http.sendGet(url);</span>
+<span class="nc" id="L305">                            url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:1000},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L306">                            http.sendGet(url);</span>
+<span class="nc" id="L307">                            url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L308">                            http.sendGet(url);</span>
+<span class="nc bnc" id="L309" title="All 2 branches missed.">                        } else if (amount &gt; 1000) {</span>
+                            //give then 2 parts of 1000 each
+<span class="nc" id="L311">                            String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:1000},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L312">                            http.sendGet(url);</span>
+<span class="nc" id="L313">                            url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L314">                            http.sendGet(url);</span>
+<span class="nc" id="L315">                        } else {</span>
+                            //give the user 1 parts of 1000 each
+<span class="nc" id="L317">                            String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot;+ obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L318">                            http.sendGet(url);</span>
+                        }
+                        //RETURN THE 2 COMMONMOST OBJECTS by the period
+<span class="nc" id="L321">                        ArrayList&lt;String&gt; temp = http.exoplanets.keySet();</span>
+
+<span class="nc bnc" id="L323" title="All 2 branches missed.">                        if (temp.size() != 0){</span>
+<span class="nc" id="L324">                            String[] sim = pearsonCorrelationCoefficient(temp, text2);</span>
+
+<span class="nc bnc" id="L326" title="All 2 branches missed.">                            for(int i = 0; i &lt; sim.length; i++){</span>
+<span class="nc" id="L327">                                textArea1.append(&quot;KEY IS: \t&quot; + sim[i] + &quot; DATA IS: \n&quot; + http.exoplanets.getValue(sim[i]).toString() + &quot;\n&quot;);</span>
+                            }
+                        }
+<span class="nc" id="L330">                    }</span>
+                    else {
+<span class="nc" id="L332">                        String obj1 = &quot;PER&quot;;</span>
+<span class="nc" id="L333">                        String obj2 = &quot;TPLANET&quot;;</span>
+<span class="nc" id="L334">                        String obj3 = &quot;RSTAR&quot;;</span>
+<span class="nc" id="L335">                        String obj4 = &quot;TSTAR&quot;;</span>
+<span class="nc" id="L336">                        String obj5 = &quot;MSTAR&quot;;</span>
+
+<span class="nc bnc" id="L338" title="All 2 branches missed.">                        if (amount &gt; 2000) {//This will compare period, planet temperature, stellar mass, star temperature, &amp; star size</span>
+                            //give them 3 parts of 1000 each
+<span class="nc" id="L340">                            String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:2000},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L341">                            http.sendGet(url);</span>
+<span class="nc" id="L342">                            url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:1000},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L343">                            http.sendGet(url);</span>
+<span class="nc" id="L344">                            url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L345">                            http.sendGet(url);</span>
+<span class="nc bnc" id="L346" title="All 2 branches missed.">                        } else if (amount &gt; 1000) {</span>
+                            //give then 2 parts of 1000 each
+<span class="nc" id="L348">                            String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:1000},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L349">                            http.sendGet(url);</span>
+<span class="nc" id="L350">                            url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L351">                            http.sendGet(url);</span>
+<span class="nc" id="L352">                        } else {</span>
+                            //give the user 1 parts of 1000 each
+<span class="nc" id="L354">                            String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj1 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot;+ obj2 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj3 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj4 + &quot;\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + obj5 + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L355">                            http.sendGet(url);</span>
+                        }
+                        //RETURN THE 2 COMMONMOST OBJECTS by the period
+<span class="nc" id="L358">                        ArrayList&lt;String&gt; temp = http.exoplanets.keySet();</span>
+
+<span class="nc bnc" id="L360" title="All 2 branches missed.">                        if (temp.size() != 0){</span>
+<span class="nc" id="L361">                            String[] sim = pearsonCorrelationCoefficient(temp);</span>
+
+<span class="nc bnc" id="L363" title="All 2 branches missed.">                            for(int i = 0; i &lt; sim.length; i++){</span>
+<span class="nc" id="L364">                                textArea1.append(&quot;KEY IS: \t&quot; + sim[i] + &quot; DATA IS: \n&quot; + http.exoplanets.getValue(sim[i]).toString() + &quot;\n&quot;);</span>
+                            }
+                        }
+<span class="nc" id="L367">                    }</span>
+                }
+                else {
+<span class="nc bnc" id="L370" title="All 2 branches missed.">                    if (amount &gt; 2000) {</span>
+                        //give them 3 parts of 1000 each
+<span class="nc" id="L372">                        String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:2000}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L373">                        http.sendGet(url);</span>
+<span class="nc" id="L374">                        url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:1000}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L375">                        http.sendGet(url);</span>
+<span class="nc" id="L376">                        url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L377">                        http.sendGet(url);</span>
+<span class="nc bnc" id="L378" title="All 2 branches missed.">                    } else if (amount &gt; 1000) {</span>
+                        //give then 2 parts of 1000 each
+<span class="nc" id="L380">                        String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:1000}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L381">                        http.sendGet(url);</span>
+<span class="nc" id="L382">                        url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L383">                        http.sendGet(url);</span>
+<span class="nc" id="L384">                    } else {</span>
+                        //give the user 1 parts of 1000 each
+<span class="nc" id="L386">                        String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L387">                        http.sendGet(url);</span>
+                    }
+<span class="nc" id="L389">                    ArrayList&lt;String&gt; temp = http.exoplanets.keySet();</span>
+
+<span class="nc bnc" id="L391" title="All 2 branches missed.">                    if (temp.size() != 0){</span>
+<span class="nc bnc" id="L392" title="All 2 branches missed.">                        for(String elements : temp){</span>
+<span class="nc" id="L393">                            textArea1.append(&quot;KEY IS: \t&quot; + elements + &quot; DATA IS: \n&quot; + http.exoplanets.getValue(elements).toString() + &quot;\n&quot;);</span>
+<span class="nc" id="L394">                        }</span>
+                    }
+<span class="nc" id="L396">                }</span>
+            }
+            else {
+<span class="nc bnc" id="L399" title="All 2 branches missed.">                if (amount &gt; 2000) {</span>
+                    //give them 3 parts of 1000 each
+<span class="nc" id="L401">                    String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:2000},\&quot;&quot; + keplerObject + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L402">                    http.sendGet(url);</span>
+<span class="nc" id="L403">                    url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:1000},\&quot;&quot; + keplerObject + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L404">                    http.sendGet(url);</span>
+<span class="nc" id="L405">                    url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + keplerObject + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L406">                    http.sendGet(url);</span>
+<span class="nc bnc" id="L407" title="All 2 branches missed.">                } else if (amount &gt; 1000) {</span>
+                    //give then 2 parts of 1000 each
+<span class="nc" id="L409">                    String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$gt\&quot;:1000},\&quot;&quot; + keplerObject + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L410">                    http.sendGet(url);</span>
+<span class="nc" id="L411">                    url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + keplerObject + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L412">                    http.sendGet(url);</span>
+<span class="nc" id="L413">                } else {</span>
+                    //give the user 1 parts of 1000 each
+<span class="nc" id="L415">                    String url = &quot;http://asterank.com/api/kepler?query={\&quot;KOI\&quot;:{\&quot;$exists\&quot;:true},\&quot;&quot; + keplerObject + &quot;\&quot;:{\&quot;$exists\&quot;:true}}&amp;limit=&quot; + amount;</span>
+<span class="nc" id="L416">                    http.sendGet(url);</span>
+                }
+<span class="nc" id="L418">                ArrayList&lt;String&gt; temp = http.exoplanets.keySet();</span>
+
+<span class="nc bnc" id="L420" title="All 2 branches missed.">                if (temp.size() != 0){</span>
+<span class="nc bnc" id="L421" title="All 2 branches missed.">                    for(String elements : temp){</span>
+<span class="nc" id="L422">                        textArea1.append(&quot;KEY IS: \t&quot; + elements + &quot; DATA IS: \n&quot; + http.exoplanets.getValue(elements).toString() + &quot;\n&quot;);</span>
+<span class="nc" id="L423">                    }</span>
+                }
+            }
+        }
+<span class="nc" id="L427">    }</span>
+
+    /**
+     * Retrieves the comparison score value between 2 Exoplanet objects using Euclidean Distance
+     * @param key1 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @return returns the score value for the 2 objects based on their features
+     */
+    private double ED(String key1, String key2) {   //returns the score value for the 2 objects based on their features
+<span class="nc" id="L436">        return Math.sqrt(Math.pow(http.exoplanets.getValue(key2).getPER()-http.exoplanets.getValue(key1).getPER(), 2) + Math.pow(http.exoplanets.getValue(key2).getTPLANET()-http.exoplanets.getValue(key1).getTPLANET(), 2) + Math.pow(http.exoplanets.getValue(key2).getRSTAR()-http.exoplanets.getValue(key1).getRSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getTSTAR()-http.exoplanets.getValue(key1).getTSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getMSTAR()-http.exoplanets.getValue(key1).getMSTAR(), 2));</span>
+    }
+
+    /**
+     * Retrieves the comparison score value between 2 Exoplanet objects using Pearson Correlation Coefficient
+     * @param key1 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @return returns the score value for the 2 objects based on their features
+     */
+    public double PCC(String key1, String key2) {   //returns the score value for the 2 objects based on their features
+        //The number of features
+<span class="nc" id="L447">        final int FEATURE_AMOUNT = 5;</span>
+
+        //sum the product of the features between the objects
+<span class="nc" id="L450">        double SOP = (http.exoplanets.getValue(key2).getPER() * http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key2).getTPLANET() * http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR() * http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR() * http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR() * http.exoplanets.getValue(key1).getMSTAR());</span>
+        //sum the features of the first object
+<span class="nc" id="L452">        double sum1 = (http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key1).getMSTAR());</span>
+        //sum the features of the second object
+<span class="nc" id="L454">        double sum2 = (http.exoplanets.getValue(key2).getPER())+(http.exoplanets.getValue(key2).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR());</span>
+        //square of the sum the features of the first object
+<span class="nc" id="L456">        double squareSum1 = (Math.pow(http.exoplanets.getValue(key1).getPER(), 2)+Math.pow((http.exoplanets.getValue(key1).getTPLANET()), 2)+Math.pow((http.exoplanets.getValue(key1).getRSTAR()), 2)+Math.pow((http.exoplanets.getValue(key1).getTSTAR()), 2)+Math.pow((http.exoplanets.getValue(key1).getMSTAR()), 2));</span>
+        //square of the sum the features of the second object
+<span class="nc" id="L458">        double squareSum2 = (Math.pow(http.exoplanets.getValue(key2).getPER(), 2)+Math.pow((http.exoplanets.getValue(key2).getTPLANET()), 2)+Math.pow((http.exoplanets.getValue(key2).getRSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getTSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getMSTAR()), 2));</span>
+
+<span class="nc" id="L460">        return ((SOP)-((sum1)*(sum2)/FEATURE_AMOUNT))/(Math.sqrt(((squareSum1)-(Math.pow(sum1, 2)/FEATURE_AMOUNT))*((squareSum2)-(Math.pow(sum2, 2)/FEATURE_AMOUNT))));</span>
+    }
+
+    /**
+     * Retrieves the most similar Exoplanet object to the one selected
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @param testKey is a key to a specified exoplanet
+     * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
+     */
+    private String[] pearsonCorrelationCoefficient(ArrayList&lt;String&gt; keys, String testKey){  //Pearson Correlation Coefficient
+<span class="nc" id="L470">        ArrayList&lt;String[]&gt; largeList = new ArrayList&lt;String[]&gt;();</span>
+<span class="nc" id="L471">        double pastVal = 0;</span>
+        double currentVal;
+<span class="nc" id="L473">        int counter = 0;</span>
+
+<span class="nc bnc" id="L475" title="All 2 branches missed.">        for(int i = 0; i &lt; keys.size(); i++) {</span>
+<span class="nc bnc" id="L476" title="All 4 branches missed.">            if(i == 0 &amp;&amp; keys.get(i) != testKey){</span>
+<span class="nc" id="L477">                pastVal = PCC(testKey, keys.get(i));</span>
+<span class="nc" id="L478">                largeList.add(new String[]{testKey, keys.get(i)});</span>
+<span class="nc" id="L479">                counter++;</span>
+            }
+            else {
+<span class="nc" id="L482">                currentVal = PCC(testKey, keys.get(i));</span>
+
+<span class="nc bnc" id="L484" title="All 4 branches missed.">                if (currentVal &gt; pastVal &amp;&amp; keys.get(i) != testKey) {</span>
+<span class="nc" id="L485">                    largeList.remove((counter-1));</span>
+<span class="nc" id="L486">                    largeList.add(new String[]{testKey, keys.get(i)});</span>
+                }
+<span class="nc" id="L488">                pastVal = currentVal;</span>
+            }
+        }
+
+<span class="nc" id="L492">        return largeList.get(0);</span>
+    }
+
+    /**
+     * Retrieves the 2 most similar Exoplanet objects in the data set specified
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @@return returns a list of the 2 most similar exoplanets in the list
+     */
+    private String[] pearsonCorrelationCoefficient(ArrayList&lt;String&gt; keys){  //Pearson Correlation Coefficient
+<span class="nc" id="L501">        ArrayList&lt;String[]&gt; largeList = new ArrayList&lt;String[]&gt;();</span>
+<span class="nc" id="L502">        double pastVal = 0;</span>
+        double currentVal;
+<span class="nc" id="L504">        int counter = 0;</span>
+
+<span class="nc bnc" id="L506" title="All 2 branches missed.">        for(int i = 0; i &lt; keys.size(); i++) {</span>
+<span class="nc bnc" id="L507" title="All 2 branches missed.">            for (int j = 0; j &lt; keys.size(); j++) {</span>
+<span class="nc bnc" id="L508" title="All 2 branches missed.">                if(j == 0){</span>
+<span class="nc" id="L509">                    pastVal = PCC(keys.get(j), keys.get(i));</span>
+<span class="nc" id="L510">                    largeList.add(new String[]{keys.get(i), keys.get(j)});</span>
+<span class="nc" id="L511">                    counter++;</span>
+                }
+                else {
+<span class="nc" id="L514">                    currentVal = PCC(keys.get(j), keys.get(i));</span>
+
+<span class="nc bnc" id="L516" title="All 2 branches missed.">                    if (currentVal &gt; pastVal) {</span>
+<span class="nc" id="L517">                        largeList.remove((counter-1));</span>
+<span class="nc" id="L518">                        largeList.add(new String[]{keys.get(i), keys.get(j)});</span>
+                    }
+
+<span class="nc" id="L521">                    pastVal = currentVal;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L526">        return largeList.get(0);</span>
+    }
+
+    /**
+     * Retrieves the most similar Exoplanet object to the one selected
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @param testKey is a key to a specified exoplanet
+     * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
+     */
+    private String[] euclideanDistance(ArrayList&lt;String&gt; keys, String testKey){    //EUCLIDEAN DISTANCE
+<span class="nc" id="L536">        ArrayList&lt;String[]&gt; largeList = new ArrayList&lt;String[]&gt;();</span>
+<span class="nc" id="L537">        double pastVal = 0;</span>
+        double currentVal;
+<span class="nc" id="L539">        int counter = 0;</span>
+
+<span class="nc bnc" id="L541" title="All 2 branches missed.">        for(int i = 0; i &lt; keys.size(); i++) {</span>
+<span class="nc bnc" id="L542" title="All 4 branches missed.">            if(i == 0  &amp;&amp; keys.get(i) != testKey){</span>
+<span class="nc" id="L543">                pastVal = ED(testKey, keys.get(i));</span>
+<span class="nc" id="L544">                largeList.add(new String[]{testKey, keys.get(i)});</span>
+<span class="nc" id="L545">                counter++;</span>
+            }
+            else {
+<span class="nc" id="L548">                currentVal = ED(testKey, keys.get(i));</span>
+
+<span class="nc bnc" id="L550" title="All 4 branches missed.">                if (currentVal &gt; pastVal &amp;&amp; keys.get(i) != testKey) {</span>
+<span class="nc" id="L551">                    largeList.remove((counter-1));</span>
+<span class="nc" id="L552">                    largeList.add(new String[]{testKey, keys.get(i)});</span>
+                }
+<span class="nc" id="L554">                pastVal = currentVal;</span>
+            }
+        }
+
+<span class="nc" id="L558">        return largeList.get(0);</span>
+    }
+
+    /**
+     * Retrieves the 2 most similar Exoplanet objects in the data set specified
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @@return returns a list of the 2 most similar exoplanets in the list
+     */
+    private String[] euclideanDistance(ArrayList&lt;String&gt; keys){    //EUCLIDEAN DISTANCE
+<span class="nc" id="L567">        ArrayList&lt;String[]&gt; largeList = new ArrayList&lt;String[]&gt;();</span>
+<span class="nc" id="L568">        double pastVal = 0;</span>
+        double currentVal;
+<span class="nc" id="L570">        int counter = 0;</span>
+
+<span class="nc bnc" id="L572" title="All 2 branches missed.">        for(int i = 0; i &lt; keys.size(); i++) {</span>
+<span class="nc bnc" id="L573" title="All 2 branches missed.">            for (int j = 0; j &lt; keys.size(); j++) {</span>
+<span class="nc bnc" id="L574" title="All 2 branches missed.">                if(j == 0){</span>
+<span class="nc" id="L575">                    pastVal = ED(keys.get(j), keys.get(i));</span>
+<span class="nc" id="L576">                    largeList.add(new String[]{keys.get(i), keys.get(j)});</span>
+<span class="nc" id="L577">                    counter++;</span>
+                }
+                else {
+<span class="nc" id="L580">                    currentVal = ED(keys.get(j), keys.get(i));</span>
+
+<span class="nc bnc" id="L582" title="All 2 branches missed.">                    if (currentVal &gt; pastVal) {</span>
+<span class="nc" id="L583">                        largeList.remove((counter-1));</span>
+<span class="nc" id="L584">                        largeList.add(new String[]{keys.get(i), keys.get(j)});</span>
+                    }
+
+<span class="nc" id="L587">                    pastVal = currentVal;</span>
+                }
+            }
+        }
+
+<span class="nc" id="L592">        return largeList.get(0);</span>
+    }
+
+    /**
+     * This invokes the graphical user interface, which displays it to the screen and listens for the button actions to be pressed
+     */
+    public static void main(String[] args) {
+        //make the gui visible
+        //make the assignments in the list visible
+<span class="nc" id="L601">        EventQueue.invokeLater(() -&gt; {</span>
+<span class="nc" id="L602">            GUI gui = new GUI();</span>
+<span class="nc" id="L603">            gui.setVisible(true);</span>
+<span class="nc" id="L604">        });</span>
+<span class="nc" id="L605">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

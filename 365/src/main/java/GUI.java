@@ -473,7 +473,7 @@ public class GUI extends JFrame {
         int counter = 0;
 
         for(int i = 0; i < keys.size(); i++) {
-            if(i == 0){
+            if(i == 0 && !keys.get(i).equalsIgnoreCase(testKey)){
                 pastVal = PCC(testKey, keys.get(i));
                 largeList.add(new String[]{testKey, keys.get(i)});
                 counter++;
@@ -481,7 +481,7 @@ public class GUI extends JFrame {
             else {
                 currentVal = PCC(testKey, keys.get(i));
 
-                if (currentVal > pastVal) {
+                if (currentVal > pastVal && !keys.get(i).equalsIgnoreCase(testKey)) {
                     largeList.remove((counter-1));
                     largeList.add(new String[]{testKey, keys.get(i)});
                 }
@@ -539,7 +539,7 @@ public class GUI extends JFrame {
         int counter = 0;
 
         for(int i = 0; i < keys.size(); i++) {
-            if(i == 0){
+            if(i == 0  && !keys.get(i).equalsIgnoreCase(testKey)){
                 pastVal = ED(testKey, keys.get(i));
                 largeList.add(new String[]{testKey, keys.get(i)});
                 counter++;
@@ -547,7 +547,7 @@ public class GUI extends JFrame {
             else {
                 currentVal = ED(testKey, keys.get(i));
 
-                if (currentVal > pastVal) {
+                if (currentVal > pastVal && !keys.get(i).equalsIgnoreCase(testKey)) {
                     largeList.remove((counter-1));
                     largeList.add(new String[]{testKey, keys.get(i)});
                 }

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="HashAlgorithmTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2017-02-24T15:54:24" hostname="LAPTOP-G5IUOE1B" time="0.0">
+  <properties/>
+  <testcase name="HT" classname="HashAlgorithmTest" time="0.0"/>
+  <testcase name="put" classname="HashAlgorithmTest" time="0.0"/>
+  <testcase name="size" classname="HashAlgorithmTest" time="0.0"/>
+  <testcase name="containsKey" classname="HashAlgorithmTest" time="0.0"/>
+  <testcase name="putMultiple" classname="HashAlgorithmTest" time="0.0"/>
+  <testcase name="getValue" classname="HashAlgorithmTest" time="0.0"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

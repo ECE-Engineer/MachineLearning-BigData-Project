@@ -1,0 +1,228 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>JSONParser.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">01</a> &gt; <a href="index.source.html" class="el_package">default</a> &gt; <span class="el_source">JSONParser.java</span></div><h1>JSONParser.java</h1><pre class="source lang-java linenums">/**
+ * @author Kyle Zeller
+ * This class provides a way to retrieve and parse the JSON formatted information coming from the database.
+ * It after it parses the data, it will create Exoplanet objects, and store them in the hash table.
+ */
+
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+
+import com.google.gson.*;
+
+<span class="nc" id="L14">public class JSONParser {</span>
+<span class="nc" id="L15">    public HashAlgorithm&lt;Exoplanets&gt; exoplanets = new HashAlgorithm&lt;&gt;();</span>
+<span class="nc" id="L16">    private final String USER_AGENT = &quot;Mozilla/5.0&quot;;</span>
+
+    /**
+     * Pulls in the Kepler Object data, creates Exoplanet objects, and stores them in the hash table
+     * @param u is the url with what and how much information to retrieve from the database
+     * @throws Exception
+     */
+    // HTTP GET request
+    public void sendGet(String u) throws Exception {
+<span class="nc" id="L25">        URL obj = new URL(u);</span>
+<span class="nc" id="L26">        HttpURLConnection con = (HttpURLConnection) obj.openConnection();</span>
+
+        // optional default is GET
+<span class="nc" id="L29">        con.setRequestMethod(&quot;GET&quot;);</span>
+
+        //add request header
+<span class="nc" id="L32">        con.setRequestProperty(&quot;User-Agent&quot;, USER_AGENT);</span>
+
+        try {
+            //take in the data
+<span class="nc" id="L36">            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));</span>
+            String inputLine;
+
+<span class="nc" id="L39">            StringBuffer response = new StringBuffer();</span>
+
+            //check for the data and store it here
+<span class="nc bnc" id="L42" title="All 2 branches missed.">            while ((inputLine = in.readLine()) != null) {</span>
+<span class="nc" id="L43">                response.append(inputLine);</span>
+            }
+<span class="nc" id="L45">            in.close();</span>
+
+            //parse the data out of the JSON object
+<span class="nc" id="L48">            JsonParser parser = new JsonParser();</span>
+<span class="nc" id="L49">            JsonObject obj1 = parser.parse(&quot;{         \&quot;dataArray\&quot;: &quot; + response.toString() + &quot;         }&quot;).getAsJsonObject();</span>
+<span class="nc" id="L50">            JsonArray array = obj1.getAsJsonArray(&quot;dataArray&quot;);</span>
+
+<span class="nc bnc" id="L52" title="All 2 branches missed.">            if (array.size() != 0){</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">                for (int i = 0; i &lt; array.size(); i++) {</span>
+<span class="nc" id="L54">                    JsonElement temp = array.get(i);</span>
+<span class="nc" id="L55">                    JsonObject obj2 = temp.getAsJsonObject();</span>
+
+<span class="nc" id="L57">                    String KOI = obj2.get(&quot;KOI&quot;).toString(); //Object of Interest number</span>
+                    double A;
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                    if(!obj2.get(&quot;A&quot;).isJsonNull())</span>
+<span class="nc" id="L60">                        A = Double.parseDouble(obj2.get(&quot;A&quot;).toString());   //Semi-major axis (AU)</span>
+                    else
+<span class="nc" id="L62">                        A = 0;</span>
+
+                    double DEC;
+<span class="nc bnc" id="L65" title="All 2 branches missed.">                    if(!obj2.get(&quot;DEC&quot;).isJsonNull())</span>
+<span class="nc" id="L66">                        DEC = Double.parseDouble(obj2.get(&quot;DEC&quot;).toString());   //Planetary radius (Earth radii)</span>
+                    else
+<span class="nc" id="L68">                        DEC = 0;</span>
+
+                    double RSTAR;
+<span class="nc bnc" id="L71" title="All 2 branches missed.">                    if(!obj2.get(&quot;RSTAR&quot;).isJsonNull())</span>
+<span class="nc" id="L72">                        RSTAR = Double.parseDouble(obj2.get(&quot;RSTAR&quot;).toString());   //Stellar radius (Sol radii)</span>
+                    else
+<span class="nc" id="L74">                        RSTAR = 0;</span>
+
+                    int TSTAR;
+<span class="nc bnc" id="L77" title="All 2 branches missed.">                    if(!obj2.get(&quot;TSTAR&quot;).isJsonNull())</span>
+<span class="nc" id="L78">                        TSTAR = Integer.parseInt(obj2.get(&quot;TSTAR&quot;).toString());   ///Effective temperature of host star as reported in KIC (k)</span>
+                    else
+<span class="nc" id="L80">                        TSTAR = 0;</span>
+
+                    double KMAG;
+<span class="nc bnc" id="L83" title="All 2 branches missed.">                    if(!obj2.get(&quot;KMAG&quot;).isJsonNull())</span>
+<span class="nc" id="L84">                        KMAG = Double.parseDouble(obj2.get(&quot;KMAG&quot;).toString());   //	Kepler magnitude (kmag)</span>
+                    else
+<span class="nc" id="L86">                        KMAG = 0;</span>
+
+                    int TPLANET;
+<span class="nc bnc" id="L89" title="All 2 branches missed.">                    if(!obj2.get(&quot;TPLANET&quot;).isJsonNull())</span>
+<span class="nc" id="L90">                        TPLANET = Integer.parseInt(obj2.get(&quot;TPLANET&quot;).toString());   //	Equilibrium temperature of planet, per Borucki et al. (k)</span>
+                    else
+<span class="nc" id="L92">                        TPLANET = 0;</span>
+
+                    double T0;
+<span class="nc bnc" id="L95" title="All 2 branches missed.">                    if(!obj2.get(&quot;T0&quot;).isJsonNull())</span>
+<span class="nc" id="L96">                        T0 = Double.parseDouble(obj2.get(&quot;T0&quot;).toString());   //Time of transit center (BJD-2454900)</span>
+                    else
+<span class="nc" id="L98">                        T0 = 0;</span>
+
+                    double UT0;
+<span class="nc bnc" id="L101" title="All 2 branches missed.">                    if(!obj2.get(&quot;UT0&quot;).isJsonNull())</span>
+<span class="nc" id="L102">                        UT0 = Double.parseDouble(obj2.get(&quot;UT0&quot;).toString());   //Uncertainty in time of transit center (+-jd)</span>
+                    else
+<span class="nc" id="L104">                        UT0 = 0;</span>
+
+                    double PER;
+<span class="nc bnc" id="L107" title="All 2 branches missed.">                    if(!obj2.get(&quot;PER&quot;).isJsonNull())</span>
+<span class="nc" id="L108">                        PER = Double.parseDouble(obj2.get(&quot;PER&quot;).toString());   //Uncertainty in time of transit center (+-jd)</span>
+                    else
+<span class="nc" id="L110">                        PER = 0;</span>
+
+                    double RA;
+<span class="nc bnc" id="L113" title="All 2 branches missed.">                    if(!obj2.get(&quot;RA&quot;).isJsonNull())</span>
+<span class="nc" id="L114">                        RA = Double.parseDouble(obj2.get(&quot;RA&quot;).toString());   //Period (days)</span>
+                    else
+<span class="nc" id="L116">                        RA = 0;</span>
+
+                    double RPLANET;
+<span class="nc bnc" id="L119" title="All 2 branches missed.">                    if(!obj2.get(&quot;RPLANET&quot;).isJsonNull())</span>
+<span class="nc" id="L120">                        RPLANET = Double.parseDouble(obj2.get(&quot;RPLANET&quot;).toString());   //Declination (@J200)</span>
+                    else
+<span class="nc" id="L122">                        RPLANET = 0;</span>
+
+                    double MSTAR;
+<span class="nc bnc" id="L125" title="All 2 branches missed.">                    if(!obj2.get(&quot;MSTAR&quot;).isJsonNull())</span>
+<span class="nc" id="L126">                        MSTAR = Double.parseDouble(obj2.get(&quot;MSTAR&quot;).toString());   //Right ascension (@J200)</span>
+                    else
+<span class="nc" id="L128">                        MSTAR = 0;</span>
+
+                    //create an exoplanet and add it to the hashtable
+<span class="nc" id="L131">                    Exoplanets exoplanet = new Exoplanets(A, DEC, RSTAR, TSTAR, KMAG, TPLANET, T0, UT0, PER, RA, RPLANET, MSTAR);</span>
+<span class="nc" id="L132">                    exoplanets.put(KOI, exoplanet);</span>
+                }
+            }
+<span class="nc" id="L135">        }catch (java.io.IOException e) {</span>
+<span class="nc" id="L136">            System.out.println(e.getMessage());</span>
+
+<span class="nc" id="L138">            JsonParser parser = new JsonParser();</span>
+<span class="nc" id="L139">            JsonObject obj1 = parser.parse(&quot;{         \&quot;dataArray\&quot;: &quot; + &quot;[]&quot; + &quot;         }&quot;).getAsJsonObject();</span>
+<span class="nc" id="L140">            JsonArray array = obj1.getAsJsonArray(&quot;dataArray&quot;);</span>
+
+<span class="nc bnc" id="L142" title="All 2 branches missed.">            if (array.size() != 0){</span>
+<span class="nc bnc" id="L143" title="All 2 branches missed.">                for (int i = 0; i &lt; array.size(); i++) {</span>
+<span class="nc" id="L144">                    JsonElement temp = array.get(i);</span>
+<span class="nc" id="L145">                    JsonObject obj2 = temp.getAsJsonObject();</span>
+
+<span class="nc" id="L147">                    String KOI = obj2.get(&quot;KOI&quot;).toString(); //Object of Interest number</span>
+                    double A;
+<span class="nc bnc" id="L149" title="All 2 branches missed.">                    if(!obj2.get(&quot;A&quot;).isJsonNull())</span>
+<span class="nc" id="L150">                        A = Double.parseDouble(obj2.get(&quot;A&quot;).toString());   //Semi-major axis (AU)</span>
+                    else
+<span class="nc" id="L152">                        A = 0;</span>
+
+                    double DEC;
+<span class="nc bnc" id="L155" title="All 2 branches missed.">                    if(!obj2.get(&quot;DEC&quot;).isJsonNull())</span>
+<span class="nc" id="L156">                        DEC = Double.parseDouble(obj2.get(&quot;DEC&quot;).toString());   //Planetary radius (Earth radii)</span>
+                    else
+<span class="nc" id="L158">                        DEC = 0;</span>
+
+                    double RSTAR;
+<span class="nc bnc" id="L161" title="All 2 branches missed.">                    if(!obj2.get(&quot;RSTAR&quot;).isJsonNull())</span>
+<span class="nc" id="L162">                        RSTAR = Double.parseDouble(obj2.get(&quot;RSTAR&quot;).toString());   //Stellar radius (Sol radii)</span>
+                    else
+<span class="nc" id="L164">                        RSTAR = 0;</span>
+
+                    int TSTAR;
+<span class="nc bnc" id="L167" title="All 2 branches missed.">                    if(!obj2.get(&quot;TSTAR&quot;).isJsonNull())</span>
+<span class="nc" id="L168">                        TSTAR = Integer.parseInt(obj2.get(&quot;TSTAR&quot;).toString());   ///Effective temperature of host star as reported in KIC (k)</span>
+                    else
+<span class="nc" id="L170">                        TSTAR = 0;</span>
+
+                    double KMAG;
+<span class="nc bnc" id="L173" title="All 2 branches missed.">                    if(!obj2.get(&quot;KMAG&quot;).isJsonNull())</span>
+<span class="nc" id="L174">                        KMAG = Double.parseDouble(obj2.get(&quot;KMAG&quot;).toString());   //	Kepler magnitude (kmag)</span>
+                    else
+<span class="nc" id="L176">                        KMAG = 0;</span>
+
+                    int TPLANET;
+<span class="nc bnc" id="L179" title="All 2 branches missed.">                    if(!obj2.get(&quot;TPLANET&quot;).isJsonNull())</span>
+<span class="nc" id="L180">                        TPLANET = Integer.parseInt(obj2.get(&quot;TPLANET&quot;).toString());   //	Equilibrium temperature of planet, per Borucki et al. (k)</span>
+                    else
+<span class="nc" id="L182">                        TPLANET = 0;</span>
+
+                    double T0;
+<span class="nc bnc" id="L185" title="All 2 branches missed.">                    if(!obj2.get(&quot;T0&quot;).isJsonNull())</span>
+<span class="nc" id="L186">                        T0 = Double.parseDouble(obj2.get(&quot;T0&quot;).toString());   //Time of transit center (BJD-2454900)</span>
+                    else
+<span class="nc" id="L188">                        T0 = 0;</span>
+
+                    double UT0;
+<span class="nc bnc" id="L191" title="All 2 branches missed.">                    if(!obj2.get(&quot;UT0&quot;).isJsonNull())</span>
+<span class="nc" id="L192">                        UT0 = Double.parseDouble(obj2.get(&quot;UT0&quot;).toString());   //Uncertainty in time of transit center (+-jd)</span>
+                    else
+<span class="nc" id="L194">                        UT0 = 0;</span>
+
+                    double PER;
+<span class="nc bnc" id="L197" title="All 2 branches missed.">                    if(!obj2.get(&quot;PER&quot;).isJsonNull())</span>
+<span class="nc" id="L198">                        PER = Double.parseDouble(obj2.get(&quot;PER&quot;).toString());   //Uncertainty in time of transit center (+-jd)</span>
+                    else
+<span class="nc" id="L200">                        PER = 0;</span>
+
+                    double RA;
+<span class="nc bnc" id="L203" title="All 2 branches missed.">                    if(!obj2.get(&quot;RA&quot;).isJsonNull())</span>
+<span class="nc" id="L204">                        RA = Double.parseDouble(obj2.get(&quot;RA&quot;).toString());   //Period (days)</span>
+                    else
+<span class="nc" id="L206">                        RA = 0;</span>
+
+                    double RPLANET;
+<span class="nc bnc" id="L209" title="All 2 branches missed.">                    if(!obj2.get(&quot;RPLANET&quot;).isJsonNull())</span>
+<span class="nc" id="L210">                        RPLANET = Double.parseDouble(obj2.get(&quot;RPLANET&quot;).toString());   //Declination (@J200)</span>
+                    else
+<span class="nc" id="L212">                        RPLANET = 0;</span>
+
+                    double MSTAR;
+<span class="nc bnc" id="L215" title="All 2 branches missed.">                    if(!obj2.get(&quot;MSTAR&quot;).isJsonNull())</span>
+<span class="nc" id="L216">                        MSTAR = Double.parseDouble(obj2.get(&quot;MSTAR&quot;).toString());   //Right ascension (@J200)</span>
+                    else
+<span class="nc" id="L218">                        MSTAR = 0;</span>
+
+                    //create an exoplanet and add it to the hashtable
+<span class="nc" id="L221">                    Exoplanets exoplanet = new Exoplanets(A, DEC, RSTAR, TSTAR, KMAG, TPLANET, T0, UT0, PER, RA, RPLANET, MSTAR);</span>
+<span class="nc" id="L222">                    exoplanets.put(KOI, exoplanet);</span>
+                }
+            }
+<span class="nc" id="L225">        }</span>
+<span class="nc" id="L226">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
