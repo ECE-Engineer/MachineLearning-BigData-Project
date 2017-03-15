@@ -495,7 +495,7 @@ public class GUI extends JFrame {
     /**
      * Retrieves the 2 most similar Exoplanet objects in the data set specified
      * @param keys is the list of all the keys to all of their respective exoplanet objects
-     * @@return returns a list of the 2 most similar exoplanets in the list
+     * @return returns a list of the 2 most similar exoplanets in the list
      */
     private String[] pearsonCorrelationCoefficient(ArrayList<String> keys){  //Pearson Correlation Coefficient
         ArrayList<String[]> largeList = new ArrayList<String[]>();
@@ -560,7 +560,7 @@ public class GUI extends JFrame {
     /**
      * Retrieves the 2 most similar Exoplanet objects in the data set specified
      * @param keys is the list of all the keys to all of their respective exoplanet objects
-     * @@return returns a list of the 2 most similar exoplanets in the list
+     * @return returns a list of the 2 most similar exoplanets in the list
      */
     private String[] euclideanDistance(ArrayList<String> keys){    //EUCLIDEAN DISTANCE
         ArrayList<String[]> largeList = new ArrayList<String[]>();

@@ -282,53 +282,106 @@ public class GUI extends JFrame {
     private void okButton(java.awt.event.ActionEvent evt) throws Exception {
         http.exoplanets.clear();
         textArea1.setText("");
-        String text = textField1.getText();
+        String text_amount = textField1.getText();
         String keplerObject = typeSelect.getSelectedItem().toString();
-        String text2 = textField2.getText();
+        String text_key = textField2.getText();
 
-        if (!text.equalsIgnoreCase("")) {
-            int amount = Integer.parseInt(text);    //it will look at this many interstellar objects
+
+        //load in all kepler objects from the API
+        final int MAX_AMOUNT = 2500;
+
+        //set a limit for the user to give as an amount
+        final int USER_MAX_AMOUNT = 2000;
+
+        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url);
+        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url);
+        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url);
+
+        //get all the keys of the kepler objects
+        ArrayList<String> temp = http.exoplanets.keySet();
+
+
+
+
+
+        /**
+         * use this part only when your going to display the information
+         *
+        if (temp.size() != 0){
+            for(String elements : temp){
+                textArea1.append("KEY IS: \t" + elements + " DATA IS: \n" + http.exoplanets.getValue(elements).toString() + "\n");
+            }
+        }
+        */
+
+
+
+
+
+
+
+
+
+        if (!text_amount.equalsIgnoreCase("")) {
+            int amount = Integer.parseInt(text_amount);    //it will look at this many interstellar objects
+
+
+
+
+
+
 
             if (keplerObject.equals("None")) {
                 if (checkBox1.isSelected()) {
-                    if (!text2.equalsIgnoreCase("")) {
-                        String obj1 = "PER";
-                        String obj2 = "TPLANET";
-                        String obj3 = "RSTAR";
-                        String obj4 = "TSTAR";
-                        String obj5 = "MSTAR";
-
-                        if (amount > 2000) {//This will compare period, planet temperature, stellar mass, star temperature, & star size
-                            //give them 3 parts of 1000 each
-                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                        } else if (amount > 1000) {
-                            //give then 2 parts of 1000 each
-                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                        } else {
-                            //give the user 1 parts of 1000 each
-                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\""+ obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                        }
-                        //RETURN THE 2 COMMONMOST OBJECTS by the period
-                        ArrayList<String> temp = http.exoplanets.keySet();
-
-                        if (temp.size() != 0){
-                            String[] sim = pearsonCorrelationCoefficient(temp, text2);
-
-                            for(int i = 0; i < sim.length; i++){
-                                textArea1.append("KEY IS: \t" + sim[i] + " DATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
-                            }
-                        }
+                    /** comparator ON >>>>>>> DISPLAY ALL THE OBJECTS ------- but only the ones they want to see  --------- but only the amount they want to see*/
+                    if (!text_key.equalsIgnoreCase("")) {
+                        /** comparator ON >>>>>>> DISPLAY ALL THE OBJECTS ------- but only the ones they want to see  --------- but only the amount they want to see -------- use the key that was given to find a similar object to it*/
+//                        String obj1 = "PER";
+//                        String obj2 = "TPLANET";
+//                        String obj3 = "RSTAR";
+//                        String obj4 = "TSTAR";
+//                        String obj5 = "MSTAR";
+//
+//                        if (amount > 2000) {//This will compare period, planet temperature, stellar mass, star temperature, & star size
+//                            //give them 3 parts of 1000 each
+//                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+//                            http.sendGet(url);
+//                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+//                            http.sendGet(url);
+//                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+//                            http.sendGet(url);
+//                        } else if (amount > 1000) {
+//                            //give then 2 parts of 1000 each
+//                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+//                            http.sendGet(url);
+//                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+//                            http.sendGet(url);
+//                        } else {
+//                            //give the user 1 parts of 1000 each
+//                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\""+ obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
+//                            http.sendGet(url);
+//                        }
+//                        //RETURN THE 2 COMMONMOST OBJECTS by the period
+//                        ArrayList<String> temp = http.exoplanets.keySet();
+//
+//                        if (temp.size() != 0){
+//                            String[] sim = pearsonCorrelationCoefficient(temp, text2);
+//
+//                            for(int i = 0; i < sim.length; i++){
+//                                textArea1.append("KEY IS: \t" + sim[i] + " DATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
+//                            }
+//                        }
                     }
                     else {
+
+                        //STEP 1 : search for all the 
+
+
+
+                        /** comparator ON >>>>>>> DISPLAY ALL THE OBJECTS ------- but only the ones they want to see  --------- but only the amount they want to see -------- find the two most similar objects*/
                         String obj1 = "PER";
                         String obj2 = "TPLANET";
                         String obj3 = "RSTAR";
@@ -366,60 +419,32 @@ public class GUI extends JFrame {
                         }
                     }
                 }
+                /** comparator OFF >>>>>> DISPLAY ALL THE OBJECTS ------- but only the amount they want to see*/
                 else {
-                    if (amount > 2000) {
-                        //give them 3 parts of 1000 each
-                        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000}}&limit=" + amount;
-                        http.sendGet(url);
-                        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000}}&limit=" + amount;
-                        http.sendGet(url);
-                        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + amount;
-                        http.sendGet(url);
-                    } else if (amount > 1000) {
-                        //give then 2 parts of 1000 each
-                        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000}}&limit=" + amount;
-                        http.sendGet(url);
-                        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + amount;
-                        http.sendGet(url);
-                    } else {
-                        //give the user 1 parts of 1000 each
-                        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + amount;
-                        http.sendGet(url);
-                    }
-                    ArrayList<String> temp = http.exoplanets.keySet();
-
                     if (temp.size() != 0){
-                        for(String elements : temp){
-                            textArea1.append("KEY IS: \t" + elements + " DATA IS: \n" + http.exoplanets.getValue(elements).toString() + "\n");
+                        if (amount > USER_MAX_AMOUNT) {
+                            for(int i = 0; i < temp.size(); i++){
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            }
+                        } else {
+                            for(int i = 0; i < amount; i++){
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            }
                         }
                     }
                 }
             }
             else {
-                if (amount > 2000) {
-                    //give them 3 parts of 1000 each
-                    String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
-                    http.sendGet(url);
-                    url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
-                    http.sendGet(url);
-                    url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
-                    http.sendGet(url);
-                } else if (amount > 1000) {
-                    //give then 2 parts of 1000 each
-                    String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
-                    http.sendGet(url);
-                    url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
-                    http.sendGet(url);
-                } else {
-                    //give the user 1 parts of 1000 each
-                    String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + amount;
-                    http.sendGet(url);
-                }
-                ArrayList<String> temp = http.exoplanets.keySet();
-
+                /** none >>>>>> DISPLAY ALL THE OBJECTS ------- but only the amount they want to see*/
                 if (temp.size() != 0){
-                    for(String elements : temp){
-                        textArea1.append("KEY IS: \t" + elements + " DATA IS: \n" + http.exoplanets.getValue(elements).toString() + "\n");
+                    if (amount > USER_MAX_AMOUNT) {
+                        for(int i = 0; i < temp.size(); i++){
+                            textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else {
+                        for(int i = 0; i < amount; i++){
+                            textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
                     }
                 }
             }
@@ -495,7 +520,7 @@ public class GUI extends JFrame {
     /**
      * Retrieves the 2 most similar Exoplanet objects in the data set specified
      * @param keys is the list of all the keys to all of their respective exoplanet objects
-     * @@return returns a list of the 2 most similar exoplanets in the list
+     * @return returns a list of the 2 most similar exoplanets in the list
      */
     private String[] pearsonCorrelationCoefficient(ArrayList<String> keys){  //Pearson Correlation Coefficient
         ArrayList<String[]> largeList = new ArrayList<String[]>();
@@ -560,7 +585,7 @@ public class GUI extends JFrame {
     /**
      * Retrieves the 2 most similar Exoplanet objects in the data set specified
      * @param keys is the list of all the keys to all of their respective exoplanet objects
-     * @@return returns a list of the 2 most similar exoplanets in the list
+     * @return returns a list of the 2 most similar exoplanets in the list
      */
     private String[] euclideanDistance(ArrayList<String> keys){    //EUCLIDEAN DISTANCE
         ArrayList<String[]> largeList = new ArrayList<String[]>();
