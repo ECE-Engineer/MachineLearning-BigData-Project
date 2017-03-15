@@ -5,3 +5,27 @@ This project is about providing a GUI that interfaces with a custom implementati
 ---> cd 365
 ---> gradlew run
 ```
+
+## Project Decomposition
+### Assignment One
+Task Number | Task Title | COMPLETED
+----------- | ---------- | ---------
+1 | Find An Online API For Keyed Data | X
+2 | Implement A Custom HashTable Class | X
+3 | Create Classes For The Data Being Modeled | X
+4 | Parse The Online Data Through The API | X
+5 | Create A GUI To Display The Data | X
+6 | Implement Similarity Metrics For The Data | X
+7 | Edit The GUI To Take A Key And Display The Most Similar Piece Of Data | X
+
+### Assignment Two
+Task Number | Task Title | COMPLETED
+----------- | ---------- | ---------
+1 | Create A Hash-Based Cache For The Data | 
+2 | Create A Persistent BTree Class Of Keys, With Values In A Separate Persistent Structure Or Files | 
+3 | Preload At Least 1000 Key-Value Pairs | 
+4 | Pre-Categorize Keys Into Clusters Using K-Means Clustering Or A Similar Metric | 
+5 | Edit The GUI To Display The Clustering Of The Objects In The Data | 
+
+## Latest Zip File
+[Class Project Zip](http://cs.oswego.edu/~kzeller/Portfolio/coursework/csc365/MachineLearning-BigData-Project.zip)
