@@ -484,8 +484,8 @@ public class GUI extends JFrame {
                 if (currentVal > pastVal && !keys.get(i).equalsIgnoreCase(testKey)) {
                     largeList.remove((counter-1));
                     largeList.add(new String[]{testKey, keys.get(i)});
+                    pastVal = currentVal;
                 }
-                pastVal = currentVal;
             }
         }
 
@@ -506,7 +506,7 @@ public class GUI extends JFrame {
         for(int i = 0; i < keys.size(); i++) {
             for (int j = 0; j < keys.size(); j++) {
                 if(j == 0){
-                    pastVal = PCC(keys.get(j), keys.get(i));
+                    pastVal = PCC(keys.get(j+1), keys.get(i));
                     largeList.add(new String[]{keys.get(i), keys.get(j)});
                     counter++;
                 }
@@ -516,9 +516,8 @@ public class GUI extends JFrame {
                     if (currentVal > pastVal) {
                         largeList.remove((counter-1));
                         largeList.add(new String[]{keys.get(i), keys.get(j)});
+                        pastVal = currentVal;
                     }
-
-                    pastVal = currentVal;
                 }
             }
         }
@@ -547,11 +546,11 @@ public class GUI extends JFrame {
             else {
                 currentVal = ED(testKey, keys.get(i));
 
-                if (currentVal > pastVal && !keys.get(i).equalsIgnoreCase(testKey)) {
+                if (currentVal < pastVal && !keys.get(i).equalsIgnoreCase(testKey)) {
                     largeList.remove((counter-1));
                     largeList.add(new String[]{testKey, keys.get(i)});
+                    pastVal = currentVal;
                 }
-                pastVal = currentVal;
             }
         }
 
@@ -572,19 +571,18 @@ public class GUI extends JFrame {
         for(int i = 0; i < keys.size(); i++) {
             for (int j = 0; j < keys.size(); j++) {
                 if(j == 0){
-                    pastVal = ED(keys.get(j), keys.get(i));
+                    pastVal = ED(keys.get(j+1), keys.get(i));
                     largeList.add(new String[]{keys.get(i), keys.get(j)});
                     counter++;
                 }
                 else {
                     currentVal = ED(keys.get(j), keys.get(i));
 
-                    if (currentVal > pastVal) {
+                    if (currentVal < pastVal) {
                         largeList.remove((counter-1));
                         largeList.add(new String[]{keys.get(i), keys.get(j)});
+                        pastVal = currentVal;
                     }
-
-                    pastVal = currentVal;
                 }
             }
         }
