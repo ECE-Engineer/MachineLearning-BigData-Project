@@ -4,6 +4,7 @@ import javax.swing.GroupLayout;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -272,144 +273,95 @@ public class GUI extends JFrame {
     private JTextArea textArea1;
     // JFormDesigner - End of variables declaration  //GEN-END:variables
 
+    //load in all kepler objects from the API
+    private final int MAX_AMOUNT = 2500;
 
+    //create a json parser object to collect the data from the API
+    private JSONParser http = new JSONParser();
 
-    JSONParser http = new JSONParser();
+    /**
+     * Handles the loading of the data from the API
+     */
+    private void loadData() throws Exception {
+        //clear everything out of the hashtable
+        http.exoplanets.clear();
+
+        //load all the API data
+        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url);
+        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url);
+        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url);
+    }
 
     /**
      * Handles the requests of the user: including the type & amount of data to retrieve and toggling the similarity metric
      */
     private void okButton(java.awt.event.ActionEvent evt) throws Exception {
-        http.exoplanets.clear();
+        Random rand = new Random();
+
+        //set all the fields
         textArea1.setText("");
         String text_amount = textField1.getText();
         String keplerObject = typeSelect.getSelectedItem().toString();
         String text_key = textField2.getText();
 
-
-        //load in all kepler objects from the API
-        final int MAX_AMOUNT = 2500;
-
-        //set a limit for the user to give as an amount
-        final int USER_MAX_AMOUNT = 2000;
-
-        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
-        http.sendGet(url);
-        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
-        http.sendGet(url);
-        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + keplerObject + "\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
-        http.sendGet(url);
-
         //get all the keys of the kepler objects
         ArrayList<String> temp = http.exoplanets.keySet();
 
+        //set a limit for the user to give as an amount
+        int USER_MAX_AMOUNT = temp.size();
 
+        if (!text_amount.equalsIgnoreCase("") && Integer.parseInt(text_amount) < USER_MAX_AMOUNT) {
 
-
-
-        /**
-         * use this part only when your going to display the information
-         *
-        if (temp.size() != 0){
-            for(String elements : temp){
-                textArea1.append("KEY IS: \t" + elements + " DATA IS: \n" + http.exoplanets.getValue(elements).toString() + "\n");
-            }
-        }
-        */
-
-
-
-
-
-
-
-
-
-        if (!text_amount.equalsIgnoreCase("")) {
-            int amount = Integer.parseInt(text_amount);    //it will look at this many interstellar objects
-
-
-
-
-
-
+            //set all the fields
+            int amount = Integer.parseInt(text_amount);
 
             if (keplerObject.equals("None")) {
                 if (checkBox1.isSelected()) {
-                    /** comparator ON >>>>>>> DISPLAY ALL THE OBJECTS ------- but only the ones they want to see  --------- but only the amount they want to see*/
+
+                    //set all the fields
+                    String obj1 = "PER";
+                    String obj2 = "TPLANET";
+                    String obj3 = "RSTAR";
+                    String obj4 = "TSTAR";
+                    String obj5 = "MSTAR";
+
+                    //remove all the data without information on the period, planet temperature, star temperature, stellar radius, or stellar mass
+                    if (temp.size() != 0) {
+                        for (int i = 0; i < temp.size(); i++) {
+                            if (http.exoplanets.getValue(temp.get(i)).getPER() == 0 || http.exoplanets.getValue(temp.get(i)).getTPLANET() == 0 || http.exoplanets.getValue(temp.get(i)).getRSTAR() == 0 || http.exoplanets.getValue(temp.get(i)).getTSTAR() == 0 || http.exoplanets.getValue(temp.get(i)).getMSTAR() == 0)
+                                temp.remove(i);
+                        }
+
+                        //update the new limit size
+                        USER_MAX_AMOUNT = temp.size();
+
+                        //remove extra objects if the total size of the list still exceeds the number of requested items to compare
+                        while (USER_MAX_AMOUNT > amount) {
+                            //remove an item randomly
+                            temp.remove(rand.nextInt(USER_MAX_AMOUNT));
+
+                            //update the new limit size
+                            USER_MAX_AMOUNT = temp.size();
+                        }
+                    }
+
                     if (!text_key.equalsIgnoreCase("")) {
-                        /** comparator ON >>>>>>> DISPLAY ALL THE OBJECTS ------- but only the ones they want to see  --------- but only the amount they want to see -------- use the key that was given to find a similar object to it*/
-//                        String obj1 = "PER";
-//                        String obj2 = "TPLANET";
-//                        String obj3 = "RSTAR";
-//                        String obj4 = "TSTAR";
-//                        String obj5 = "MSTAR";
-//
-//                        if (amount > 2000) {//This will compare period, planet temperature, stellar mass, star temperature, & star size
-//                            //give them 3 parts of 1000 each
-//                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-//                            http.sendGet(url);
-//                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-//                            http.sendGet(url);
-//                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-//                            http.sendGet(url);
-//                        } else if (amount > 1000) {
-//                            //give then 2 parts of 1000 each
-//                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-//                            http.sendGet(url);
-//                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-//                            http.sendGet(url);
-//                        } else {
-//                            //give the user 1 parts of 1000 each
-//                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\""+ obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-//                            http.sendGet(url);
-//                        }
-//                        //RETURN THE 2 COMMONMOST OBJECTS by the period
-//                        ArrayList<String> temp = http.exoplanets.keySet();
-//
-//                        if (temp.size() != 0){
-//                            String[] sim = pearsonCorrelationCoefficient(temp, text2);
-//
-//                            for(int i = 0; i < sim.length; i++){
-//                                textArea1.append("KEY IS: \t" + sim[i] + " DATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
-//                            }
-//                        }
+                        //display the two most common kepler objects using a specified number of kepler objects and a specified kepler object key
+                        //return the most common kepler object to the specified kepler object
+                        if (temp.size() != 0){
+                            String[] sim = pearsonCorrelationCoefficient(temp, text_key);
+
+                            for(int i = 0; i < sim.length; i++){
+                                textArea1.append("KEY IS: \t" + sim[i] + " DATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
+                            }
+                        }
                     }
                     else {
-
-                        //STEP 1 : search for all the 
-
-
-
-                        /** comparator ON >>>>>>> DISPLAY ALL THE OBJECTS ------- but only the ones they want to see  --------- but only the amount they want to see -------- find the two most similar objects*/
-                        String obj1 = "PER";
-                        String obj2 = "TPLANET";
-                        String obj3 = "RSTAR";
-                        String obj4 = "TSTAR";
-                        String obj5 = "MSTAR";
-
-                        if (amount > 2000) {//This will compare period, planet temperature, stellar mass, star temperature, & star size
-                            //give them 3 parts of 1000 each
-                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                        } else if (amount > 1000) {
-                            //give then 2 parts of 1000 each
-                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                            url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\"" + obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                        } else {
-                            //give the user 1 parts of 1000 each
-                            String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true},\"" + obj1 + "\":{\"$exists\":true},\""+ obj2 + "\":{\"$exists\":true},\"" + obj3 + "\":{\"$exists\":true},\"" + obj4 + "\":{\"$exists\":true},\"" + obj5 + "\":{\"$exists\":true}}&limit=" + amount;
-                            http.sendGet(url);
-                        }
-                        //RETURN THE 2 COMMONMOST OBJECTS by the period
-                        ArrayList<String> temp = http.exoplanets.keySet();
-
+                        //display the two most common kepler objects using a specified number of kepler objects
+                        //return the two most common kepler objects
                         if (temp.size() != 0){
                             String[] sim = pearsonCorrelationCoefficient(temp);
 
@@ -419,31 +371,77 @@ public class GUI extends JFrame {
                         }
                     }
                 }
-                /** comparator OFF >>>>>> DISPLAY ALL THE OBJECTS ------- but only the amount they want to see*/
                 else {
+                    //display the specific amount of kepler objects
                     if (temp.size() != 0){
-                        if (amount > USER_MAX_AMOUNT) {
-                            for(int i = 0; i < temp.size(); i++){
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-                            }
-                        } else {
-                            for(int i = 0; i < amount; i++){
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-                            }
+                        for(int i = 0; i < amount; i++){
+                            textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     }
                 }
             }
             else {
-                /** none >>>>>> DISPLAY ALL THE OBJECTS ------- but only the amount they want to see*/
+                //display the specific amount and only the matching type of kepler objects
                 if (temp.size() != 0){
-                    if (amount > USER_MAX_AMOUNT) {
-                        for(int i = 0; i < temp.size(); i++){
-                            textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-                        }
-                    } else {
+                    if (keplerObject.equalsIgnoreCase("A")) {
                         for(int i = 0; i < amount; i++){
-                            textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (http.exoplanets.getValue(temp.get(i)).getA() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("DEC")) {
+                        for(int i = 0; i < amount; i++){
+                            if (http.exoplanets.getValue(temp.get(i)).getDEC() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("RSTAR")) {
+                        for(int i = 0; i < amount; i++){
+                            if (http.exoplanets.getValue(temp.get(i)).getRSTAR() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("TSTAR")) {
+                        for(int i = 0; i < amount; i++){
+                            if (http.exoplanets.getValue(temp.get(i)).getTSTAR() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("KMAG")) {
+                        for(int i = 0; i < amount; i++){
+                            if (http.exoplanets.getValue(temp.get(i)).getKMAG() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("TPLANET")) {
+                        for(int i = 0; i < amount; i++){
+                            if (http.exoplanets.getValue(temp.get(i)).getTPLANET() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("T0")) {
+                        for(int i = 0; i < amount; i++){
+                            if (http.exoplanets.getValue(temp.get(i)).getT0() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("UT0")) {
+                        for(int i = 0; i < amount; i++){
+                            if (http.exoplanets.getValue(temp.get(i)).getUT0() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("PER")) {
+                        for(int i = 0; i < amount; i++){
+                            if (http.exoplanets.getValue(temp.get(i)).getPER() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("RA")) {
+                        for(int i = 0; i < amount; i++){
+                            if (http.exoplanets.getValue(temp.get(i)).getRA() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("RPLANET")) {
+                        for(int i = 0; i < amount; i++){
+                            if (http.exoplanets.getValue(temp.get(i)).getRPLANET() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("MSTAR")) {
+                        for(int i = 0; i < amount; i++){
+                            if (http.exoplanets.getValue(temp.get(i)).getMSTAR() != 0)
+                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     }
                 }
@@ -623,6 +621,11 @@ public class GUI extends JFrame {
         //make the assignments in the list visible
         EventQueue.invokeLater(() -> {
             GUI gui = new GUI();
+            try {
+                gui.loadData();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             gui.setVisible(true);
         });
     }
