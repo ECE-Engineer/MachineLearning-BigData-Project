@@ -282,7 +282,7 @@ public class GUI extends JFrame {
     /**
      * Handles the loading of the data from the API
      */
-    private void loadData() throws Exception {
+    public void loadData() throws Exception {
         //clear everything out of the hashtable
         http.exoplanets.clear();
 
@@ -611,22 +611,5 @@ public class GUI extends JFrame {
         }
 
         return largeList.get(0);
-    }
-
-    /**
-     * This invokes the graphical user interface, which displays it to the screen and listens for the button actions to be pressed
-     */
-    public static void main(String[] args) {
-        //make the gui visible
-        //make the assignments in the list visible
-        EventQueue.invokeLater(() -> {
-            GUI gui = new GUI();
-            try {
-                gui.loadData();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            gui.setVisible(true);
-        });
     }
 }
