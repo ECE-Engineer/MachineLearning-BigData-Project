@@ -4,18 +4,18 @@
  */
 
 public class Exoplanets {
-    private double A;   //Semi-major axis (AU)
-    private double DEC; //Declination (@J200)
-    private double RSTAR;   //Stellar radius (Sol radii)
-    private int TSTAR;  //Effective temperature of host star as reported in KIC (k)
-    private double KMAG;    //	Kepler magnitude (kmag)
-    private int TPLANET;    //	Equilibrium temperature of planet, per Borucki et al. (k)
-    private double T0;  //Time of transit center (BJD-2454900)
-    private double UT0; //Uncertainty in time of transit center (+-jd)
-    private double PER; //Period (days)
-    private double RA;  //Right ascension (@J200)
-    private double RPLANET; //Planetary radius (Sol radii)
-    private double MSTAR;   //Derived stellar mass (msol)
+    private float A;        //Semi-major axis (AU)
+    private float DEC;      //Declination (@J200)
+    private float RSTAR;    //Stellar radius (Sol radii)
+    private short TSTAR;    //Effective temperature of host star as reported in KIC (k)
+    private float KMAG;     //Kepler magnitude (kmag)
+    private short TPLANET;  //Equilibrium temperature of planet, per Borucki et al. (k)
+    private float T0;       //Time of transit center (BJD-2454900)
+    private float UT0;      //Uncertainty in time of transit center (+-jd)
+    private float PER;      //Period (days)
+    private float RA;       //Right ascension (@J200)
+    private float RPLANET;  //Planetary radius (Sol radii)
+    private float MSTAR;    //Derived stellar mass (msol)
 
     /**
      * Creates an Exoplanet object
@@ -32,7 +32,7 @@ public class Exoplanets {
      * @param rp is Planetary radius (Sol radii)
      * @param ms is Derived stellar mass (msol)
      */
-    Exoplanets(double au, double d, double rs, int ts, double km, int tp, double t, double u, double p, double r, double rp, double ms){
+    Exoplanets(float au, float d, float rs, short ts, float km, short tp, float t, float u, float p, float r, float rp, float ms){
         A = au;
         DEC = d;
         RSTAR = rs;
@@ -68,71 +68,71 @@ public class Exoplanets {
      * Returns the Semi-major axis (AU)
      * @return returns the Semi-major axis (AU)
      */
-    public double getA(){return A;}
+    public float getA(){return A;}
 
     /**
      * Returns the Planetary radius (Earth radii)
      * @return returns the Declination (@J200)
      */
-    public double getDEC(){return DEC;}
+    public float getDEC(){return DEC;}
 
     /**
      * Returns the Stellar radius (Sol radii)
      * @return returns the Stellar radius (Sol radii)
      */
-    public double getRSTAR(){return RSTAR;}
+    public float getRSTAR(){return RSTAR;}
 
     /**
      * Returns the Returns the Effective temperature of host star as reported in KIC (k)
      * @return returns the Effective temperature of host star as reported in KIC (k)
      */
-    public int getTSTAR(){return TSTAR;}
+    public short getTSTAR(){return TSTAR;}
 
     /**
      * Returns the Kepler magnitude (kmag)
      * @return returns the Kepler magnitude (kmag)
      */
-    public double getKMAG(){return KMAG;}
+    public float getKMAG(){return KMAG;}
 
     /**
      * Returns the Equilibrium temperature of planet, per Borucki et al. (k)
      * @return returns the Equilibrium temperature of planet, per Borucki et al. (k)
      */
-    public int getTPLANET(){return TPLANET;}
+    public short getTPLANET(){return TPLANET;}
 
     /**
      * Returns the Time of transit center (BJD-2454900)
      * @return returns the Time of transit center (BJD-2454900)
      */
-    public double getT0(){return T0;}
+    public float getT0(){return T0;}
 
     /**
      * Returns the Uncertainty in time of transit center (+-jd)
      * @return returns the Uncertainty in time of transit center (+-jd)
      */
-    public double getUT0(){return UT0;}
+    public float getUT0(){return UT0;}
 
     /**
      * Returns the Period (days)
      * @return returns the Period (days)
      */
-    public double getPER(){return PER;}
+    public float getPER(){return PER;}
 
     /**
      * Returns the Right ascension (@J200)
      * @return returns the Right ascension (@J200)
      */
-    public double getRA(){return RA;}
+    public float getRA(){return RA;}
 
     /**
      * Returns the Planetary radius (Sol radii)
      * @return returns the Planetary radius (Sol radii)
      */
-    public double getRPLANET(){return RPLANET;}
+    public float getRPLANET(){return RPLANET;}
 
     /**
      * Returns the Derived stellar mass (msol)
      * @return returns the Derived stellar mass (msol)
      */
-    public double getMSTAR(){return MSTAR;}
+    public float getMSTAR(){return MSTAR;}
 }

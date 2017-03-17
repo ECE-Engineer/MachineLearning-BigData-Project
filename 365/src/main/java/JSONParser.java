@@ -12,7 +12,7 @@ import java.net.URL;
 import com.google.gson.*;
 
 public class JSONParser {
-    public HashAlgorithm<String,Exoplanets> exoplanets = new HashAlgorithm<>();
+    public HashAlgorithm<Float,Exoplanets> exoplanets = new HashAlgorithm<>();
     private final String USER_AGENT = "Mozilla/5.0";
 
     /**
@@ -54,78 +54,58 @@ public class JSONParser {
                     JsonElement temp = array.get(i);
                     JsonObject obj2 = temp.getAsJsonObject();
 
-                    String KOI = obj2.get("KOI").toString(); //Object of Interest number
-                    double A;
+                    float KOI = Float.parseFloat(obj2.get("KOI").toString()); //Object of Interest number
+
+                    //set default fields
+                    float A = 0;
+                    float DEC = 0;
+                    float RSTAR = 0;
+                    short TSTAR = 0;
+                    float KMAG = 0;
+                    short TPLANET = 0;
+                    float T0 = 0;
+                    float UT0 = 0;
+                    float PER = 0;
+                    float RA = 0;
+                    float RPLANET = 0;
+                    float MSTAR = 0;
+
+                    //set all the actual values
                     if(!obj2.get("A").isJsonNull())
-                        A = Double.parseDouble(obj2.get("A").toString());   //Semi-major axis (AU)
-                    else
-                        A = 0;
+                        A = Float.parseFloat(obj2.get("A").toString());   //Semi-major axis (AU)
 
-                    double DEC;
                     if(!obj2.get("DEC").isJsonNull())
-                        DEC = Double.parseDouble(obj2.get("DEC").toString());   //Planetary radius (Earth radii)
-                    else
-                        DEC = 0;
+                        DEC = Float.parseFloat(obj2.get("DEC").toString());   //Planetary radius (Earth radii)
 
-                    double RSTAR;
                     if(!obj2.get("RSTAR").isJsonNull())
-                        RSTAR = Double.parseDouble(obj2.get("RSTAR").toString());   //Stellar radius (Sol radii)
-                    else
-                        RSTAR = 0;
+                        RSTAR = Float.parseFloat(obj2.get("RSTAR").toString());   //Stellar radius (Sol radii)
 
-                    int TSTAR;
                     if(!obj2.get("TSTAR").isJsonNull())
-                        TSTAR = Integer.parseInt(obj2.get("TSTAR").toString());   ///Effective temperature of host star as reported in KIC (k)
-                    else
-                        TSTAR = 0;
+                        TSTAR = Short.parseShort(obj2.get("TSTAR").toString());   ///Effective temperature of host star as reported in KIC (k)
 
-                    double KMAG;
                     if(!obj2.get("KMAG").isJsonNull())
-                        KMAG = Double.parseDouble(obj2.get("KMAG").toString());   //	Kepler magnitude (kmag)
-                    else
-                        KMAG = 0;
+                        KMAG = Float.parseFloat(obj2.get("KMAG").toString());   //	Kepler magnitude (kmag)
 
-                    int TPLANET;
                     if(!obj2.get("TPLANET").isJsonNull())
-                        TPLANET = Integer.parseInt(obj2.get("TPLANET").toString());   //	Equilibrium temperature of planet, per Borucki et al. (k)
-                    else
-                        TPLANET = 0;
+                        TPLANET = Short.parseShort(obj2.get("TPLANET").toString());   //	Equilibrium temperature of planet, per Borucki et al. (k)
 
-                    double T0;
                     if(!obj2.get("T0").isJsonNull())
-                        T0 = Double.parseDouble(obj2.get("T0").toString());   //Time of transit center (BJD-2454900)
-                    else
-                        T0 = 0;
+                        T0 = Float.parseFloat(obj2.get("T0").toString());   //Time of transit center (BJD-2454900)
 
-                    double UT0;
                     if(!obj2.get("UT0").isJsonNull())
-                        UT0 = Double.parseDouble(obj2.get("UT0").toString());   //Uncertainty in time of transit center (+-jd)
-                    else
-                        UT0 = 0;
+                        UT0 = Float.parseFloat(obj2.get("UT0").toString());   //Uncertainty in time of transit center (+-jd)
 
-                    double PER;
                     if(!obj2.get("PER").isJsonNull())
-                        PER = Double.parseDouble(obj2.get("PER").toString());   //Uncertainty in time of transit center (+-jd)
-                    else
-                        PER = 0;
+                        PER = Float.parseFloat(obj2.get("PER").toString());   //Uncertainty in time of transit center (+-jd)
 
-                    double RA;
                     if(!obj2.get("RA").isJsonNull())
-                        RA = Double.parseDouble(obj2.get("RA").toString());   //Period (days)
-                    else
-                        RA = 0;
+                        RA = Float.parseFloat(obj2.get("RA").toString());   //Period (days)
 
-                    double RPLANET;
                     if(!obj2.get("RPLANET").isJsonNull())
-                        RPLANET = Double.parseDouble(obj2.get("RPLANET").toString());   //Declination (@J200)
-                    else
-                        RPLANET = 0;
+                        RPLANET = Float.parseFloat(obj2.get("RPLANET").toString());   //Declination (@J200)
 
-                    double MSTAR;
                     if(!obj2.get("MSTAR").isJsonNull())
-                        MSTAR = Double.parseDouble(obj2.get("MSTAR").toString());   //Right ascension (@J200)
-                    else
-                        MSTAR = 0;
+                        MSTAR = Float.parseFloat(obj2.get("MSTAR").toString());   //Right ascension (@J200)
 
                     //create an exoplanet and add it to the hashtable
                     Exoplanets exoplanet = new Exoplanets(A, DEC, RSTAR, TSTAR, KMAG, TPLANET, T0, UT0, PER, RA, RPLANET, MSTAR);
@@ -144,78 +124,58 @@ public class JSONParser {
                     JsonElement temp = array.get(i);
                     JsonObject obj2 = temp.getAsJsonObject();
 
-                    String KOI = obj2.get("KOI").toString(); //Object of Interest number
-                    double A;
+                    float KOI = Float.parseFloat(obj2.get("KOI").toString()); //Object of Interest number
+
+                    //set default fields
+                    float A = 0;
+                    float DEC = 0;
+                    float RSTAR = 0;
+                    short TSTAR = 0;
+                    float KMAG = 0;
+                    short TPLANET = 0;
+                    float T0 = 0;
+                    float UT0 = 0;
+                    float PER = 0;
+                    float RA = 0;
+                    float RPLANET = 0;
+                    float MSTAR = 0;
+
+                    //set all the actual values
                     if(!obj2.get("A").isJsonNull())
-                        A = Double.parseDouble(obj2.get("A").toString());   //Semi-major axis (AU)
-                    else
-                        A = 0;
+                        A = Float.parseFloat(obj2.get("A").toString());   //Semi-major axis (AU)
 
-                    double DEC;
                     if(!obj2.get("DEC").isJsonNull())
-                        DEC = Double.parseDouble(obj2.get("DEC").toString());   //Planetary radius (Earth radii)
-                    else
-                        DEC = 0;
+                        DEC = Float.parseFloat(obj2.get("DEC").toString());   //Planetary radius (Earth radii)
 
-                    double RSTAR;
                     if(!obj2.get("RSTAR").isJsonNull())
-                        RSTAR = Double.parseDouble(obj2.get("RSTAR").toString());   //Stellar radius (Sol radii)
-                    else
-                        RSTAR = 0;
+                        RSTAR = Float.parseFloat(obj2.get("RSTAR").toString());   //Stellar radius (Sol radii)
 
-                    int TSTAR;
                     if(!obj2.get("TSTAR").isJsonNull())
-                        TSTAR = Integer.parseInt(obj2.get("TSTAR").toString());   ///Effective temperature of host star as reported in KIC (k)
-                    else
-                        TSTAR = 0;
+                        TSTAR = Short.parseShort(obj2.get("TSTAR").toString());   ///Effective temperature of host star as reported in KIC (k)
 
-                    double KMAG;
                     if(!obj2.get("KMAG").isJsonNull())
-                        KMAG = Double.parseDouble(obj2.get("KMAG").toString());   //	Kepler magnitude (kmag)
-                    else
-                        KMAG = 0;
+                        KMAG = Float.parseFloat(obj2.get("KMAG").toString());   //	Kepler magnitude (kmag)
 
-                    int TPLANET;
                     if(!obj2.get("TPLANET").isJsonNull())
-                        TPLANET = Integer.parseInt(obj2.get("TPLANET").toString());   //	Equilibrium temperature of planet, per Borucki et al. (k)
-                    else
-                        TPLANET = 0;
+                        TPLANET = Short.parseShort(obj2.get("TPLANET").toString());   //	Equilibrium temperature of planet, per Borucki et al. (k)
 
-                    double T0;
                     if(!obj2.get("T0").isJsonNull())
-                        T0 = Double.parseDouble(obj2.get("T0").toString());   //Time of transit center (BJD-2454900)
-                    else
-                        T0 = 0;
+                        T0 = Float.parseFloat(obj2.get("T0").toString());   //Time of transit center (BJD-2454900)
 
-                    double UT0;
                     if(!obj2.get("UT0").isJsonNull())
-                        UT0 = Double.parseDouble(obj2.get("UT0").toString());   //Uncertainty in time of transit center (+-jd)
-                    else
-                        UT0 = 0;
+                        UT0 = Float.parseFloat(obj2.get("UT0").toString());   //Uncertainty in time of transit center (+-jd)
 
-                    double PER;
                     if(!obj2.get("PER").isJsonNull())
-                        PER = Double.parseDouble(obj2.get("PER").toString());   //Uncertainty in time of transit center (+-jd)
-                    else
-                        PER = 0;
+                        PER = Float.parseFloat(obj2.get("PER").toString());   //Uncertainty in time of transit center (+-jd)
 
-                    double RA;
                     if(!obj2.get("RA").isJsonNull())
-                        RA = Double.parseDouble(obj2.get("RA").toString());   //Period (days)
-                    else
-                        RA = 0;
+                        RA = Float.parseFloat(obj2.get("RA").toString());   //Period (days)
 
-                    double RPLANET;
                     if(!obj2.get("RPLANET").isJsonNull())
-                        RPLANET = Double.parseDouble(obj2.get("RPLANET").toString());   //Declination (@J200)
-                    else
-                        RPLANET = 0;
+                        RPLANET = Float.parseFloat(obj2.get("RPLANET").toString());   //Declination (@J200)
 
-                    double MSTAR;
                     if(!obj2.get("MSTAR").isJsonNull())
-                        MSTAR = Double.parseDouble(obj2.get("MSTAR").toString());   //Right ascension (@J200)
-                    else
-                        MSTAR = 0;
+                        MSTAR = Float.parseFloat(obj2.get("MSTAR").toString());   //Right ascension (@J200)
 
                     //create an exoplanet and add it to the hashtable
                     Exoplanets exoplanet = new Exoplanets(A, DEC, RSTAR, TSTAR, KMAG, TPLANET, T0, UT0, PER, RA, RPLANET, MSTAR);

@@ -308,7 +308,7 @@ public class GUI extends JFrame {
         String text_key = textField2.getText();
 
         //get all the keys of the kepler objects
-        ArrayList<String> temp = http.exoplanets.keySet();
+        ArrayList<Float> temp = http.exoplanets.keySet();
 
         //set a limit for the user to give as an amount
         int USER_MAX_AMOUNT = temp.size();
@@ -352,7 +352,7 @@ public class GUI extends JFrame {
                         //display the two most common kepler objects using a specified number of kepler objects and a specified kepler object key
                         //return the most common kepler object to the specified kepler object
                         if (temp.size() != 0){
-                            String[] sim = pearsonCorrelationCoefficient(temp, text_key);
+                            Float[] sim = pearsonCorrelationCoefficient(temp, Float.parseFloat(text_key));
 
                             for(int i = 0; i < sim.length; i++){
                                 textArea1.append("KEY IS: \t" + sim[i] + " DATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
@@ -363,7 +363,7 @@ public class GUI extends JFrame {
                         //display the two most common kepler objects using a specified number of kepler objects
                         //return the two most common kepler objects
                         if (temp.size() != 0){
-                            String[] sim = pearsonCorrelationCoefficient(temp);
+                            Float[] sim = pearsonCorrelationCoefficient(temp);
 
                             for(int i = 0; i < sim.length; i++){
                                 textArea1.append("KEY IS: \t" + sim[i] + " DATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
@@ -455,7 +455,7 @@ public class GUI extends JFrame {
      * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
      * @return returns the score value for the 2 objects based on their features
      */
-    private double ED(String key1, String key2) {   //returns the score value for the 2 objects based on their features
+    private double ED(Float key1, Float key2) {   //returns the score value for the 2 objects based on their features
         return Math.sqrt(Math.pow(http.exoplanets.getValue(key2).getPER()-http.exoplanets.getValue(key1).getPER(), 2) + Math.pow(http.exoplanets.getValue(key2).getTPLANET()-http.exoplanets.getValue(key1).getTPLANET(), 2) + Math.pow(http.exoplanets.getValue(key2).getRSTAR()-http.exoplanets.getValue(key1).getRSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getTSTAR()-http.exoplanets.getValue(key1).getTSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getMSTAR()-http.exoplanets.getValue(key1).getMSTAR(), 2));
     }
 
@@ -465,7 +465,7 @@ public class GUI extends JFrame {
      * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
      * @return returns the score value for the 2 objects based on their features
      */
-    public double PCC(String key1, String key2) {   //returns the score value for the 2 objects based on their features
+    public double PCC(Float key1, Float key2) {   //returns the score value for the 2 objects based on their features
         //The number of features
         final int FEATURE_AMOUNT = 5;
 
@@ -489,24 +489,24 @@ public class GUI extends JFrame {
      * @param testKey is a key to a specified exoplanet
      * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
      */
-    private String[] pearsonCorrelationCoefficient(ArrayList<String> keys, String testKey){  //Pearson Correlation Coefficient
-        ArrayList<String[]> largeList = new ArrayList<String[]>();
+    private Float[] pearsonCorrelationCoefficient(ArrayList<Float> keys, Float testKey){  //Pearson Correlation Coefficient
+        ArrayList<Float[]> largeList = new ArrayList<Float[]>();
         double pastVal = 0;
         double currentVal;
         int counter = 0;
 
         for(int i = 0; i < keys.size(); i++) {
-            if(i == 0 && !keys.get(i).equalsIgnoreCase(testKey)){
+            if(i == 0 && keys.get(i) != testKey){
                 pastVal = PCC(testKey, keys.get(i));
-                largeList.add(new String[]{testKey, keys.get(i)});
+                largeList.add(new Float[]{testKey, keys.get(i)});
                 counter++;
             }
             else {
                 currentVal = PCC(testKey, keys.get(i));
 
-                if (currentVal > pastVal && !keys.get(i).equalsIgnoreCase(testKey)) {
+                if (currentVal > pastVal && keys.get(i) != testKey) {
                     largeList.remove((counter-1));
-                    largeList.add(new String[]{testKey, keys.get(i)});
+                    largeList.add(new Float[]{testKey, keys.get(i)});
                     pastVal = currentVal;
                 }
             }
@@ -520,8 +520,8 @@ public class GUI extends JFrame {
      * @param keys is the list of all the keys to all of their respective exoplanet objects
      * @return returns a list of the 2 most similar exoplanets in the list
      */
-    private String[] pearsonCorrelationCoefficient(ArrayList<String> keys){  //Pearson Correlation Coefficient
-        ArrayList<String[]> largeList = new ArrayList<String[]>();
+    private Float[] pearsonCorrelationCoefficient(ArrayList<Float> keys){  //Pearson Correlation Coefficient
+        ArrayList<Float[]> largeList = new ArrayList<Float[]>();
         double pastVal = 0;
         double currentVal;
         int counter = 0;
@@ -530,7 +530,7 @@ public class GUI extends JFrame {
             for (int j = 0; j < keys.size(); j++) {
                 if(j == 0){
                     pastVal = PCC(keys.get(j+1), keys.get(i));
-                    largeList.add(new String[]{keys.get(i), keys.get(j)});
+                    largeList.add(new Float[]{keys.get(i), keys.get(j)});
                     counter++;
                 }
                 else {
@@ -538,7 +538,7 @@ public class GUI extends JFrame {
 
                     if (currentVal > pastVal) {
                         largeList.remove((counter-1));
-                        largeList.add(new String[]{keys.get(i), keys.get(j)});
+                        largeList.add(new Float[]{keys.get(i), keys.get(j)});
                         pastVal = currentVal;
                     }
                 }
@@ -554,24 +554,24 @@ public class GUI extends JFrame {
      * @param testKey is a key to a specified exoplanet
      * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
      */
-    private String[] euclideanDistance(ArrayList<String> keys, String testKey){    //EUCLIDEAN DISTANCE
-        ArrayList<String[]> largeList = new ArrayList<String[]>();
+    private Float[] euclideanDistance(ArrayList<Float> keys, Float testKey){    //EUCLIDEAN DISTANCE
+        ArrayList<Float[]> largeList = new ArrayList<Float[]>();
         double pastVal = 0;
         double currentVal;
         int counter = 0;
 
         for(int i = 0; i < keys.size(); i++) {
-            if(i == 0  && !keys.get(i).equalsIgnoreCase(testKey)){
+            if(i == 0  && keys.get(i) != testKey){
                 pastVal = ED(testKey, keys.get(i));
-                largeList.add(new String[]{testKey, keys.get(i)});
+                largeList.add(new Float[]{testKey, keys.get(i)});
                 counter++;
             }
             else {
                 currentVal = ED(testKey, keys.get(i));
 
-                if (currentVal < pastVal && !keys.get(i).equalsIgnoreCase(testKey)) {
+                if (currentVal < pastVal && keys.get(i) != testKey) {
                     largeList.remove((counter-1));
-                    largeList.add(new String[]{testKey, keys.get(i)});
+                    largeList.add(new Float[]{testKey, keys.get(i)});
                     pastVal = currentVal;
                 }
             }
@@ -585,8 +585,8 @@ public class GUI extends JFrame {
      * @param keys is the list of all the keys to all of their respective exoplanet objects
      * @return returns a list of the 2 most similar exoplanets in the list
      */
-    private String[] euclideanDistance(ArrayList<String> keys){    //EUCLIDEAN DISTANCE
-        ArrayList<String[]> largeList = new ArrayList<String[]>();
+    private Float[] euclideanDistance(ArrayList<Float> keys){    //EUCLIDEAN DISTANCE
+        ArrayList<Float[]> largeList = new ArrayList<Float[]>();
         double pastVal = 0;
         double currentVal;
         int counter = 0;
@@ -595,7 +595,7 @@ public class GUI extends JFrame {
             for (int j = 0; j < keys.size(); j++) {
                 if(j == 0){
                     pastVal = ED(keys.get(j+1), keys.get(i));
-                    largeList.add(new String[]{keys.get(i), keys.get(j)});
+                    largeList.add(new Float[]{keys.get(i), keys.get(j)});
                     counter++;
                 }
                 else {
@@ -603,7 +603,7 @@ public class GUI extends JFrame {
 
                     if (currentVal < pastVal) {
                         largeList.remove((counter-1));
-                        largeList.add(new String[]{keys.get(i), keys.get(j)});
+                        largeList.add(new Float[]{keys.get(i), keys.get(j)});
                         pastVal = currentVal;
                     }
                 }
