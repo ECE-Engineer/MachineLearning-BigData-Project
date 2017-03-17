@@ -308,7 +308,7 @@ public class GUI extends JFrame {
         String text_key = textField2.getText();
 
         //get all the keys of the kepler objects
-        ArrayList<Float> temp = http.exoplanets.keySet();
+        ArrayList<Short> temp = http.exoplanets.keySet();
 
         //set a limit for the user to give as an amount
         int USER_MAX_AMOUNT = temp.size();
@@ -352,10 +352,10 @@ public class GUI extends JFrame {
                         //display the two most common kepler objects using a specified number of kepler objects and a specified kepler object key
                         //return the most common kepler object to the specified kepler object
                         if (temp.size() != 0){
-                            Float[] sim = pearsonCorrelationCoefficient(temp, Float.parseFloat(text_key));
+                            Short[] sim = pearsonCorrelationCoefficient(temp, Short.parseShort(text_key));
 
                             for(int i = 0; i < sim.length; i++){
-                                textArea1.append("KEY IS: \t" + sim[i] + " DATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
+                                textArea1.append("KEY IS: " + sim[i] + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
                             }
                         }
                     }
@@ -363,10 +363,10 @@ public class GUI extends JFrame {
                         //display the two most common kepler objects using a specified number of kepler objects
                         //return the two most common kepler objects
                         if (temp.size() != 0){
-                            Float[] sim = pearsonCorrelationCoefficient(temp);
+                            Short[] sim = pearsonCorrelationCoefficient(temp);
 
                             for(int i = 0; i < sim.length; i++){
-                                textArea1.append("KEY IS: \t" + sim[i] + " DATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
+                                textArea1.append("KEY IS: " + sim[i] + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
                             }
                         }
                     }
@@ -375,7 +375,7 @@ public class GUI extends JFrame {
                     //display the specific amount of kepler objects
                     if (temp.size() != 0){
                         for(int i = 0; i < amount; i++){
-                            textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     }
                 }
@@ -386,62 +386,62 @@ public class GUI extends JFrame {
                     if (keplerObject.equalsIgnoreCase("A")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getA() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("DEC")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getDEC() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("RSTAR")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getRSTAR() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("TSTAR")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getTSTAR() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("KMAG")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getKMAG() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("TPLANET")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getTPLANET() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("T0")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getT0() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("UT0")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getUT0() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("PER")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getPER() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("RA")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getRA() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("RPLANET")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getRPLANET() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("MSTAR")) {
                         for(int i = 0; i < amount; i++){
                             if (http.exoplanets.getValue(temp.get(i)).getMSTAR() != 0)
-                                textArea1.append("KEY IS: \t" + temp.get(i) + " DATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
                         }
                     }
                 }
@@ -455,7 +455,7 @@ public class GUI extends JFrame {
      * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
      * @return returns the score value for the 2 objects based on their features
      */
-    private double ED(Float key1, Float key2) {   //returns the score value for the 2 objects based on their features
+    private double ED(Short key1, Short key2) {   //returns the score value for the 2 objects based on their features
         return Math.sqrt(Math.pow(http.exoplanets.getValue(key2).getPER()-http.exoplanets.getValue(key1).getPER(), 2) + Math.pow(http.exoplanets.getValue(key2).getTPLANET()-http.exoplanets.getValue(key1).getTPLANET(), 2) + Math.pow(http.exoplanets.getValue(key2).getRSTAR()-http.exoplanets.getValue(key1).getRSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getTSTAR()-http.exoplanets.getValue(key1).getTSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getMSTAR()-http.exoplanets.getValue(key1).getMSTAR(), 2));
     }
 
@@ -465,16 +465,16 @@ public class GUI extends JFrame {
      * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
      * @return returns the score value for the 2 objects based on their features
      */
-    public double PCC(Float key1, Float key2) {   //returns the score value for the 2 objects based on their features
+    private double PCC(Short key1, Short key2) {   //returns the score value for the 2 objects based on their features
         //The number of features
-        final int FEATURE_AMOUNT = 5;
+        final short FEATURE_AMOUNT = 5;
 
         //sum the product of the features between the objects
-        double SOP = (http.exoplanets.getValue(key2).getPER() * http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key2).getTPLANET() * http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR() * http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR() * http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR() * http.exoplanets.getValue(key1).getMSTAR());
+        float SOP = (http.exoplanets.getValue(key2).getPER() * http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key2).getTPLANET() * http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR() * http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR() * http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR() * http.exoplanets.getValue(key1).getMSTAR());
         //sum the features of the first object
-        double sum1 = (http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key1).getMSTAR());
+        float sum1 = (http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key1).getMSTAR());
         //sum the features of the second object
-        double sum2 = (http.exoplanets.getValue(key2).getPER())+(http.exoplanets.getValue(key2).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR());
+        float sum2 = (http.exoplanets.getValue(key2).getPER())+(http.exoplanets.getValue(key2).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR());
         //square of the sum the features of the first object
         double squareSum1 = (Math.pow(http.exoplanets.getValue(key1).getPER(), 2)+Math.pow((http.exoplanets.getValue(key1).getTPLANET()), 2)+Math.pow((http.exoplanets.getValue(key1).getRSTAR()), 2)+Math.pow((http.exoplanets.getValue(key1).getTSTAR()), 2)+Math.pow((http.exoplanets.getValue(key1).getMSTAR()), 2));
         //square of the sum the features of the second object
@@ -489,16 +489,16 @@ public class GUI extends JFrame {
      * @param testKey is a key to a specified exoplanet
      * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
      */
-    private Float[] pearsonCorrelationCoefficient(ArrayList<Float> keys, Float testKey){  //Pearson Correlation Coefficient
-        ArrayList<Float[]> largeList = new ArrayList<Float[]>();
+    private Short[] pearsonCorrelationCoefficient(ArrayList<Short> keys, short testKey){  //Pearson Correlation Coefficient
+        ArrayList<Short[]> largeList = new ArrayList<>();
         double pastVal = 0;
         double currentVal;
-        int counter = 0;
+        short counter = 0;
 
         for(int i = 0; i < keys.size(); i++) {
             if(i == 0 && keys.get(i) != testKey){
                 pastVal = PCC(testKey, keys.get(i));
-                largeList.add(new Float[]{testKey, keys.get(i)});
+                largeList.add(new Short[]{testKey, keys.get(i)});
                 counter++;
             }
             else {
@@ -506,12 +506,11 @@ public class GUI extends JFrame {
 
                 if (currentVal > pastVal && keys.get(i) != testKey) {
                     largeList.remove((counter-1));
-                    largeList.add(new Float[]{testKey, keys.get(i)});
+                    largeList.add(new Short[]{testKey, keys.get(i)});
                     pastVal = currentVal;
                 }
             }
         }
-
         return largeList.get(0);
     }
 
@@ -520,17 +519,17 @@ public class GUI extends JFrame {
      * @param keys is the list of all the keys to all of their respective exoplanet objects
      * @return returns a list of the 2 most similar exoplanets in the list
      */
-    private Float[] pearsonCorrelationCoefficient(ArrayList<Float> keys){  //Pearson Correlation Coefficient
-        ArrayList<Float[]> largeList = new ArrayList<Float[]>();
+    private Short[] pearsonCorrelationCoefficient(ArrayList<Short> keys){  //Pearson Correlation Coefficient
+        ArrayList<Short[]> largeList = new ArrayList<>();
         double pastVal = 0;
         double currentVal;
-        int counter = 0;
+        short counter = 0;
 
         for(int i = 0; i < keys.size(); i++) {
             for (int j = 0; j < keys.size(); j++) {
                 if(j == 0){
                     pastVal = PCC(keys.get(j+1), keys.get(i));
-                    largeList.add(new Float[]{keys.get(i), keys.get(j)});
+                    largeList.add(new Short[]{keys.get(i), keys.get(j)});
                     counter++;
                 }
                 else {
@@ -538,13 +537,12 @@ public class GUI extends JFrame {
 
                     if (currentVal > pastVal) {
                         largeList.remove((counter-1));
-                        largeList.add(new Float[]{keys.get(i), keys.get(j)});
+                        largeList.add(new Short[]{keys.get(i), keys.get(j)});
                         pastVal = currentVal;
                     }
                 }
             }
         }
-
         return largeList.get(0);
     }
 
@@ -554,16 +552,16 @@ public class GUI extends JFrame {
      * @param testKey is a key to a specified exoplanet
      * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
      */
-    private Float[] euclideanDistance(ArrayList<Float> keys, Float testKey){    //EUCLIDEAN DISTANCE
-        ArrayList<Float[]> largeList = new ArrayList<Float[]>();
+    private Short[] euclideanDistance(ArrayList<Short> keys, short testKey){    //EUCLIDEAN DISTANCE
+        ArrayList<Short[]> largeList = new ArrayList<>();
         double pastVal = 0;
         double currentVal;
-        int counter = 0;
+        short counter = 0;
 
         for(int i = 0; i < keys.size(); i++) {
             if(i == 0  && keys.get(i) != testKey){
                 pastVal = ED(testKey, keys.get(i));
-                largeList.add(new Float[]{testKey, keys.get(i)});
+                largeList.add(new Short[]{testKey, keys.get(i)});
                 counter++;
             }
             else {
@@ -571,12 +569,11 @@ public class GUI extends JFrame {
 
                 if (currentVal < pastVal && keys.get(i) != testKey) {
                     largeList.remove((counter-1));
-                    largeList.add(new Float[]{testKey, keys.get(i)});
+                    largeList.add(new Short[]{testKey, keys.get(i)});
                     pastVal = currentVal;
                 }
             }
         }
-
         return largeList.get(0);
     }
 
@@ -585,17 +582,17 @@ public class GUI extends JFrame {
      * @param keys is the list of all the keys to all of their respective exoplanet objects
      * @return returns a list of the 2 most similar exoplanets in the list
      */
-    private Float[] euclideanDistance(ArrayList<Float> keys){    //EUCLIDEAN DISTANCE
-        ArrayList<Float[]> largeList = new ArrayList<Float[]>();
+    private Short[] euclideanDistance(ArrayList<Short> keys){    //EUCLIDEAN DISTANCE
+        ArrayList<Short[]> largeList = new ArrayList<>();
         double pastVal = 0;
         double currentVal;
-        int counter = 0;
+        short counter = 0;
 
         for(int i = 0; i < keys.size(); i++) {
             for (int j = 0; j < keys.size(); j++) {
                 if(j == 0){
                     pastVal = ED(keys.get(j+1), keys.get(i));
-                    largeList.add(new Float[]{keys.get(i), keys.get(j)});
+                    largeList.add(new Short[]{keys.get(i), keys.get(j)});
                     counter++;
                 }
                 else {
@@ -603,13 +600,12 @@ public class GUI extends JFrame {
 
                     if (currentVal < pastVal) {
                         largeList.remove((counter-1));
-                        largeList.add(new Float[]{keys.get(i), keys.get(j)});
+                        largeList.add(new Short[]{keys.get(i), keys.get(j)});
                         pastVal = currentVal;
                     }
                 }
             }
         }
-
         return largeList.get(0);
     }
 }
