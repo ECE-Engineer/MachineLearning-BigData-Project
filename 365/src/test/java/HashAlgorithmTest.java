@@ -33,7 +33,7 @@ public class HashAlgorithmTest {
         HashAlgorithm ht = new HashAlgorithm();
         int size = 1;
         String key = "1306.01";
-        Exoplanets e = new Exoplanets(15, 5, 3, 2, 76, 35, 43, 23, 23, 235, 234, 7365);
+        Exoplanet e = new Exoplanet(15, 5, 3, (short) 2, 76, (short) 35, 43, 23, 23, 235, 234, 7365);
         ht.put(key, e);
 
         assertEquals(ht.size(), size);
@@ -42,14 +42,14 @@ public class HashAlgorithmTest {
 
     @Test
     public void putMultiple() throws Exception {
-        ArrayList<Exoplanets> exoplanets = new ArrayList<>();
+        ArrayList<Exoplanet> exoplanets = new ArrayList<>();
         HashAlgorithm ht = new HashAlgorithm();
 
         ArrayList<String> temp = new ArrayList<>();
         for (int i = 0; i < 5; i++) {
             String key = i + ".01";
             temp.add(key);
-            exoplanets.add(new Exoplanets(i, i, i, i, i, i, i, i, i, i, i, i));
+            exoplanets.add(new Exoplanet(i, i, i, (short) i, i, (short) i, i, i, i, i, i, i));
             ht.put(key, exoplanets.get(i));
         }
 

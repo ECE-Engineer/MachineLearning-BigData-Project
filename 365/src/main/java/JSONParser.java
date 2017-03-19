@@ -12,7 +12,7 @@ import java.net.URL;
 import com.google.gson.*;
 
 public class JSONParser {
-    public HashAlgorithm<Short,Exoplanets> exoplanets = new HashAlgorithm<>();
+    public HashAlgorithm<Short, Exoplanet> exoplanets = new HashAlgorithm<>();
     private final String USER_AGENT = "Mozilla/5.0";
 
     /**
@@ -118,7 +118,7 @@ public class JSONParser {
                     MSTAR = Float.parseFloat(obj2.get("MSTAR").toString());   //Right ascension (@J200)
 
                 //create an exoplanet and add it to the hashtable
-                Exoplanets exoplanet = new Exoplanets(A, DEC, RSTAR, TSTAR, KMAG, TPLANET, T0, UT0, PER, RA, RPLANET, MSTAR);
+                Exoplanet exoplanet = new Exoplanet(A, DEC, RSTAR, TSTAR, KMAG, TPLANET, T0, UT0, PER, RA, RPLANET, MSTAR);
                 exoplanets.put(KOI, exoplanet);
             }
         }

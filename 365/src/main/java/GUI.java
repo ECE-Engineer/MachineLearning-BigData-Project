@@ -282,7 +282,7 @@ public class GUI extends JFrame {
     /**
      * Handles the loading of the data from the API
      */
-    public void loadData() throws Exception {
+    public void loadDataAPI() throws Exception {
         //clear everything out of the hashtable
         http.exoplanets.clear();
 

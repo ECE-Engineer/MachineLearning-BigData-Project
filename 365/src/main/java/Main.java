@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.io.IOException;
 
 /**
  * @author Kyle Zeller
@@ -13,13 +14,33 @@ public class Main {
     /**
      * This invokes the graphical user interface, which displays it to the screen and listens for the button actions to be pressed
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
+
+
+
+        /**LOOK FOR AN ITEM*/
+        /**does it exist in the hashcache file*/
+        /**if it does NOT, then create a hashcache file, THEN find it in the Btree, get it, THEN add it to the hashcache file, THEN DO STUFF WITH THE ITEM*/
+        /**if it DOES, then see if it contains the item*/
+        /**if it does NOT, then find it in the Btree, get it, THEN add it to the hashcache file, THEN DO STUFF WITH THE ITEM*/
+        /**if it DOES, then get the item, THEN DO STUFF WITH THE ITEM*/
+
+        /**KEEP GOING??  which also means clicking the exit button*/
+        /**if NO, then save & close the hashcache file, AND then write to the Btree cache file & save & close it*/
+        /**if YES, then the GUI should simply continue*/
+
+
         //make the gui visible
         //make the assignments in the list visible
         EventQueue.invokeLater(() -> {
             GUI gui = new GUI();
             try {
-                gui.loadData();
+                /**do the Btree cache files exist*/
+                /**if they do NOT, then create the Btree cache & populate it with the data, THEN load the data into the BTREE structure*/
+                /**if they do, then check and see if it IS empty*/
+                /**if it is NOT, start the GUI*/
+                /**if it IS, populate it with the data, THEN load the data into the BTREE structure, THEN start the GUI*/
+                gui.loadDataAPI();/////////////////////////////////////////this loads data from the API
             } catch (Exception e) {
                 e.printStackTrace();
             }
