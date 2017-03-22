@@ -38,11 +38,13 @@ public class HashAlgorithm<K,V> {
     /*tab.length should always be a power of 2*/
     Entry<K,V>[] tab;
 
+    private final int INIT_SIZE = 16;
+
     /**
      * Initializes the size of the HashTable.
      */
-    public void HT() {
-        tab = new Entry[16];    // selected to be a good starting size
+    private void HT() {
+        tab = new Entry[INIT_SIZE];    // selected to be a good starting size
     }
 
     /**
@@ -255,7 +257,7 @@ public class HashAlgorithm<K,V> {
      * @param s is the unique identification value that the object has
      * @return returns the unique hashing value to the unique key that was given
      */
-    public int hashCode(K s){
+    private int hashCode(K s){
         char[] info = (s.toString()).toCharArray();
 
         int temp, i;

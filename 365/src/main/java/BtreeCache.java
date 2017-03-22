@@ -5,7 +5,7 @@ import java.io.*;
  * This class provides a way to store the keys of the hashtable and its related exoplanet object.
  * It also provides a way to load all the keys of the hashtable and its related exoplanet object in to the BTree structure.
  */
-
+//////////////////the first file should store the nodes of the Btree and also add an extra feature to the nodes to be given the index of where EXACTLY to find the object in the file
 public class BtreeCache implements Serializable {//////////////////////////////////////////////////////////////ADD EXTRA FEATURE OF THE BOOK KEEPING!!!!!!!!!!!!!!!!!-----store the root OR where the root is, and the order of the btree--------------this is why to use 2 files instead
     private RandomAccessFile raf;
     private final short KEY_SIZE = 2;
