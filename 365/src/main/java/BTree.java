@@ -6,7 +6,7 @@ import java.io.*;
  */
 public class BTree implements Serializable {
     private RandomAccessFile raf;
-    private final short NODE_SIZE = 78;
+    private final short NODE_SIZE = 94;
     private final short EXOPLANET_SIZE = 157;
     private short DEGREE_TREE_LOCATION = 0;
     private short ROOT_LOCATION = 2;
@@ -56,7 +56,7 @@ public class BTree implements Serializable {
         return keys;
     }
 
-    public Exoplanet getValue(Short k) throws IOException, ClassNotFoundException {
+    public Exoplanet getValue(long k) throws IOException, ClassNotFoundException {
         raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "r");
         byte[] objectMask = new byte[EXOPLANET_SIZE];
 
@@ -92,12 +92,14 @@ public class BTree implements Serializable {
 
         //create a new node
         Node n = new Node();
+        //set the index of the new node
+        n.index = counter;
         //seek to the end of the file
         raf.seek(raf.length());
         //write the value to the file
         raf.write(serialize(n));
         //seek to the node just created
-        raf.seek(NODE_SIZE * counter);
+        raf.seek(NODE_SIZE * n.index);
         //get the object
         byte[] objectMask = new byte[NODE_SIZE];
         raf.read(objectMask);
@@ -115,9 +117,9 @@ public class BTree implements Serializable {
 
         short objectCount = (short) (raf.length()/(NODE_SIZE));
 
-        if (counter-1 < objectCount) {
+        if (n.index < objectCount) {
             //adjust the pointer
-            raf.seek(counter * NODE_SIZE - NODE_SIZE);
+            raf.seek(n.index * NODE_SIZE);
             //overwrite the object
             raf.write(serialize(n));
         }
@@ -132,20 +134,20 @@ public class BTree implements Serializable {
         raf.seek(raf.length());
         //write the value to the file
         raf.write(serialize(e));
-        //seek to the node just created
-        raf.seek(EXOPLANET_SIZE * counter);
         //close the file
         raf.close();
     }
 
-    public void overwriteValue(Exoplanet e) throws IOException {
+    public void overwriteValue(Node n) throws IOException, ClassNotFoundException {
         raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "rw");
+
+        Exoplanet e = getValue(n.index);
 
         short objectCount = (short) (raf.length()/(EXOPLANET_SIZE));
 
-        if (counter-1 < objectCount) {
+        if (n.index < objectCount) {
             //adjust the pointer
-            raf.seek(counter * EXOPLANET_SIZE - EXOPLANET_SIZE);
+            raf.seek(n.index * EXOPLANET_SIZE);
             //overwrite the object
             raf.write(serialize(e));
         }
@@ -171,11 +173,11 @@ public class BTree implements Serializable {
         raf.close();
     }
 
-    public Node getNode() throws IOException, ClassNotFoundException {////////////////////////////////////////////////////I will seek advice for this part B/C I'm uncertain of HOW TO ADJUST THE COUNTER when I'm moving up and down the tree!????????????????????????
+    public Node getNode(Node n) throws IOException, ClassNotFoundException {
         raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
         byte[] objectMask = new byte[NODE_SIZE];
         //seek to the position specified
-        raf.seek(counter * NODE_SIZE - NODE_SIZE);
+        raf.seek(n.index * NODE_SIZE);
         //get the key stored there
         raf.read(objectMask);
         Node temp = (Node) deserialize(objectMask);
@@ -189,11 +191,11 @@ public class BTree implements Serializable {
         if (x != null)
             return x;
         else
-            return getNode();////////////////////////////////////////////////////I will seek advice for this part B/C I'm uncertain of HOW TO ADJUST THE COUNTER when I'm moving up and down the tree!????????????????????????
+            return getNode(x);
     }
 
     public void diskWrite(Node n) throws IOException, ClassNotFoundException {
-        if (n == getNode())////////////////////////////////////////////////////I will seek advice for this part B/C I'm uncertain of HOW TO ADJUST THE COUNTER when I'm moving up and down the tree!????????????????????????
+        if (n == getNode(n))
             return;
         else
             overwriteNode(n);

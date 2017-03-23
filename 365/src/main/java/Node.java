@@ -5,12 +5,14 @@ import java.io.Serializable;
  */
 public class Node implements Serializable {
     short[] key;
+    long index;
     Node[] child;
     int NKeys;
     boolean isLeaf;
 
     Node() {
         key = null;
+        index = 0;
         child = null;
         NKeys = 0;
         isLeaf = false;
