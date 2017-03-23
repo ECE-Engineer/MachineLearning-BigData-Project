@@ -43,7 +43,7 @@ public class BTree implements Serializable {
     }
 
     public short[] getKeys() throws IOException, ClassNotFoundException {
-        raf = new RandomAccessFile(".\\Cache\\hashcacheNode", "r");
+        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
         short objectCount = (short) (raf.length() / (NODE_SIZE));
         short[] keys = new short[objectCount];
 
@@ -56,8 +56,22 @@ public class BTree implements Serializable {
         return keys;
     }
 
+    public Exoplanet getValue(Short k) throws IOException, ClassNotFoundException {
+        raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "r");
+        byte[] objectMask = new byte[EXOPLANET_SIZE];
+
+        //get the object
+        raf.seek(k * EXOPLANET_SIZE);
+        raf.read(objectMask);
+        Exoplanet temp = (Exoplanet) deserialize(objectMask);
+        //close the file
+        raf.close();
+
+        return temp;
+    }
+
     public Exoplanet[] getValues() throws IOException, ClassNotFoundException {
-        raf = new RandomAccessFile(".\\Cache\\hashcacheValue", "r");
+        raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "r");
         short objectCount = (short) (raf.length() / (EXOPLANET_SIZE));
         Exoplanet[] values = new Exoplanet[objectCount];
         byte[] objectMask = new byte[EXOPLANET_SIZE];
@@ -157,8 +171,8 @@ public class BTree implements Serializable {
         raf.close();
     }
 
-    public Node getNode() throws IOException, ClassNotFoundException {
-        raf = new RandomAccessFile(".\\Cache\\hashcacheNode", "r");
+    public Node getNode() throws IOException, ClassNotFoundException {////////////////////////////////////////////////////I will seek advice for this part B/C I'm uncertain of HOW TO ADJUST THE COUNTER when I'm moving up and down the tree!????????????????????????
+        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
         byte[] objectMask = new byte[NODE_SIZE];
         //seek to the position specified
         raf.seek(counter * NODE_SIZE - NODE_SIZE);
@@ -175,11 +189,11 @@ public class BTree implements Serializable {
         if (x != null)
             return x;
         else
-            return getNode();
+            return getNode();////////////////////////////////////////////////////I will seek advice for this part B/C I'm uncertain of HOW TO ADJUST THE COUNTER when I'm moving up and down the tree!????????????????????????
     }
 
     public void diskWrite(Node n) throws IOException, ClassNotFoundException {
-        if (n == getNode())
+        if (n == getNode())////////////////////////////////////////////////////I will seek advice for this part B/C I'm uncertain of HOW TO ADJUST THE COUNTER when I'm moving up and down the tree!????????????????????????
             return;
         else
             overwriteNode(n);
@@ -273,7 +287,7 @@ public class BTree implements Serializable {
             BTreeSplitChild(s, (short) 1);
             BTreeInsertNonFull(s, k);
         } else
-            BTreeInsertNonFull(r, k);
+            BTreeInsertNonFull(r, k);/////////////////////////////null pointer exception
     }
 
     public void BTreeInsertNonFull(Node x, short k) throws IOException, ClassNotFoundException {
@@ -283,7 +297,7 @@ public class BTree implements Serializable {
                 x.key[i + 1 - 1] = x.key[i - 1];
                 i = i - 1;
             }
-            x.key[i + 1 - 1] = k;
+            x.key[i + 1 - 1] = k;/////////////////////////////null pointer exception
             x.NKeys = x.NKeys + 1;
             diskWrite(x);
         } else {

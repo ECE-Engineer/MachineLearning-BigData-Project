@@ -59,7 +59,14 @@ public class Main {
 //        //make the gui visible
 //        //make the assignments in the list visible
         EventQueue.invokeLater(() -> {
-            GUI gui = new GUI();
+            GUI gui = null;
+            try {
+                gui = new GUI();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
             try {
                 /**do the Btree cache files exist*/
                 /**if they do NOT, then create the Btree cache & populate it with the data, THEN load the data into the BTREE structure*/
