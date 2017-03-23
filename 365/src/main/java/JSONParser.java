@@ -14,6 +14,13 @@ import com.google.gson.*;
 public class JSONParser {
     public HashAlgorithm<Short, Exoplanet> exoplanets = new HashAlgorithm<>();
     private final String USER_AGENT = "Mozilla/5.0";
+    private final int MAX_API_CALLS = 3;
+    private int apiCounter = 1;
+    private String totalAPIResponse = "";
+
+    public String getAPIResponse() {
+        return totalAPIResponse;
+    }
 
     /**
      * Pulls in the Kepler Object data, creates Exoplanet objects, and stores them in the hash table
@@ -48,9 +55,21 @@ public class JSONParser {
             System.out.println(e.getMessage());
         }
 
+        //construct the api response
+        if (apiCounter == 1)
+            totalAPIResponse += "[" + response.toString().replace("[","").replaceAll("]","");
+        else if (apiCounter == MAX_API_CALLS)
+            totalAPIResponse += ", " + response.toString().replace("[","").replaceAll("]","") + "]";
+        else
+            totalAPIResponse += ", " + response.toString().replace("[","").replaceAll("]","");
+        //increment counter
+        apiCounter++;
+    }
+
+    public void createHashTable(String s) {
         //parse the data out of the JSON object
         JsonParser parser = new JsonParser();
-        JsonObject obj1 = parser.parse("{         \"dataArray\": " + response.toString() + "         }").getAsJsonObject();
+        JsonObject obj1 = parser.parse("{         \"dataArray\": " + s + "         }").getAsJsonObject();
         JsonArray array = obj1.getAsJsonArray("dataArray");
 
         if (array.size() != 0){

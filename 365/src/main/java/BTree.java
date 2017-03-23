@@ -1,35 +1,30 @@
+import java.io.*;
+
 /**
  * @author Kyle Zeller
  * This class provides a way to store and access all of the exoplanet objects in an efficient manner.
  */
-public class BTree {
-    Node root;
-    static final int t = 32;
+public class BTree implements Serializable {
+    private RandomAccessFile raf;
+    private final short NODE_SIZE = 78;
+    private final short EXOPLANET_SIZE = 157;
+    private short DEGREE_TREE_LOCATION = 0;
+    private short ROOT_LOCATION = 2;
+    private Node root;
+    private int t = 32;
+
+    private short counter = 0;
 
     /**
      * The constructor calls BTree() to initialize the size of the BTree.
      */
-    public BTree() {
+    public BTree() throws IOException, ClassNotFoundException {
         Node x = allocateNode();
         x.isLeaf = true;
         x.NKeys = 0;
         diskWrite(x);
         this.root = x;
         root = x;
-    }
-
-    public class Node {
-        short[] key;
-        Node[] child;
-        int NKeys;
-        boolean isLeaf;
-
-        Node() {
-            key = null;
-            child = null;
-            NKeys = 0;
-            isLeaf = false;
-        }
     }
 
     public class Pair<Node, Integer> {
@@ -42,24 +37,195 @@ public class BTree {
         }
     }
 
-    //get keys>>>>>>>>>>>>>>>>>>>>traversal method
-
-    //get values>>>>>>>>>>>>>>>>>>traversal method
-
-    public Node allocateNode() {
-        //allocate a page of disk space to a node
-
+    public short getNumberOfNodes() throws IOException {
+        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
+        return (short) (raf.length()/(NODE_SIZE));
     }
 
-    public Node diskRead(Node x) {////////////////////////////////////////////////parameter and result
+    public short[] getKeys() throws IOException, ClassNotFoundException {
+        raf = new RandomAccessFile(".\\Cache\\hashcacheNode", "r");
+        short objectCount = (short) (raf.length() / (NODE_SIZE));
+        short[] keys = new short[objectCount];
 
+        for (int i = 0; i < objectCount; i++) {
+            raf.seek(i * NODE_SIZE);
+            keys[i] = raf.readShort();
+        }
+        raf.close();
+
+        return keys;
     }
 
-    public void diskWrite(Node n) {
+    public Exoplanet[] getValues() throws IOException, ClassNotFoundException {
+        raf = new RandomAccessFile(".\\Cache\\hashcacheValue", "r");
+        short objectCount = (short) (raf.length() / (EXOPLANET_SIZE));
+        Exoplanet[] values = new Exoplanet[objectCount];
+        byte[] objectMask = new byte[EXOPLANET_SIZE];
 
+        for (int i = 0; i < objectCount; i++) {
+            //get the object
+            raf.seek(i * EXOPLANET_SIZE);
+            raf.read(objectMask);
+            values[i] = (Exoplanet) deserialize(objectMask);
+        }
+        raf.close();
+
+        return values;
     }
 
-    public Pair<Node, Integer> BTreeSearch(Node x, short k) {
+    public Node allocateNode() throws IOException, ClassNotFoundException {
+        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "rw");
+
+        //create a new node
+        Node n = new Node();
+        //seek to the end of the file
+        raf.seek(raf.length());
+        //write the value to the file
+        raf.write(serialize(n));
+        //seek to the node just created
+        raf.seek(NODE_SIZE * counter);
+        //get the object
+        byte[] objectMask = new byte[NODE_SIZE];
+        raf.read(objectMask);
+        Node temp = (Node) deserialize(objectMask);
+        //close the file
+        raf.close();
+        //increment the counter
+        counter++;
+        //return the node
+        return temp;
+    }
+
+    public void overwriteNode(Node n) throws IOException {
+        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "rw");
+
+        short objectCount = (short) (raf.length()/(NODE_SIZE));
+
+        if (counter-1 < objectCount) {
+            //adjust the pointer
+            raf.seek(counter * NODE_SIZE - NODE_SIZE);
+            //overwrite the object
+            raf.write(serialize(n));
+        }
+        //close the file
+        raf.close();
+    }
+
+    public void allocateValue(Exoplanet e) throws IOException, ClassNotFoundException {
+        raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "rw");
+
+        //seek to the end of the file
+        raf.seek(raf.length());
+        //write the value to the file
+        raf.write(serialize(e));
+        //seek to the node just created
+        raf.seek(EXOPLANET_SIZE * counter);
+        //close the file
+        raf.close();
+    }
+
+    public void overwriteValue(Exoplanet e) throws IOException {
+        raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "rw");
+
+        short objectCount = (short) (raf.length()/(EXOPLANET_SIZE));
+
+        if (counter-1 < objectCount) {
+            //adjust the pointer
+            raf.seek(counter * EXOPLANET_SIZE - EXOPLANET_SIZE);
+            //overwrite the object
+            raf.write(serialize(e));
+        }
+        //close the file
+        raf.close();
+    }
+
+    public void degreeToFile() throws IOException {
+        raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "rw");
+
+        //write the degree of the tree
+        raf.writeShort(this.t);
+        //close the file
+        raf.close();
+    }
+
+    public void rootToFile() throws IOException {
+        raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "rw");
+
+        //write the root of the tree
+        raf.write(serialize(this.root));
+        //close the file
+        raf.close();
+    }
+
+    public Node getNode() throws IOException, ClassNotFoundException {
+        raf = new RandomAccessFile(".\\Cache\\hashcacheNode", "r");
+        byte[] objectMask = new byte[NODE_SIZE];
+        //seek to the position specified
+        raf.seek(counter * NODE_SIZE - NODE_SIZE);
+        //get the key stored there
+        raf.read(objectMask);
+        Node temp = (Node) deserialize(objectMask);
+        //close the file
+        raf.close();
+        //return the key
+        return temp;
+    }
+
+    public Node diskRead(Node x) throws IOException, ClassNotFoundException {
+        if (x != null)
+            return x;
+        else
+            return getNode();
+    }
+
+    public void diskWrite(Node n) throws IOException, ClassNotFoundException {
+        if (n == getNode())
+            return;
+        else
+            overwriteNode(n);
+    }
+
+    public void setTreeDegree() throws IOException {
+        raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "rw");
+
+        //seek to the end of the file
+        raf.seek(DEGREE_TREE_LOCATION);
+        //get the degree of the tree
+        this.t = raf.readShort();
+        //close the file
+        raf.close();
+    }
+
+    public void setTreeRoot() throws IOException, ClassNotFoundException {
+        raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "rw");
+
+        //seek to the end of the file
+        raf.seek(ROOT_LOCATION);
+        byte[] objectMask = new byte[NODE_SIZE];
+        raf.read(objectMask);
+        this.root = (Node) deserialize(objectMask);
+        //close the file
+        raf.close();
+    }
+
+    private byte[] serialize(Object obj) throws IOException {
+        try(ByteArrayOutputStream b = new ByteArrayOutputStream()){
+            try(ObjectOutputStream o = new ObjectOutputStream(b)){
+                o.writeObject(obj);
+            }
+            return b.toByteArray();
+        }
+    }
+
+    private Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+        try(ByteArrayInputStream b = new ByteArrayInputStream(bytes)){
+            try(ObjectInputStream o = new ObjectInputStream(b)){
+                return o.readObject();
+            }
+        }
+    }
+
+    public Pair<Node, Integer> BTreeSearch(Node x, short k) throws IOException, ClassNotFoundException {
         int i = 0;
         while (i <= x.NKeys && k > x.key[i - 1])
             i = i + 1;
@@ -73,7 +239,7 @@ public class BTree {
         }
     }
 
-    public void BTreeSplitChild(Node x, short i) {
+    public void BTreeSplitChild(Node x, short i) throws IOException, ClassNotFoundException {
         Node z = allocateNode();
         Node y = x.child[i - 1];
         z.isLeaf = y.isLeaf;
@@ -96,7 +262,7 @@ public class BTree {
         diskWrite(x);
     }
 
-    public void BTreeInsert(BTree T, short k) {
+    public void BTreeInsert(BTree T, short k) throws IOException, ClassNotFoundException {
         Node r = T.root;
         if (r.NKeys == 2 * t - 1) {
             Node s = allocateNode();
@@ -110,7 +276,7 @@ public class BTree {
             BTreeInsertNonFull(r, k);
     }
 
-    public void BTreeInsertNonFull(Node x, short k) {
+    public void BTreeInsertNonFull(Node x, short k) throws IOException, ClassNotFoundException {
         int i = x.NKeys;
         if (x.isLeaf) {
             while (i >= 1 && k < x.key[i - 1]) {

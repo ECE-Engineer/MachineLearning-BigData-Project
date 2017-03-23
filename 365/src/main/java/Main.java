@@ -15,6 +15,32 @@ public class Main {
      * This invokes the graphical user interface, which displays it to the screen and listens for the button actions to be pressed
      */
     public static void main(String[] args) throws IOException, ClassNotFoundException {
+        ////LOADER::::::
+
+        //pull data from the API--------------------DONE
+
+        //store the API responses in the hashcache--------------------DONE
+
+        //make a TEMPORARY!!!!!! hashtable from the hashcache--------------------DONE
+
+        //store data objects in the btree --------------------DONE------------------------------BUT NOT VERIFIED
+
+        //(optionally) cluster the data
+
+        //-------------------------
+
+        //APPLICATION::::::
+
+        //load the BTree with the data from the files
+
+        //load or compute the clusters
+
+        //display clusters and data samples
+
+        //ALSO enable the user to look at specific data
+
+
+
 
 
 
@@ -30,8 +56,8 @@ public class Main {
         /**if YES, then the GUI should simply continue*/
 
 
-        //make the gui visible
-        //make the assignments in the list visible
+//        //make the gui visible
+//        //make the assignments in the list visible
         EventQueue.invokeLater(() -> {
             GUI gui = new GUI();
             try {
@@ -40,7 +66,9 @@ public class Main {
                 /**if they do, then check and see if it IS empty*/
                 /**if it is NOT, start the GUI*/
                 /**if it IS, populate it with the data, THEN load the data into the BTREE structure, THEN start the GUI*/
-                gui.loadDataAPI();/////////////////////////////////////////this loads data from the API
+                gui.loadDataAPI();/////////////////////////////////////////this loads data from the API AND THEN this stores the API response in the hashcache
+                gui.initFromFile();//make a TEMPORARY!!!!!! hashtable from the hashcache
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

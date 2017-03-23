@@ -2,6 +2,7 @@ import java.awt.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -22,7 +23,7 @@ public class GUI extends JFrame {
     /**
      * The constructor calls initComponents() to initialize all of the components of the graphical user interface
      */
-    public GUI() {
+    public GUI() throws IOException, ClassNotFoundException {
         initComponents();
     }
 
@@ -276,13 +277,13 @@ public class GUI extends JFrame {
     //load in all kepler objects from the API
     private final int MAX_AMOUNT = 2500;
 
-    //create a json parser object to collect the data from the API
-    private JSONParser http = new JSONParser();
-
     /**
      * Handles the loading of the data from the API
      */
     public void loadDataAPI() throws Exception {
+        //create a json parser object to collect the data from the API
+        JSONParser http = new JSONParser();
+
         //clear everything out of the hashtable
         http.exoplanets.clear();
 
@@ -293,7 +294,44 @@ public class GUI extends JFrame {
         http.sendGet(url);
         url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
         http.sendGet(url);
+
+        this.storeResponse(http);
     }
+
+    //create a hashcache object to use the data as needed
+    private HashCache APIcache = new HashCache();
+
+    public void storeResponse(JSONParser p) throws IOException, ClassNotFoundException {
+        APIcache.append(p.getAPIResponse());
+    }
+
+    //create a BTree to quickly find information
+    BTree btree = new BTree();
+
+    public void initFromFile() throws IOException, ClassNotFoundException {
+        //create a json parser object to collect the data from the API
+        JSONParser http = new JSONParser();
+        //create the hashtable
+        http.createHashTable(APIcache.getResponse());
+        //get all the keys of the kepler objects
+        ArrayList<Short> temp = http.exoplanets.keySet();
+        //populate the BTree
+        for (Short key : temp) {
+            //insert a key into the BTree
+            btree.BTreeInsert(this.btree, key);
+            //populate the Node & Value files
+            btree.allocateValue(http.exoplanets.getValue(key));
+        }
+        //write the root node & degree of btree to the Tree file
+        btree.degreeToFile();
+        btree.rootToFile();
+    }
+
+    public void initFromBTree() {
+
+    }
+
+
 
     /**
      * Handles the requests of the user: including the type & amount of data to retrieve and toggling the similarity metric
