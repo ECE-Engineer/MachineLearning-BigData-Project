@@ -302,7 +302,7 @@ public class GUI extends JFrame {
     private HashCache APIcache = new HashCache();
 
     public void storeResponse(JSONParser p) throws IOException, ClassNotFoundException {
-        APIcache.append(p.getAPIResponse());
+        APIcache.overwrite(p.getAPIResponse());
     }
 
     //create a BTree to quickly find information
