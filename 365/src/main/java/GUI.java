@@ -284,8 +284,8 @@ public class GUI extends JFrame {
         //create a json parser object to collect the data from the API
         JSONParser http = new JSONParser();
 
-        //clear everything out of the hashtable
-        http.exoplanets.clear();
+        //clear everything out of the tuple list
+        http.clearTupleList();
 
         //load all the API data
         String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000}}&limit=" + MAX_AMOUNT;
@@ -298,35 +298,52 @@ public class GUI extends JFrame {
         this.storeResponse(http);
     }
 
+
+
+
+
+
+
+
+
     //create a hashcache object to use the data as needed
-    private HashCache APIcache = new HashCache();
+    private HashCache APIcache = new HashCache();////////////////////////////////////////////////////////////////////////////////THIS WILL BE EDITED
 
     public void storeResponse(JSONParser p) throws IOException, ClassNotFoundException {
         APIcache.overwrite(p.getAPIResponse());
     }
 
     //create a BTree to quickly find information
-    BTree btree = new BTree();
+    BTree btree = new BTree();////////////////////////////////////////////////////////////////////////
 
     public void initFromFile() throws IOException, ClassNotFoundException {
         //create a json parser object to collect the data from the API
         JSONParser http = new JSONParser();
-        //create the hashtable
-        http.createHashTable(APIcache.getResponse());
-        //get all the keys of the kepler objects
-        ArrayList<Short> temp = http.exoplanets.keySet();
 
-        int counter = 0;
+        //create an arraylist of key, value tuples
+        http.createTuples(APIcache.getResponse());
+        //get all the keys and values of the kepler objects
+        ArrayList<Pair<Short, Exoplanet>> tuples = http.getTupleList();
+
+//        //create the hashtable
+//        http.createHashTable(APIcache.getResponse());
+
+
+
+        //populate the
+
+//        int counter = 0;
 
         //populate the BTree
-        for (Short key : temp) {
-            System.out.println(counter);//////////////////////prints out 0
-            //insert a key into the BTree
-            btree.BTreeInsert(this.btree, key);/////////////////////////////null pointer exception
-            //populate the Node & Value files
-            btree.allocateValue(http.exoplanets.getValue(key));
-            counter++;
-        }
+//        for (Short key : temp) {
+            //System.out.println(counter);//////////////////////prints out 0
+            //System.out.println("KEY IS : " + key.toString().substring(0,key.toString().length()-1));
+            //insert a key into the BTree and the value into the file
+//            btree.BTreeInsert(key, http.exoplanets.getValue(key));/////////////////////////////null pointer exception////////////////////////////////////
+            //System.out.println(btree.BTreeSearch(key).toString());
+//            counter++;
+//        }
+
         //write the root node & degree of btree to the Tree file
         btree.degreeToFile();
         btree.rootToFile();

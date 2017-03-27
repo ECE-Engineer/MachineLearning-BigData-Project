@@ -55,10 +55,10 @@ public class HashCache implements Serializable {
     }
 
 private Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
-        try(ByteArrayInputStream b = new ByteArrayInputStream(bytes)){
-            try(ObjectInputStream o = new ObjectInputStream(b)){
-                return o.readObject();
-                }
+    try(ByteArrayInputStream b = new ByteArrayInputStream(bytes)){
+        try(ObjectInputStream o = new ObjectInputStream(b)){
+            return o.readObject();
             }
         }
+    }
 }

@@ -6,16 +6,18 @@ import java.io.Serializable;
 public class Node implements Serializable {
     short[] key;
     short index;
+    short[] nodeIndex;
     short[] valIndex;
-    Node[] child;
+    Node[] child;/////////////////////////////////////////////////
     int NKeys;
     boolean isLeaf;
 
-    Node(int t) {
-        key = new short[t - 1]; // WAS null
+    Node(int order) {
+        key = new short[order - 1];
         index = 0;
-        valIndex = null;
-        child = new Node[t];
+        nodeIndex = null;/**ASK CHRIS WHAT TO DO WITH THIS*/
+        valIndex = new short[order - 1];
+        child = new Node[order];
         NKeys = 0;
         isLeaf = false;
     }
