@@ -27,5 +27,5 @@ Task Number | Task Title | COMPLETED
 4 | Pre-Categorize Keys Into Clusters Using K-Means Clustering Or A Similar Metric | 
 5 | Edit The GUI To Display The Clustering Of The Objects In The Data | 
 
-## Latest Zip File
+## Latest Stable Copy
 [Class Project Zip](http://cs.oswego.edu/~kzeller/Portfolio/coursework/csc365/MachineLearning-BigData-Project.zip)
