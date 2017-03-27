@@ -21,9 +21,9 @@ Task Number | Task Title | COMPLETED
 ### Assignment Two
 Task Number | Task Title | COMPLETED
 ----------- | ---------- | ---------
-1 | Create A Hash-Based Cache For The Data | 
-2 | Create A Persistent BTree Class Of Keys, With Values In A Separate Persistent Structure Or Files | 
-3 | Preload At Least 1000 Key-Value Pairs | 
+1 | Create A Hash-Based Cache For The Data | X
+2 | Create A Persistent BTree Class Of Keys, With Values In A Separate Persistent Structure Or Files | X
+3 | Preload At Least 1000 Key-Value Pairs | X
 4 | Pre-Categorize Keys Into Clusters Using K-Means Clustering Or A Similar Metric | 
 5 | Edit The GUI To Display The Clustering Of The Objects In The Data | 
 
