@@ -330,7 +330,11 @@ public class GUI extends JFrame {
 
 
 
-        //populate the
+        //populate the BTree
+        for (Pair<Short, Exoplanet> pair : tuples) {
+            //insert a key into the BTree and the value into the file
+            btree.BTreeInsert(pair.pairShort, pair.pairExoplanet);
+        }
 
 //        int counter = 0;
 
@@ -352,6 +356,70 @@ public class GUI extends JFrame {
 //    public void initFromBTree() {
 //
 //    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
