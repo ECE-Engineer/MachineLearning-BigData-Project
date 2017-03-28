@@ -57,7 +57,7 @@ public class HashCache implements Serializable {
         raf.seek(0);
         //write the api response to the file
         raf.write(serialize(l));
-        System.out.println(serialize(l).length);//////////////////////////////////////////////
+        System.out.println(serialize(l).length);/////////////////////////////
         //close the file
         raf.close();
     }

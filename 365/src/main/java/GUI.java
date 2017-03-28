@@ -315,8 +315,8 @@ public class GUI extends JFrame {
      */
     public void loadFromFile() throws IOException, ClassNotFoundException {
         //load the BTree
-        btree.setTreeDegree();//////////////////////////////MAKE SURE THESE ARE OPERATING PROPERLY
-        btree.setTreeRoot();//////////////////////////////MAKE SURE THESE ARE OPERATING PROPERLY
+        btree.readTreeDegree();
+        btree.readTreeRoot();
     }
 
     /**
@@ -350,12 +350,12 @@ public class GUI extends JFrame {
         //populate the BTree
         for (Pair<Short, Exoplanet> pair : tuples) {
             //insert a key into the BTree and the value into the file
-            btree.BTreeInsert(pair.pairShort, pair.pairExoplanet);//////////////////////////////////////////CHECK TO SEE IF YOU ARE OVERWRITING VALUES AT THIS STAGE AS YOU SHOULD NOT BE ---- B/C ---- YOU DO THAT IF THE TREE ALREADY EXISTS!!!!!!!!!! -------------ACTUALLY JUST ALWAYS OVERWRITE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            btree.BTreeInsert(pair.pairShort, pair.pairExoplanet);
         }
 
         //write the root node & degree of btree to the btreecache file
-        btree.degreeToFile();//////////////////////////////////////////CHECK TO SEE HOW THIS IS BEING STORED ---------------- AND HOW IT IS BEING RETREIVED TO RECREATE THE TREE AT STARTUP!!!!!! IF THE TREE ALREADY EXISTS IN MEMORY!!
-        btree.rootToFile();//////////////////////////////////////////CHECK TO SEE HOW THIS IS BEING STORED ---------------- AND HOW IT IS BEING RETREIVED TO RECREATE THE TREE AT STARTUP!!!!!! IF THE TREE ALREADY EXISTS IN MEMORY!!
+        btree.overwriteDegreeToFile();
+        btree.overwriteRootToFile();
     }
 
 
