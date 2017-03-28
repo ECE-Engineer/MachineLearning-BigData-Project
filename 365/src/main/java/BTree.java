@@ -1,3 +1,5 @@
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.io.*;
 import java.util.ArrayList;
 
@@ -7,7 +9,7 @@ import java.util.ArrayList;
  */
 public class BTree implements Serializable {
     private RandomAccessFile raf;
-    private final short NODE_SIZE = 182;
+    private final short RECORD_SIZE = 82;
     private final short EXOPLANET_SIZE = 157;
     private short DEGREE_TREE_LOCATION = 0;
     private short ROOT_LOCATION = 2;
@@ -42,13 +44,13 @@ public class BTree implements Serializable {
 //     */
 //    public short[] getKeys() throws IOException, ClassNotFoundException {
 //        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
-//        short objectCount = (short) (raf.length() / (NODE_SIZE));
+//        short objectCount = (short) (raf.length() / (RECORD_SIZE));
 //        short[] keys = new short[objectCount];
 //
 //        for (int i = 0; i < objectCount; i++) {
-//            byte[] objectMask = new byte[NODE_SIZE];
+//            byte[] objectMask = new byte[RECORD_SIZE];
 //            //seek to the position specified
-//            raf.seek(i * NODE_SIZE);
+//            raf.seek(i * RECORD_SIZE);
 //            //get the key stored there
 //            raf.read(objectMask);
 //            Node temp = (Node) deserialize(objectMask);
@@ -88,9 +90,9 @@ public class BTree implements Serializable {
 
     //    public Node getNode(Node n) throws IOException, ClassNotFoundException {
 //        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
-//        byte[] objectMask = new byte[NODE_SIZE];
+//        byte[] objectMask = new byte[RECORD_SIZE];
 //        //seek to the position specified
-//        raf.seek(n.index * NODE_SIZE);
+//        raf.seek(n.index * RECORD_SIZE);
 //        //get the key stored there
 //        raf.read(objectMask);
 //        Node temp = (Node) deserialize(objectMask);
@@ -128,7 +130,7 @@ public class BTree implements Serializable {
      */
     public short getNumberOfNodes() throws IOException {
         raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
-        return (short) (raf.length()/(NODE_SIZE));
+        return (short) (raf.length()/(RECORD_SIZE));
     }
 
     public short getKeyCount(Node x) throws IOException, ClassNotFoundException {
@@ -206,9 +208,11 @@ public class BTree implements Serializable {
         raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "rw");
 
         //adjust the pointer
-        raf.seek(n.index * NODE_SIZE);
+        raf.seek(n.index * RECORD_SIZE);
         //overwrite the object
-        raf.write(serialize(n));
+        //write everything except for the node array to file & instead of the node array, write the array of pointers to the nodes in memory
+        raf.write(serialize(new Record<Short, Integer, Boolean>(n.key, n.index, n.nodeIndex, n.valIndex, n.NKeys, n.isLeaf)));
+
         //close the file
         raf.close();
     }
@@ -279,15 +283,62 @@ public class BTree implements Serializable {
         raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "rw");
 
         //adjust the pointer
-        raf.seek(pos * NODE_SIZE);
-        byte[] objectMask = new byte[NODE_SIZE];
+        raf.seek(pos * RECORD_SIZE);
+
+        //read in all the parts and create the BTree OR CREATE THE ROOT >>>>>>>> then write a method to create the BTree using its node >>>>>>>_____________ NOTE that the NODE array is EMPTY TO START IF YOU DO THIS & WHEN YOU CREATE THE BTree, >>>>> REALLY YOU WILL JUST BE RECURSIVELY FILLING THE node arrays >>>> starting with the root
+
+
+
+
+
+        byte[] objectMask = new byte[RECORD_SIZE];
         raf.read(objectMask);
 
         //close the file
         raf.close();
 
-        return (Node) deserialize(objectMask);/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues start here 1
+        //create a temporary record
+        Record<Short, Integer, Boolean> temp = (Record<Short, Integer, Boolean>) deserialize(objectMask);
+
+        //create an empty node
+        Node node = new Node();
+
+        //set all the features of the node
+        node.key = temp.key;
+        node.index = temp.index;
+        node.nodeIndex = temp.nodeIndex;
+        node.valIndex = temp.valIndex;
+        node.NKeys = temp.NKeys;
+        node.isLeaf = temp.isLeaf;
+
+        return node;////////////////////////////////REMEMBER THAT THE NODE ARRAY IS EMPTY & THAT YOU WILL HAVE TO CREATE A BTREE CREATE METHOD THAT FILLS THIS ARRAY APPROPRIATELY!!!!!!!!!!!!!!!
     }
+
+//    public void readNode(Node r) throws IOException, ClassNotFoundException {
+//        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "rw");
+//
+//        //seek to the node specified
+//        raf.seek(ROOT_LOCATION);
+//        this.root = getRoot(raf.readShort());/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues 2
+//        //close the file
+//        raf.close();
+//    }
+//
+//    public Node readNode(short pos) throws IOException, ClassNotFoundException {
+//        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "rw");
+//
+//        //adjust the pointer
+//        raf.seek(pos * RECORD_SIZE);
+//        byte[] objectMask = new byte[RECORD_SIZE];
+//        raf.read(objectMask);
+//
+//        //close the file
+//        raf.close();
+//
+//        return (Node) deserialize(objectMask);/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues start here 1
+//    }
+
+
 
     private byte[] serialize(Object obj) throws IOException {
         try(ByteArrayOutputStream b = new ByteArrayOutputStream()){

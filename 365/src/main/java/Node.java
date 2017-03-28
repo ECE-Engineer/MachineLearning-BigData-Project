@@ -8,16 +8,26 @@ public class Node implements Serializable {
     short index;
     short[] nodeIndex;
     short[] valIndex;
-    Node[] child;/////////////////////////////////////////////////
+    Node[] child;
     int NKeys;
     boolean isLeaf;
 
     Node(int order) {
         key = new short[order - 1];
         index = 0;
-        nodeIndex = null;/**ASK CHRIS WHAT TO DO WITH THIS*/
+        nodeIndex = null;
         valIndex = new short[order - 1];
         child = new Node[order];
+        NKeys = 0;
+        isLeaf = false;
+    }
+
+    Node() {
+        key = null;
+        index = 0;
+        nodeIndex = null;
+        valIndex = null;
+        child = null;
         NKeys = 0;
         isLeaf = false;
     }
