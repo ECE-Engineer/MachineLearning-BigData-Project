@@ -270,7 +270,7 @@ public class BTree implements Serializable {
 
         //seek to the end of the degree of tree location
         raf.seek(ROOT_LOCATION);
-        this.root = getRoot(raf.readShort());
+        this.root = getRoot(raf.readShort());/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues 2
         //close the file
         raf.close();
     }
@@ -286,7 +286,7 @@ public class BTree implements Serializable {
         //close the file
         raf.close();
 
-        return (Node) deserialize(objectMask);
+        return (Node) deserialize(objectMask);/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues start here 1
     }
 
     private byte[] serialize(Object obj) throws IOException {
@@ -301,7 +301,7 @@ public class BTree implements Serializable {
     private Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
         try(ByteArrayInputStream b = new ByteArrayInputStream(bytes)){
             try(ObjectInputStream o = new ObjectInputStream(b)){
-                return o.readObject();
+                return o.readObject();/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues
             }
         }
     }

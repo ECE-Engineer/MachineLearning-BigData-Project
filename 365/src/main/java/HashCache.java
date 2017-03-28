@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class HashCache implements Serializable {
     private RandomAccessFile raf;
     private final short TRIPLE_SIZE = 299;
-    private final short TIMESTAMP_SIZE = 299;
+    private final short TIMESTAMP_SIZE = 51;
 
     public void overwrite(Triple<String> t, String s) throws IOException {
         raf = new RandomAccessFile(".\\Cache\\hashcache", "rw");
@@ -57,7 +57,6 @@ public class HashCache implements Serializable {
         raf.seek(0);
         //write the api response to the file
         raf.write(serialize(l));
-        System.out.println(serialize(l).length);/////////////////////////////
         //close the file
         raf.close();
     }

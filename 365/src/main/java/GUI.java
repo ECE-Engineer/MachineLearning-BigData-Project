@@ -295,11 +295,11 @@ public class GUI extends JFrame {
                 loadFromAPI();
             } else {
                 //run the file loader b/c the data is up to date
-                loadFromFile();
+                loadFromFile();/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues
             }
         } else {
             //write a timestamp to file
-            APIcache.writeTimeStamp(LocalDateTime.now());/////////////////////////////////////////////////////make sure that the file is overwritten!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            APIcache.writeTimeStamp(LocalDateTime.now());
             //create and write the API response and API call to file and populate the BTree
             loadFromAPI();
         }
@@ -316,7 +316,7 @@ public class GUI extends JFrame {
     public void loadFromFile() throws IOException, ClassNotFoundException {
         //load the BTree
         btree.readTreeDegree();
-        btree.readTreeRoot();
+        btree.readTreeRoot();/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues
     }
 
     /**
