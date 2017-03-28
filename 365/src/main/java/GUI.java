@@ -285,22 +285,44 @@ public class GUI extends JFrame {
     public void generalLoad() throws Exception {
         //check to see if the cache file exists
         if (new File(".\\Cache\\hashcache").exists()) {
-            ///////if it does read and compare the time stamps
-
+            //get the current timestamp
+            LocalDateTime currentTime = LocalDateTime.now();
+            //get the past timestamp
+            LocalDateTime pastTime = APIcache.readTimeStamp();
+            //check to see if the timestamp is out of date
+            if ((currentTime.getYear() > pastTime.getYear()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() > pastTime.getMonthValue()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() == pastTime.getMonthValue() && currentTime.getDayOfMonth() > pastTime.getDayOfMonth()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() == pastTime.getMonthValue() && currentTime.getDayOfMonth() == pastTime.getDayOfMonth() && currentTime.getHour() > pastTime.getHour())) {
+                //run the API loader b/c the data is out of date
+                loadFromAPI();
+            } else {
+                //run the file loader b/c the data is up to date
+                loadFromFile();
+            }
         } else {
-            //////otherwise create and write a timestamp to file
-            APIcache.writeTimeStamp(LocalDateTime.now());
-            loadDataAPI();
+            //write a timestamp to file
+            APIcache.writeTimeStamp(LocalDateTime.now());/////////////////////////////////////////////////////make sure that the file is overwritten!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            //create and write the API response and API call to file and populate the BTree
+            loadFromAPI();
         }
     }
 
     //create a BTree to quickly find information
     BTree btree = new BTree();
 
+
+
+    /**
+     * Loads the BTree from file.
+     */
+    public void loadFromFile() throws IOException, ClassNotFoundException {
+        //load the BTree
+        btree.setTreeDegree();//////////////////////////////MAKE SURE THESE ARE OPERATING PROPERLY
+        btree.setTreeRoot();//////////////////////////////MAKE SURE THESE ARE OPERATING PROPERLY
+    }
+
     /**
      * Gets all the data from the API, writes the API response to file, loads the API response into main memory, and then loads the BTree.
      */
-    public void loadDataAPI() throws Exception {
+    public void loadFromAPI() throws Exception {
         //create a json parser object to collect the data from the API
         JSONParser http = new JSONParser();
 
@@ -326,66 +348,18 @@ public class GUI extends JFrame {
         ArrayList<Pair<Short, Exoplanet>> tuples = http.getTupleList();
 
         //populate the BTree
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        //run the rest of the GUI!!!!
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    }
-
-
-
-
-
-
-
-
-
-
-
-//    public void initFromBTree() {
-//
-//    }
-
-
-
-
-
-    public void initFromFile() throws IOException, ClassNotFoundException {
-        //create a json parser object to collect the data from the API
-        JSONParser http = new JSONParser();
-
-        //create an arraylist of key, value tuples
-        http.createTuples(APIcache.getResponse());
-        //get all the keys and values of the kepler objects
-        ArrayList<Pair<Short, Exoplanet>> tuples = http.getTupleList();
-
-//        //create the hashtable
-//        http.createHashTable(APIcache.getResponse());
-
-
-
-        //populate the BTree
         for (Pair<Short, Exoplanet> pair : tuples) {
             //insert a key into the BTree and the value into the file
-            btree.BTreeInsert(pair.pairShort, pair.pairExoplanet);
+            btree.BTreeInsert(pair.pairShort, pair.pairExoplanet);//////////////////////////////////////////CHECK TO SEE IF YOU ARE OVERWRITING VALUES AT THIS STAGE AS YOU SHOULD NOT BE ---- B/C ---- YOU DO THAT IF THE TREE ALREADY EXISTS!!!!!!!!!! -------------ACTUALLY JUST ALWAYS OVERWRITE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         }
 
-//        int counter = 0;
-
-        //populate the BTree
-//        for (Short key : temp) {
-            //System.out.println(counter);//////////////////////prints out 0
-            //System.out.println("KEY IS : " + key.toString().substring(0,key.toString().length()-1));
-            //insert a key into the BTree and the value into the file
-//            btree.BTreeInsert(key, http.exoplanets.getValue(key));/////////////////////////////null pointer exception////////////////////////////////////
-            //System.out.println(btree.BTreeSearch(key).toString());
-//            counter++;
-//        }
-
-        //write the root node & degree of btree to the Tree file
-        btree.degreeToFile();
-        btree.rootToFile();
+        //write the root node & degree of btree to the btreecache file
+        btree.degreeToFile();//////////////////////////////////////////CHECK TO SEE HOW THIS IS BEING STORED ---------------- AND HOW IT IS BEING RETREIVED TO RECREATE THE TREE AT STARTUP!!!!!! IF THE TREE ALREADY EXISTS IN MEMORY!!
+        btree.rootToFile();//////////////////////////////////////////CHECK TO SEE HOW THIS IS BEING STORED ---------------- AND HOW IT IS BEING RETREIVED TO RECREATE THE TREE AT STARTUP!!!!!! IF THE TREE ALREADY EXISTS IN MEMORY!!
     }
+
+
+
 
 
 

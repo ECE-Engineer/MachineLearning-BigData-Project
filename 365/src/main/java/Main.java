@@ -62,9 +62,7 @@ public class Main {
             GUI gui = null;
             try {
                 gui = new GUI();
-            } catch (IOException e) {
-                e.printStackTrace();
-            } catch (ClassNotFoundException e) {
+            } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             }
             try {
@@ -73,8 +71,7 @@ public class Main {
                 /**if they do, then check and see if it IS empty*/
                 /**if it is NOT, start the GUI*/
                 /**if it IS, populate it with the data, THEN load the data into the BTREE structure, THEN start the GUI*/
-                gui.loadDataAPI();/////////////////////////////////////////this loads data from the API AND THEN this stores the API response in the hashcache
-                gui.initFromFile();//make a TEMPORARY!!!!!! hashtable from the hashcache
+                gui.generalLoad();
 
             } catch (Exception e) {
                 e.printStackTrace();
