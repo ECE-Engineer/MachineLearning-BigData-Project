@@ -1,4 +1,5 @@
 import java.io.*;
+import java.time.LocalDateTime;
 
 /**
  * @author Kyle Zeller
@@ -7,6 +8,36 @@ import java.io.*;
 
 public class HashCache implements Serializable {
     private RandomAccessFile raf;
+    private final short TRIPLE_SIZE = 299;
+    private final short TIMESTAMP_SIZE = 299;
+
+    public void overwrite(Triple<String> t, String s) throws IOException {
+        raf = new RandomAccessFile(".\\Cache\\hashcache", "rw");
+
+        //seek to the start of the file
+        raf.seek(0);
+        //write the url key to the file
+        raf.write(this.serialize(t));
+        //write the api response to the file
+        raf.write(serialize(s));
+        //close the file
+        raf.close();
+    }
+
+    public String getResponse() throws IOException, ClassNotFoundException {
+        raf = new RandomAccessFile(".\\Cache\\hashcache", "r");
+        final int RESPONSE_SIZE = (int) (raf.length() - TRIPLE_SIZE);
+        byte[] objectMask = new byte[RESPONSE_SIZE];
+        //seek to the position specified
+        raf.seek(TRIPLE_SIZE);
+        //get the key stored there
+        raf.read(objectMask);
+        String temp = (String) deserialize(objectMask);
+        //close the file
+        raf.close();
+        //return the string
+        return temp;
+    }
 
     public void append(String s) throws IOException {
         raf = new RandomAccessFile(".\\Cache\\hashcache", "rw");
@@ -19,29 +50,29 @@ public class HashCache implements Serializable {
         raf.close();
     }
 
-    public void overwrite(String s) throws IOException {
-        raf = new RandomAccessFile(".\\Cache\\hashcache", "rw");
+    public void writeTimeStamp(LocalDateTime l) throws IOException {
+        raf = new RandomAccessFile(".\\Cache\\timecache", "rw");
 
         //seek to the start of the file
         raf.seek(0);
         //write the api response to the file
-        raf.write(serialize(s));
+        raf.write(serialize(l));
+        System.out.println(serialize(l).length);//////////////////////////////////////////////
         //close the file
         raf.close();
     }
 
-    public String getResponse() throws IOException, ClassNotFoundException {
-        raf = new RandomAccessFile(".\\Cache\\hashcache", "r");
-        final int RESPONSE_SIZE = (int) raf.length();
-        byte[] objectMask = new byte[RESPONSE_SIZE];
+    public LocalDateTime readTimeStamp() throws IOException, ClassNotFoundException {
+        raf = new RandomAccessFile(".\\Cache\\timecache", "r");
+        byte[] objectMask = new byte[TIMESTAMP_SIZE];
         //seek to the position specified
         raf.seek(0);
         //get the key stored there
         raf.read(objectMask);
-        String temp = (String) deserialize(objectMask);
+        LocalDateTime temp = (LocalDateTime) deserialize(objectMask);
         //close the file
         raf.close();
-        //return the string
+
         return temp;
     }
 

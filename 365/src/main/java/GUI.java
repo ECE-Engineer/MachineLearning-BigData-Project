@@ -1,9 +1,11 @@
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -277,8 +279,26 @@ public class GUI extends JFrame {
     //load in all kepler objects from the API
     private final int MAX_AMOUNT = 2500;
 
+    //create a hashcache object to use the data as needed
+    private HashCache APIcache = new HashCache();
+
+    public void generalLoad() throws Exception {
+        //check to see if the cache file exists
+        if (new File(".\\Cache\\hashcache").exists()) {
+            ///////if it does read and compare the time stamps
+
+        } else {
+            //////otherwise create and write a timestamp to file
+            APIcache.writeTimeStamp(LocalDateTime.now());
+            loadDataAPI();
+        }
+    }
+
+    //create a BTree to quickly find information
+    BTree btree = new BTree();
+
     /**
-     * Handles the loading of the data from the API
+     * Gets all the data from the API, writes the API response to file, loads the API response into main memory, and then loads the BTree.
      */
     public void loadDataAPI() throws Exception {
         //create a json parser object to collect the data from the API
@@ -288,14 +308,28 @@ public class GUI extends JFrame {
         http.clearTupleList();
 
         //load all the API data
-        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000}}&limit=" + MAX_AMOUNT;
-        http.sendGet(url);
-        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000}}&limit=" + MAX_AMOUNT;
-        http.sendGet(url);
-        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
-        http.sendGet(url);
+        String url1 = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url1);
+        String url2 = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url2);
+        String url3 = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url3);
 
-        this.storeResponse(http);
+        //write the API response to file
+        APIcache.overwrite(new Triple<String>(url1, url2, url3), http.getAPIResponse());
+
+        //load the API response into main memory
+        //create an arraylist of key, value tuples
+        http.createTuples(APIcache.getResponse());
+
+        //get all the keys and values of the kepler objects
+        ArrayList<Pair<Short, Exoplanet>> tuples = http.getTupleList();
+
+        //populate the BTree
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        //run the rest of the GUI!!!!
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
 
@@ -306,15 +340,15 @@ public class GUI extends JFrame {
 
 
 
-    //create a hashcache object to use the data as needed
-    private HashCache APIcache = new HashCache();////////////////////////////////////////////////////////////////////////////////THIS WILL BE EDITED
 
-    public void storeResponse(JSONParser p) throws IOException, ClassNotFoundException {
-        APIcache.overwrite(p.getAPIResponse());
-    }
 
-    //create a BTree to quickly find information
-    BTree btree = new BTree();////////////////////////////////////////////////////////////////////////
+//    public void initFromBTree() {
+//
+//    }
+
+
+
+
 
     public void initFromFile() throws IOException, ClassNotFoundException {
         //create a json parser object to collect the data from the API
@@ -353,9 +387,7 @@ public class GUI extends JFrame {
         btree.rootToFile();
     }
 
-//    public void initFromBTree() {
-//
-//    }
+
 
 
 

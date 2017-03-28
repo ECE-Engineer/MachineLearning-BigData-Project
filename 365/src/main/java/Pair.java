@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 /**
  * Created by Kyle on 3/27/2017.
  */
-public class Pair<Short, Exoplanet> {
+public class Pair<Short, Exoplanet> implements Serializable {
     final Short pairShort;
     final Exoplanet pairExoplanet;
 
