@@ -1,6 +1,7 @@
 import java.io.Serializable;
 
 /**
+ * @author Kyle Zeller
  * This class provides a way to store all Three API calls necessary to grab all the data from the Kepler API.
  */
 public class Triple<String> implements Serializable {

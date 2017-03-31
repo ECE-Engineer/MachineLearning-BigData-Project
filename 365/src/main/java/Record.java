@@ -1,6 +1,7 @@
 import java.io.Serializable;
 
 /**
+ * @author Kyle Zeller
  * This class provides a way to store all the nodes as on disk with a fixed size.
  */
 public class Record implements Serializable {

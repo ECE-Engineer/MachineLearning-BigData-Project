@@ -1,6 +1,7 @@
 import java.io.Serializable;
 
 /**
+ * @author Kyle Zeller
  * This class provides a way to store all the data necessary to create a node in a BTree.
  */
 public class Node implements Serializable {

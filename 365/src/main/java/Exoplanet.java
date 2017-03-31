@@ -85,7 +85,7 @@ public class Exoplanet implements Serializable {
     public float getRSTAR(){return RSTAR;}
 
     /**
-     * Returns the Returns the Effective temperature of host star as reported in KIC (k)
+     * Returns the Effective temperature of host star as reported in KIC (k)
      * @return returns the Effective temperature of host star as reported in KIC (k)
      */
     public short getTSTAR(){return TSTAR;}
@@ -137,4 +137,64 @@ public class Exoplanet implements Serializable {
      * @return returns the Derived stellar mass (msol)
      */
     public float getMSTAR(){return MSTAR;}
+
+    /**
+     * Sets the Semi-major axis (AU)
+     */
+    public void setA(float v){A = v;}
+
+    /**
+     * Sets the Planetary radius (Earth radii)
+     */
+    public void setDEC(float v){DEC = v;}
+
+    /**
+     * Sets the Stellar radius (Sol radii)
+     */
+    public void setRSTAR(float v){RSTAR = v;}
+
+    /**
+     * Sets the Effective temperature of host star as reported in KIC (k)
+     */
+    public void setTSTAR(short v){TSTAR = v;}
+
+    /**
+     * Sets the Kepler magnitude (kmag)
+     */
+    public void setKMAG(float v){KMAG = v;}
+
+    /**
+     * Sets the Equilibrium temperature of planet, per Borucki et al. (k)
+     */
+    public void setTPLANET(short v){TPLANET = v;}
+
+    /**
+     * Sets the Time of transit center (BJD-2454900)
+     */
+    public void setT0(float v){T0 = v;}
+
+    /**
+     * Sets the Uncertainty in time of transit center (+-jd)
+     */
+    public void setUT0(float v){UT0 = v;}
+
+    /**
+     * Sets the Period (days)
+     */
+    public void setPER(float v){PER = v;}
+
+    /**
+     * Sets the Right ascension (@J200)
+     */
+    public void setRA(float v){RA = v;}
+
+    /**
+     * Sets the Planetary radius (Sol radii)
+     */
+    public void setRPLANET(float v){RPLANET = v;}
+
+    /**
+     * Sets the Derived stellar mass (msol)
+     */
+    public void setMSTAR(float v){MSTAR = v;}
 }

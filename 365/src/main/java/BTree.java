@@ -56,11 +56,7 @@ public class BTree implements Serializable {
         //seek to the end of the degree of tree location
         raf.seek(ROOT_LOCATION);
 
-
         short temp = raf.readShort();
-
-
-
 
         //set the root of the BTree
         this.root = getNode(temp);
@@ -85,6 +81,24 @@ public class BTree implements Serializable {
                     keys.add(eachKey);
         }
         return keys;
+    }
+
+    public ArrayList<Exoplanet> getValues() throws IOException, ClassNotFoundException {
+        return getValues(this.root);
+    }
+
+    public ArrayList<Exoplanet> getValues(Node x) throws IOException, ClassNotFoundException {
+        ArrayList<Exoplanet> values = new ArrayList<>();
+        if (!x.isLeaf)
+            for (Exoplanet eachValue : getValues(getNode(x.childIndex[1 - 1])))
+                values.add(eachValue);
+        for (int i = 1; i <= x.NKeys; i++) {
+            values.add(getValue(x.valIndex[i - 1]));
+            if (!x.isLeaf)
+                for (Exoplanet eachValue : getValues(getNode(x.childIndex[i + 1 - 1])))
+                    values.add(eachValue);
+        }
+        return values;
     }
 
     /**
@@ -226,7 +240,6 @@ public class BTree implements Serializable {
 
         return node;
     }
-
 
     public Exoplanet BTreeSearch(short k) throws IOException, ClassNotFoundException {
         return BTreeSearch(this.root, k);

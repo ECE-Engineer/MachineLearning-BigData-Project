@@ -762,103 +762,96 @@ public class GUI extends JFrame {
     }
 
 
-//    public ArrayList<Exoplanet> kMeansClustering(ArrayList<Short> keys, int clusterAmount) throws IOException, ClassNotFoundException {
-//        final int ITERATIONS = 30;
-//
-//
-//        //ArrayList<Exoplanet> largeList = new ArrayList<>();
-//
-//        ArrayList<ArrayList<Short>> clusters = new ArrayList<>(clusterAmount);
-//        Random rand = new Random();
-//        //select N centroids at random//////////////////////////////////////MAKE THE CORRESPONDING CHANGES TO MAKE THESE THE EXOPLANET OBJECTS
-//        ArrayList<Short> temp = keys;
-//        for (int i = 0; i < clusterAmount; i++) {
-//            short key = keys.get(rand.nextInt(temp.size()));
-//            ArrayList<Short> temp2 = new ArrayList<>();
-//            temp2.add(key);
-//            clusters.add(i, temp2);
-//            temp.remove(key);
-//        }
-//
-//        for (int z = 0; z < ITERATIONS; z++) {
-//            double[] centroidValues = new double[clusterAmount];
-//            if (z == 0) {
-//                //calculate the distance of every data point to all the centroids to determine which cluster to place the point into
-//                for (short k : keys) {
-//                    //calculate one point to every centroid and place it into a cluster
-//                    //the clusters are labeled 0 through n-1 -->> so make a list of values the sie of the amount of clusters and the index of the one that is most similar USE THE INDEX to put the corresponding value into the specific cluster
-//                    double[] similarityValues = new double[clusterAmount];
-//                    for (int i = 0; i < similarityValues.length; i++) {
-//                        similarityValues[i] = ED(clusters.get(i).get(0), k);////it is assumed here that the centroid will always be located at the the FIRST location in every cluster!
-//                    }
-//                    //find the best similarity value
-//                    int position = 0;
-//                    for (int i = 0; i < similarityValues.length-1; i++) {
-//                        if (similarityValues[i+1] < similarityValues[i])
-//                            position = i;
-//                    }
-//                    //add to the cluster
-//                    clusters.get(position).add(k);
-//                }
-//
-//                //recalculate the new centroid for every cluster
-//                for (int i = 0; i < clusterAmount; i++) {
-//                    //get a new centroid as an average of all the points in that cluster
-//                    double totalSum = 0;
-//                    for (int j = 0; j < clusters.get(i).size(); j++) {
-//                        totalSum += SUM(clusters.get(i).get(j));
-//                    }
-//                    totalSum /= clusters.get(i).size();
-//                    centroidValues[i] = totalSum;/////////////////////////////////////////when repeating, just look at these for the centroids INSTEAD OF THE ARRAYLIST OF ARRAYLIST FOR THE CENTROIDS!
-//                }
-//            }
-//            else {
-//                //calculate the distance of every data point to all the centroids to determine which cluster to place the point into
-//                for (short k : keys) {
-//                    //calculate one point to every centroid and place it into a cluster
-//                    //the clusters are labeled 0 through n-1 -->> so make a list of values the sie of the amount of clusters and the index of the one that is most similar USE THE INDEX to put the corresponding value into the specific cluster
-//                    double[] similarityValues = new double[clusterAmount];
-//                    for (int i = 0; i < similarityValues.length; i++) {
-//                        similarityValues[i] = ED(centroidValues[i], k);////it is assumed here that the centroid will always be located at the the FIRST location in every cluster!
-//                    }
-//                    //find the best similarity value
-//                    int position = 0;
-//                    for (int i = 0; i < similarityValues.length-1; i++) {
-//                        if (similarityValues[i+1] < similarityValues[i])
-//                            position = i;
-//                    }
-//                    //add to the cluster
-//                    clusters.get(position).add(k);
-//                }
-//
-//                //recalculate the new centroid for every cluster
-//                for (int i = 0; i < clusterAmount; i++) {
-//                    //get a new centroid as an average of all the points in that cluster
-//                    double totalSum = 0;
-//                    for (int j = 0; j < clusters.get(i).size(); j++) {
-//                        totalSum += SUM(clusters.get(i).get(j));
-//                    }
-//                    totalSum /= clusters.get(i).size();
-//                    centroidValues[i] = totalSum;/////////////////////////////////////////when repeating, just look at these for the centroids INSTEAD OF THE ARRAYLIST OF ARRAYLIST FOR THE CENTROIDS!
-//                }
-//            }
-//
-//
-//        }
-//
-//        return largeList;
-//    }
+    public ArrayList<Exoplanet> kMeansClustering(int numberOfValues, int clusterAmount) throws IOException, ClassNotFoundException {
+        final int ITERATIONS = 30;
+        final int CENTROID_LOCATION = 0;
+        //make a list of all the objects up to the number of objects being looked at
+        ArrayList<Exoplanet> largeList = btree.getValues();
+        int deletionAmount = largeList.size() - numberOfValues;
+        Random rand = new Random();
+        for (int i = 0; i < deletionAmount; i++) {
+            //delete values till you have the amount they want to look at
+            //randomly remove values
+            largeList.remove(rand.nextInt(largeList.size()));
+        }
+
+        //make the amount of clusters specified
+        ArrayList<ArrayList<Exoplanet>> clusters = new ArrayList<>(clusterAmount);
+        //select N centroids at random
+        for (int i = 0; i < clusterAmount; i++) {
+            Exoplanet value = largeList.get(rand.nextInt(largeList.size()));
+            ArrayList<Exoplanet> temp2 = new ArrayList<>();
+            temp2.add(value);
+            clusters.add(i, temp2);
+            largeList.remove(value);
+        }
+
+        //iterate for a certain amount of time
+        for (int z = 0; z < ITERATIONS; z++) {
+            Exoplanet[] centroidValues = new Exoplanet[clusterAmount];
+            //calculate the distance of every data point to all the centroids to determine which cluster to place the point into
+            for (Exoplanet v : largeList) {
+                //calculate one point to every centroid and place it into a cluster
+                double[] similarityValues = new double[clusterAmount];
+                for (int i = 0; i < similarityValues.length; i++) {
+                    similarityValues[i] = ED(clusters.get(i).get(CENTROID_LOCATION), v);
+                }
+                //find the best similarity value
+                int position = 0;
+                for (int i = 0; i < similarityValues.length-1; i++) {
+                    if (similarityValues[i+1] < similarityValues[i])
+                        position = i;
+                }
+                //add to the cluster
+                clusters.get(position).add(v);
+            }
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+            //recalculate the new centroid for every cluster
+            for (int i = 0; i < clusterAmount; i++) {
+                //get a new centroid as an average of all the points in that cluster
+                Exoplanet newCentroid = clusters.get(rand.nextInt(clusters.size())).get(rand.nextInt(clusters.get(rand.nextInt(clusters.size())).size()));
+                for (int j = 0; j < clusters.get(i).size(); j++) {
+                    totalSum += SUM(clusters.get(i).get(j));//////////////////////////////////////////////
+                }
+                totalSum /= clusters.get(i).size();
+                centroidValues[i] = totalSum;/////////////////////////////////////////when repeating, just look at these for the centroids INSTEAD OF THE ARRAYLIST OF ARRAYLIST FOR THE CENTROIDS!
+            }
+        }
+
+        return largeList;
+    }
 
     /**
      * Retrieves the comparison score value between 2 Exoplanet objects using Euclidean Distance
-     * @param key is a String that is used to retrieve the features of it's respective exoplanet object
+     * @param val1 is an Exoplanet that is used to retrieve the features
+     * @param val2 is an Exoplanet that is used to retrieve the features
      * @return returns the score value for the 2 objects based on their features
      */
-    private double SUM(Short key) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
-        return btree.BTreeSearch(key).getPER() + btree.BTreeSearch(key).getTPLANET() + btree.BTreeSearch(key).getRSTAR() + btree.BTreeSearch(key).getTSTAR() + btree.BTreeSearch(key).getMSTAR();
+    private double ED(Exoplanet val1, Exoplanet val2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+        return Math.sqrt(Math.pow(val2.getPER()-val1.getPER(), 2) + Math.pow(val2.getTPLANET()-val1.getTPLANET(), 2) + Math.pow(val2.getRSTAR()-val1.getRSTAR(), 2) + Math.pow(val2.getTSTAR()-val1.getTSTAR(), 2) + Math.pow(val2.getMSTAR()-val1.getMSTAR(), 2));
+    }
+
+    /**
+     * Retrieves the comparison score value between 2 Exoplanet objects using Euclidean Distance
+     * @param value is an Exoplanet that is used to retrieve the features
+     * @return returns the score value for the 2 objects based on their features
+     */
+    private double SUM(Exoplanet value) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+        return value.getPER() + value.getTPLANET() + value.getRSTAR() + value.getTSTAR() + value.getMSTAR();
     }
 
 

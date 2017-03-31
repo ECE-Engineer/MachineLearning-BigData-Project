@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class HashAlgorithm<K,V> {
 
     /**
+     * @author Kyle Zeller
      * The constructor calls HT() to initialize the size of the HashTable.
      */
     HashAlgorithm() {
