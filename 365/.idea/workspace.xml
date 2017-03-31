@@ -23,8 +23,8 @@
             <file leaf-file-name="BTree.java" pinned="false" current-in-tab="true">
               <entry file="file://$PROJECT_DIR$/src/main/java/BTree.java">
                 <provider selected="true" editor-type-id="text-editor">
-                  <state relative-caret-position="208">
-                    <caret line="519" column="171" lean-forward="false" selection-start-line="519" selection-start-column="171" selection-end-line="519" selection-end-column="171" />
+                  <state relative-caret-position="720">
+                    <caret line="262" column="88" lean-forward="false" selection-start-line="262" selection-start-column="88" selection-end-line="262" selection-end-column="88" />
                     <folding>
                       <element signature="imports" expanded="true" />
                     </folding>
@@ -125,8 +125,8 @@
       <file leaf-file-name="GUI.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/GUI.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="225">
-              <caret line="408" column="10" lean-forward="false" selection-start-line="408" selection-start-column="10" selection-end-line="408" selection-end-column="10" />
+            <state relative-caret-position="361">
+              <caret line="334" column="173" lean-forward="false" selection-start-line="334" selection-start-column="173" selection-end-line="334" selection-end-column="173" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -172,7 +172,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>allocateNode</find>
       <find>counter</find>
       <find>valueCounter</find>
       <find>btreecacheTree</find>
@@ -201,6 +200,7 @@
       <find>IS</find>
       <find>counterGlobal</find>
       <find>0</find>
+      <find>POINTERS</find>
       <find>getKeys</find>
     </findStrings>
     <replaceStrings>
@@ -621,8 +621,8 @@
         <option value="$PROJECT_DIR$/src/main/java/Record.java" />
         <option value="$PROJECT_DIR$/src/GUI.java" />
         <option value="$PROJECT_DIR$/src/GUI.jfd" />
-        <option value="$PROJECT_DIR$/src/main/java/GUI.java" />
         <option value="$PROJECT_DIR$/src/main/java/BTree.java" />
+        <option value="$PROJECT_DIR$/src/main/java/GUI.java" />
       </list>
     </option>
   </component>
@@ -1219,7 +1219,7 @@
       <window_info id="Image Layers" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Fluid" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.8304172" sideWeight="0.4978678" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.07133244" sideWeight="0.4978678" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="9" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32827735" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.11825193" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
@@ -1583,6 +1583,14 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/Node.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="18" column="21" lean-forward="false" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/Main.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="261">
@@ -1593,18 +1601,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/java/Node.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="306">
-          <caret line="18" column="21" lean-forward="false" selection-start-line="18" selection-start-column="21" selection-end-line="18" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/GUI.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="408" column="10" lean-forward="false" selection-start-line="408" selection-start-column="10" selection-end-line="408" selection-end-column="10" />
+        <state relative-caret-position="361">
+          <caret line="334" column="173" lean-forward="false" selection-start-line="334" selection-start-column="173" selection-end-line="334" selection-end-column="173" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -1613,8 +1613,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/BTree.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="208">
-          <caret line="519" column="171" lean-forward="false" selection-start-line="519" selection-start-column="171" selection-end-line="519" selection-end-column="171" />
+        <state relative-caret-position="720">
+          <caret line="262" column="88" lean-forward="false" selection-start-line="262" selection-start-column="88" selection-end-line="262" selection-end-column="88" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>

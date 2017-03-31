@@ -179,12 +179,6 @@ public class BTree implements Serializable {
 
 
 
-
-
-
-
-
-
     /**
      * Overwrite
      * @param n is the specified index to find the value in the btreecacheValue file
@@ -197,13 +191,16 @@ public class BTree implements Serializable {
 
 
 
-        if (isEmptyArray(n.childIndex)) {
-            System.out.println("THIS NODE "+ n.index + " HAS 0 POINTERS TO IT'S CHILD NODES");///////////////////////////////////////////////////////////////////////this verifies the issue I'm having!!!!!!!!!!!!!!!!!!!!
-        }
+//        if (isEmptyArray(n.childIndex)) {
+//            System.out.println("THIS NODE "+ n.index + " HAS 0 POINTERS TO IT'S CHILD NODES");///////////////////////////////////////////////////////////////////////this verifies the issue I'm having!!!!!!!!!!!!!!!!!!!!
+//        }
+
+//        if (!isEmptyArray(n.childIndex)) {
+//            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.THIS NODE "+ n.index + " HAS POINTERS TO IT'S CHILD NODES");
+//        }
 
 
-
-
+        //////////////////////////////////////////////////////THE STUFF ABOVE HAS TOLD ME THAT NOT ALL THE NODES HAVE POINTERS TO CHILD NODES AND THIS IS POSSIBLY THE CAUSE OF THE ISSUE I'M HAVING!!!!!!!!
 
 
 
@@ -240,6 +237,12 @@ public class BTree implements Serializable {
             byte[] mask = new byte[RECORD_SIZE];
             raf.read(mask);
             Record temp = (Record) deserialize(mask);
+            if (isEmptyArray(temp.childIndex)) {
+                System.out.println("THIS NODE "+ temp.index + " HAS 0 POINTERS TO IT'S CHILD NODES");///////////////////////////////////////////////////////////////////////this verifies the issue I'm having!!!!!!!!!!!!!!!!!!!!
+            }
+            if (!isEmptyArray(temp.childIndex)) {
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.THIS NODE "+ temp.index + " HAS POINTERS TO IT'S CHILD NODES");
+            }
             tempcounter += temp.NKeys;
         }
         raf.close();
@@ -348,9 +351,9 @@ public class BTree implements Serializable {
     public void loadTree(Node r) throws IOException, ClassNotFoundException {
         finalCounter++;
         keyCount += r.NKeys;
-        if (isEmptyArray(r.childIndex)) {
-            System.out.println("THIS NODE "+ r.index + " HAS 0 POINTERS TO IT'S CHILD NODES");
-        }
+//        if (isEmptyArray(r.childIndex)) {
+//            System.out.println("THIS NODE "+ r.index + " HAS 0 POINTERS TO IT'S CHILD NODES");
+//        }
         if (!r.isLeaf) {
             //link the node of the specified child node
             r.child[1 - 1] = getNode(r.childIndex[1 - 1]);/////////////////////////////////////because it is going through all the nodes and all the data does seem intact-----------
