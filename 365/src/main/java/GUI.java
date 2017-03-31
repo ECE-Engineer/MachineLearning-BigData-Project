@@ -49,9 +49,9 @@ public class GUI extends JFrame {
         label7 = new JLabel();
         textField2 = new JTextField();
         cluster = new JLabel();
-        clusterselect = new JComboBox<>();
+        clusterSelect = new JComboBox<>();
         label8 = new JLabel();
-        comboBox1 = new JComboBox<>();
+        clusterViewAmount = new JComboBox<>();
         panel2 = new JPanel();
         scrollPane1 = new JScrollPane();
         textArea1 = new JTextArea();
@@ -110,12 +110,12 @@ public class GUI extends JFrame {
             });
 
             //---- label3 ----
-            label3.setText("Please Select An Object Limit (1 - 2500):");
+            label3.setText("Please Select An Object Limit (1 - " + MAX_AMOUNT + "):");
             label3.setFont(label3.getFont().deriveFont(label3.getFont().getStyle() | Font.BOLD));
             label3.setForeground(Color.black);
 
             //---- label4 ----
-            label4.setText("Simularity Metric:");
+            label4.setText("similarity Metric:");
             label4.setFont(label4.getFont().deriveFont(label4.getFont().getStyle() | Font.BOLD));
             label4.setForeground(Color.black);
 
@@ -143,8 +143,8 @@ public class GUI extends JFrame {
             cluster.setFont(cluster.getFont().deriveFont(cluster.getFont().getStyle() | Font.BOLD));
             cluster.setText("Please Select Cluster Amount:");
 
-            //---- clusterselect ----
-            clusterselect.setModel(new DefaultComboBoxModel<>(new String[] {
+            //---- clusterSelect ----
+            clusterSelect.setModel(new DefaultComboBoxModel<>(new String[] {
                     "None",
                     "1",
                     "2",
@@ -160,8 +160,8 @@ public class GUI extends JFrame {
             label8.setForeground(Color.black);
             label8.setFont(label8.getFont().deriveFont(label8.getFont().getStyle() | Font.BOLD));
 
-            //---- comboBox1 ----
-            comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
+            //---- clusterViewAmount ----
+            clusterViewAmount.setModel(new DefaultComboBoxModel<>(new String[] {
                     "None",
                     "All",
                     "1",
@@ -190,8 +190,8 @@ public class GUI extends JFrame {
                                                             .addComponent(label7))
                                                     .addGap(51, 51, 51)
                                                     .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                                            .addComponent(clusterselect, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                                                            .addComponent(comboBox1, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                                            .addComponent(clusterSelect, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                                            .addComponent(clusterViewAmount, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
                                                             .addComponent(textField2, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
                                     .addContainerGap(150, Short.MAX_VALUE))
                             .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
@@ -245,12 +245,12 @@ public class GUI extends JFrame {
                                     .addComponent(label6)
                                     .addGap(18, 18, 18)
                                     .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
-                                            .addComponent(clusterselect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(clusterSelect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                             .addComponent(cluster, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
                                     .addGap(18, 18, 18)
                                     .addGroup(panel1Layout.createParallelGroup()
                                             .addComponent(label8, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(clusterViewAmount, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                     .addGap(18, 18, 18)
                                     .addGroup(panel1Layout.createParallelGroup()
                                             .addComponent(label7, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
@@ -325,9 +325,9 @@ public class GUI extends JFrame {
     private JLabel label7;
     private JTextField textField2;
     private JLabel cluster;
-    private JComboBox<String> clusterselect;
+    private JComboBox<String> clusterSelect;
     private JLabel label8;
-    private JComboBox<String> comboBox1;
+    private JComboBox<String> clusterViewAmount;
     private JPanel panel2;
     private JScrollPane scrollPane1;
     private JTextArea textArea1;
@@ -351,20 +351,17 @@ public class GUI extends JFrame {
             //get the past timestamp
             LocalDateTime pastTime = APIcache.readTimeStamp();
             //check to see if the timestamp is out of date
-            if ((currentTime.getYear() > pastTime.getYear()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() > pastTime.getMonthValue())) {////////////////////////////////////////
+            if ((currentTime.getYear() > pastTime.getYear()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() > pastTime.getMonthValue())) {
                 //run the API loader b/c the data is out of date
-                System.out.println("API");/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 loadFromAPI();
             } else {
                 //run the file loader b/c the data is up to date
-                System.out.println("FILE");/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 loadFromFile();
             }
         } else {
             //write a timestamp to file
             APIcache.writeTimeStamp(LocalDateTime.now());
             //create and write the API response and API call to file and populate the BTree
-            System.out.println("API");/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             loadFromAPI();
         }
     }
@@ -372,24 +369,14 @@ public class GUI extends JFrame {
     //create a BTree to quickly find information
     BTree btree;
 
-
-
     /**
      * Loads the BTree from file.
      * @throws IOException is used for the IO exceptions that might occur
      * @throws ClassNotFoundException is used for the class not found exceptions that might occur
      */
-    public void loadFromFile() throws IOException, ClassNotFoundException {///////////////////////IT WON'T LET ME RUN THE btree variable because it is null
+    public void loadFromFile() throws IOException, ClassNotFoundException {
         //load the BTree
-        btree = new BTree(btree);///////
-
-        //recursively build up the BTree
-//        btree.loadTree();
-
-
-
-
-//        btree.printProperties();/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        btree = new BTree(btree);
     }
 
     /**
@@ -418,11 +405,6 @@ public class GUI extends JFrame {
         //create an arraylist of key, value tuples
         http.createTuples(APIcache.getResponse());
 
-
-        //System.out.println(http.getTupleList().size());/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
         //get all the keys and values of the kepler objects
         ArrayList<Pair<Short, Exoplanet>> tuples = http.getTupleList();
 
@@ -444,11 +426,6 @@ public class GUI extends JFrame {
      * @param evt is the event handler for this button
      */
     private void okButton(java.awt.event.ActionEvent evt) throws Exception {
-
-
-
-
-
         Random rand = new Random();
 
         //set all the fields
@@ -523,11 +500,15 @@ public class GUI extends JFrame {
                         }
                     }
                 }
-                else {
-                    //display the specific amount of kepler objects
-                    if (temp.size() != 0){
-                        for(int i = 0; i < amount; i++){
-                            textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                else {///////////////////////////////////////////////////////////////////////////////////////////THIS IS WHERE YOU DO STUFF IF THE similarity METRIC CHECK BOX IS DISABLED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    if (!clusterSelect.getSelectedItem().toString().equalsIgnoreCase("None")) {
+                        ///////////////////////////////////////////////////////////ALL CLUSTER STUFF WILL HAPPEN HERE
+                    } else {
+                        //display the specific amount of kepler objects
+                        if (temp.size() != 0){
+                            for(int i = 0; i < amount; i++){
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
                         }
                     }
                 }
@@ -762,7 +743,7 @@ public class GUI extends JFrame {
     }
 
 
-    public ArrayList<Exoplanet> kMeansClustering(int numberOfValues, int clusterAmount) throws IOException, ClassNotFoundException {
+    public ArrayList<ArrayList<Exoplanet>> kMeansClustering(int numberOfValues, int clusterAmount) throws IOException, ClassNotFoundException {
         final int ITERATIONS = 30;
         final int CENTROID_LOCATION = 0;
         //make a list of all the objects up to the number of objects being looked at
@@ -788,7 +769,6 @@ public class GUI extends JFrame {
 
         //iterate for a certain amount of time
         for (int z = 0; z < ITERATIONS; z++) {
-            Exoplanet[] centroidValues = new Exoplanet[clusterAmount];
             //calculate the distance of every data point to all the centroids to determine which cluster to place the point into
             for (Exoplanet v : largeList) {
                 //calculate one point to every centroid and place it into a cluster
@@ -806,33 +786,33 @@ public class GUI extends JFrame {
                 clusters.get(position).add(v);
             }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
             //recalculate the new centroid for every cluster
             for (int i = 0; i < clusterAmount; i++) {
                 //get a new centroid as an average of all the points in that cluster
-                Exoplanet newCentroid = clusters.get(rand.nextInt(clusters.size())).get(rand.nextInt(clusters.get(rand.nextInt(clusters.size())).size()));
+                Exoplanet newCentroid = clusters.get(i).get(CENTROID_LOCATION);
+                newCentroid.setPER(0);
+                newCentroid.setTPLANET((short) 0);
+                newCentroid.setRSTAR(0);
+                newCentroid.setTSTAR((short) 0);
+                newCentroid.setMSTAR(0);
                 for (int j = 0; j < clusters.get(i).size(); j++) {
-                    totalSum += SUM(clusters.get(i).get(j));//////////////////////////////////////////////
+                    newCentroid = SUM(newCentroid, clusters.get(i).get(j));
                 }
-                totalSum /= clusters.get(i).size();
-                centroidValues[i] = totalSum;/////////////////////////////////////////when repeating, just look at these for the centroids INSTEAD OF THE ARRAYLIST OF ARRAYLIST FOR THE CENTROIDS!
+                newCentroid.setPER(newCentroid.getPER() / clusters.get(i).size());
+                newCentroid.setTPLANET((short) (newCentroid.getTPLANET() / clusters.get(i).size()));
+                newCentroid.setRSTAR(newCentroid.getRSTAR() / clusters.get(i).size());
+                newCentroid.setTSTAR((short) (newCentroid.getTSTAR() / clusters.get(i).size()));
+                newCentroid.setMSTAR(newCentroid.getMSTAR() / clusters.get(i).size());
+                if (z > 0) {
+                    //remove the old centroids
+                    clusters.get(i).remove(CENTROID_LOCATION);
+                }
+                //add on the new centroids
+                clusters.get(i).add(CENTROID_LOCATION, newCentroid);
             }
         }
 
-        return largeList;
+        return clusters;
     }
 
     /**
@@ -846,44 +826,17 @@ public class GUI extends JFrame {
     }
 
     /**
-     * Retrieves the comparison score value between 2 Exoplanet objects using Euclidean Distance
-     * @param value is an Exoplanet that is used to retrieve the features
-     * @return returns the score value for the 2 objects based on their features
+     * Calculates the sum of each feature from two Exoplanet objects
+     * @param value1 is an Exoplanet that is used to retrieve the features
+     * @param value2 is an Exoplanet that is used to retrieve the features
+     * @return returns the sum of each feature from two Exoplanet objects
      */
-    private double SUM(Exoplanet value) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
-        return value.getPER() + value.getTPLANET() + value.getRSTAR() + value.getTSTAR() + value.getMSTAR();
+    private Exoplanet SUM(Exoplanet value1, Exoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+        value1.setPER(value1.getPER() + value2.getPER());
+        value1.setTPLANET((short) (value1.getTPLANET() + value2.getTPLANET()));
+        value1.setRSTAR(value1.getRSTAR() + value2.getRSTAR());
+        value1.setTSTAR((short) (value1.getTSTAR() + value2.getTSTAR()));
+        value1.setMSTAR(value1.getMSTAR() + value2.getMSTAR());
+        return value1;
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }
