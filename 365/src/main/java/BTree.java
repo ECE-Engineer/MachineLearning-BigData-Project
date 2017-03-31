@@ -5,11 +5,10 @@ import java.util.ArrayList;
 
 /**
  * @author Kyle Zeller
- * This class provides a way to store and access all of the exoplanet objects in an efficient manner.
+ * This class provides a way to store and access all of the exoplanet objects in an efficient manner using a BTree.
  */
 public class BTree implements Serializable {
-    private RandomAccessFile raf;
-    private final short RECORD_SIZE = 82;
+    private final short RECORD_SIZE = 173;
     private final short EXOPLANET_SIZE = 157;
     private short DEGREE_TREE_LOCATION = 0;
     private short ROOT_LOCATION = 2;
@@ -20,130 +19,129 @@ public class BTree implements Serializable {
     private short nodeCounter = 0;
     private short valueCounter = 0;
 
-    public void setOrder(int newOrder) {
-        order = newOrder;
-    }
-
     /**
-     * The constructor calls BTree() to initialize the size of the BTree.
+     * Creates the root node of the BTree.
      */
     public BTree() throws IOException, ClassNotFoundException {
         Node x = allocateNode();
         x.isLeaf = true;
-        x.NKeys = 0;
+        x.NKeys = 0;///////////////////////////////////////////////////
         diskWrite(x);
         this.root = x;
-        root = x;
     }
 
-//    /**
-//     * Returns the keys to all the Nodes in the btreecacheNode file
-//     * @throws IOException is used for the IO exceptions that might occur
-//     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
-//     * @return returns the unique hashing value to the unique key that was given
-//     */
-//    public short[] getKeys() throws IOException, ClassNotFoundException {
-//        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
-//        short objectCount = (short) (raf.length() / (RECORD_SIZE));
-//        short[] keys = new short[objectCount];
-//
-//        for (int i = 0; i < objectCount; i++) {
-//            byte[] objectMask = new byte[RECORD_SIZE];
-//            //seek to the position specified
-//            raf.seek(i * RECORD_SIZE);
-//            //get the key stored there
-//            raf.read(objectMask);
-//            Node temp = (Node) deserialize(objectMask);
-//
-//
-//
-//            keys[i] = temp.index;/////////////////////////////////////not sure about this!!!
-//        }
-//        raf.close();
-//
-//        return keys;
-//    }
+    public BTree(BTree T) throws IOException, ClassNotFoundException {
+        readTreeDegree();
+        readTreeRoot();
+    }
 
-//    public void overwriteValue(Node n) throws IOException, ClassNotFoundException {
-//        raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "rw");
-//
-//        Exoplanet e = getValue(n.index);
-//
-//        short objectCount = (short) (raf.length()/(EXOPLANET_SIZE));
-//
-//        if (n.index < objectCount) {
-//            //adjust the pointer
-//            raf.seek(n.index * EXOPLANET_SIZE);
-//            //overwrite the object
-//            raf.write(serialize(e));
-//        }
-//        //close the file
-//        raf.close();
-//    }
 
-    //    public Node diskRead(Node x) throws IOException, ClassNotFoundException {/////////////////////////GET ADVICE FOR THIS!!!!!!!!!!!!!!!!!!!!!!!!
-//        if (x != null)
-//            return x;
-//        else
-//            return getNode(x);/////////////////////////ALWAYS null
-//    }
+    public void readTreeDegree() throws IOException {
+        RandomAccessFile raf;
+        raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "r");
 
-    //    public Node getNode(Node n) throws IOException, ClassNotFoundException {
-//        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
-//        byte[] objectMask = new byte[RECORD_SIZE];
-//        //seek to the position specified
-//        raf.seek(n.index * RECORD_SIZE);
-//        //get the key stored there
-//        raf.read(objectMask);
-//        Node temp = (Node) deserialize(objectMask);
-//        //close the file
-//        raf.close();
-//        //return the key
-//        return temp;
-//    }
+        //seek to the start of the file
+        raf.seek(DEGREE_TREE_LOCATION);
+        //get the degree of the tree
+        this.order = raf.readShort();
+        //close the file
+        raf.close();
+    }
 
-//    /**
-//     * Returns all the Exoplanets in the btreecacheValue file
-//     * @throws IOException is used for the IO exceptions that might occur
-//     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
-//     */
-//    public Exoplanet[] getValues() throws IOException, ClassNotFoundException {
-//        raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "r");
-//        short objectCount = (short) (raf.length() / (EXOPLANET_SIZE));
-//        Exoplanet[] values = new Exoplanet[objectCount];
-//        byte[] objectMask = new byte[EXOPLANET_SIZE];
-//
-//        for (int i = 0; i < objectCount; i++) {
-//            //get the object
-//            raf.seek(i * EXOPLANET_SIZE);
-//            raf.read(objectMask);
-//            values[i] = (Exoplanet) deserialize(objectMask);
-//        }
-//        raf.close();
-//
-//        return values;
-//    }
+    public void readTreeRoot() throws IOException, ClassNotFoundException {
+        RandomAccessFile raf;
+        raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "r");
+
+        //seek to the end of the degree of tree location
+        raf.seek(ROOT_LOCATION);
+
+
+        short temp = raf.readShort();
+
+        System.out.println("INDEX OF ROOT : " + temp);/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        //set the root of the BTree
+        this.root = getNode(temp);
+
+        //close the file
+        raf.close();
+    }
+
+
+
+    public void setOrder(int newOrder) {
+        order = newOrder;
+    }
+
+    private int getLength(Object[] o) {
+        int counter = 0;
+        for (int i = 0; i < o.length; i++)
+            if (o[i] != null)
+                counter++;
+        return counter;
+    }
 
     /**
      * Returns the number count of Nodes in the btreecacheNode file
      * @throws IOException is used for the IO exceptions that might occur
      */
     public short getNumberOfNodes() throws IOException {
+        RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
         return (short) (raf.length()/(RECORD_SIZE));
     }
 
-    public short getKeyCount(Node x) throws IOException, ClassNotFoundException {
-        short counter = 0;
-        if (!x.isLeaf)
-            counter = (short) (counter + getKeyCount(x.child[1 - 1]));
-        for (int i = 1; i <= x.NKeys; i++) {
-            counter = (short) (counter + x.key[i - 1]);
-            if (!x.isLeaf)
-                counter = (short) (counter + getKeyCount(x.child[i + 1 - 1]));
-        }
-        return counter;
-    }
+//    public short getKeyCount() throws IOException, ClassNotFoundException {
+//        return getKeyCount(this.root);
+//    }
+
+//    int loadCounter = 0;
+//    public short getKeyCount(Node x) throws IOException, ClassNotFoundException {//////////////////////////////////this does not work
+////        finalCounter++;
+////        keyCount += r.NKeys;
+////        if (!r.isLeaf) {
+////            //link the node of the specified child node
+////            r.child[1 - 1] = getNode(r.childIndex[1 - 1]);
+////            //recursively link you the rest of the BTree
+////            loadTree(r.child[1 - 1]);
+////        }
+////        for (int i = 1; i <= r.NKeys; i++) {
+////            //link the node of the specified child node
+////            r.child[i - 1] = getNode(r.childIndex[i - 1]);
+////            if (!r.isLeaf) {
+////                //link the node of the specified child node
+////                r.child[i + 1 - 1] = getNode(r.childIndex[i + 1 - 1]);
+////                //recursively link you the rest of the BTree
+////                loadTree(r.child[i + 1 - 1]);
+////            }
+////        }
+////
+//
+//
+//        loadCounter++;
+//        short counter = 0;
+//        if (x != null) {
+//            if (!x.isLeaf) {
+//                if (x.child[1 - 1] == null) {
+//                    System.out.println("LOOKED AT THIS MANY KEYS : " + loadCounter);
+//                    System.out.println("KEY IS : " + x.key[1 - 1]);
+//                }
+//                counter += getKeyCount(x.child[1 - 1]);
+//            }
+//            for (int i = 1; i <= x.NKeys; i++) {
+//                counter += x.key[i - 1];
+//                if (!x.isLeaf) {
+//                    if (x.child[i + 1 - 1] == null) {
+//                        System.out.println("LOOKED AT THIS MANY KEYS : " + loadCounter);
+//                        System.out.println("KEY IS : " + x.key[i + 1 - 1]);
+//                    }
+//                    counter += getKeyCount(x.child[i + 1 - 1]);
+//                }
+//            }
+//        }
+//        return counter;
+//    }
 
     public ArrayList<Short> getKeys() throws IOException, ClassNotFoundException {
         return getKeys(this.root);
@@ -152,7 +150,7 @@ public class BTree implements Serializable {
     public ArrayList<Short> getKeys(Node x) throws IOException, ClassNotFoundException {
         ArrayList<Short> keys = new ArrayList<>();
         if (!x.isLeaf)
-            for (short eachKey : getKeys(x.child[1 - 1]))
+            for (short eachKey : getKeys(x.child[1 - 1]))///////////////////////////////////////it is running into a null pointer exception at the 2nd level unless I tell it to avoid these!!!!!!!!!!!!!!!
                 keys.add(eachKey);
         for (int i = 1; i <= x.NKeys; i++) {
             keys.add(x.key[i - 1]);
@@ -161,26 +159,6 @@ public class BTree implements Serializable {
                     keys.add(eachKey);
         }
         return keys;
-    }
-
-    /**
-     * Returns the value corresponding to a specific index
-     * @param k is the specified index to find the value in the btreecacheValue file
-     * @throws IOException is used for the IO exceptions that might occur
-     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
-     */
-    public Exoplanet getValue(short k) throws IOException, ClassNotFoundException {
-        raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "r");
-        byte[] objectMask = new byte[EXOPLANET_SIZE];
-
-        //get the object
-        raf.seek(k * EXOPLANET_SIZE);
-        raf.read(objectMask);
-        Exoplanet temp = (Exoplanet) deserialize(objectMask);
-        //close the file
-        raf.close();
-
-        return temp;
     }
 
     /**
@@ -199,25 +177,117 @@ public class BTree implements Serializable {
         return n;
     }
 
+
+
+
+
+
+
+
+
     /**
      * Overwrite
      * @param n is the specified index to find the value in the btreecacheValue file
      * @throws IOException is used for the IO exceptions that might occur
      */
     public void overwriteNode(Node n) throws IOException {
+        RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "rw");
+
+
+
+
+        if (isEmptyArray(n.childIndex)) {
+            System.out.println("THIS NODE "+ n.index + " HAS 0 POINTERS TO IT'S CHILD NODES");///////////////////////////////////////////////////////////////////////this verifies the issue I'm having!!!!!!!!!!!!!!!!!!!!
+        }
+
+
+
+
+
+
 
         //adjust the pointer
         raf.seek(n.index * RECORD_SIZE);
         //overwrite the object
         //write everything except for the node array to file & instead of the node array, write the array of pointers to the nodes in memory
-        raf.write(serialize(new Record<Short, Integer, Boolean>(n.key, n.index, n.nodeIndex, n.valIndex, n.NKeys, n.isLeaf)));
+        raf.write(serialize(new Record(n.key, n.index, n.childIndex, n.valIndex, n.NKeys, n.isLeaf)));
 
         //close the file
         raf.close();
     }
 
+
+
+
+
+
+
+
+
+
+    public void printProperties() throws IOException, ClassNotFoundException {
+        RandomAccessFile raf;
+        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
+
+        System.out.println("NUMBER OF NODES : " + (raf.length() / RECORD_SIZE));
+
+        int tempcounter = 0;
+        int morecounter = 0;
+        for (int i = 0; i < (raf.length() / RECORD_SIZE); i++) {
+            morecounter++;
+            raf.seek(i*RECORD_SIZE);
+            byte[] mask = new byte[RECORD_SIZE];
+            raf.read(mask);
+            Record temp = (Record) deserialize(mask);
+            tempcounter += temp.NKeys;
+        }
+        raf.close();
+        System.out.println("# keys : " + tempcounter);////////////////NUMBER OF KEYS//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        System.out.println("# nodes : " + morecounter);
+    }
+
+    public void printAt(int i) throws IOException, ClassNotFoundException {
+        RandomAccessFile raf;
+        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
+
+        raf.seek(i*RECORD_SIZE);
+        byte[] mask = new byte[RECORD_SIZE];
+        raf.read(mask);
+        Record temp = (Record) deserialize(mask);
+        raf.close();
+
+        System.out.println("NKEYS IS : " + temp.NKeys);/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     public short overwriteValue(Exoplanet e) throws IOException, ClassNotFoundException {
+        RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "rw");
 
         //seek to the current end of the file
@@ -233,17 +303,19 @@ public class BTree implements Serializable {
     }
 
     public void overwriteDegreeToFile() throws IOException {
+        RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "rw");
 
         //seek to the start of the file
         raf.seek(DEGREE_TREE_LOCATION);
         //write the degree of the tree
-        raf.writeShort(this.t);
+        raf.writeShort(this.order);
         //close the file
         raf.close();
     }
 
     public void overwriteRootToFile() throws IOException {
+        RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "rw");
 
         //seek to the end of the degree of tree location
@@ -254,43 +326,67 @@ public class BTree implements Serializable {
         raf.close();
     }
 
-    public void diskWrite(Node n) throws IOException, ClassNotFoundException {
-        overwriteNode(n);
+
+
+
+
+
+
+
+
+
+    public void loadTree() throws IOException, ClassNotFoundException {
+        loadTree(this.root);
     }
 
-    public void readTreeDegree() throws IOException {
-        raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "rw");
 
-        //seek to the start of the file
-        raf.seek(DEGREE_TREE_LOCATION);
-        //get the degree of the tree
-        this.t = raf.readShort();
-        //close the file
-        raf.close();
+
+
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////THIS MUST BE WHAT IS WRONG////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    int finalCounter = 0;
+    int keyCount = 0;
+    public void loadTree(Node r) throws IOException, ClassNotFoundException {
+        finalCounter++;
+        keyCount += r.NKeys;
+        if (isEmptyArray(r.childIndex)) {
+            System.out.println("THIS NODE "+ r.index + " HAS 0 POINTERS TO IT'S CHILD NODES");
+        }
+        if (!r.isLeaf) {
+            //link the node of the specified child node
+            r.child[1 - 1] = getNode(r.childIndex[1 - 1]);/////////////////////////////////////because it is going through all the nodes and all the data does seem intact-----------
+            //recursively link you the rest of the BTree
+            loadTree(r.child[1 - 1]);
+        }
+        for (int i = 1; i <= r.NKeys; i++) {
+            //link the node of the specified child node
+            r.child[i - 1] = getNode(r.childIndex[i - 1]);////////////////////////////////>>>>>>>>>>>>>>>>>>>>>>>>>>>>>it's almost like the data isn't attaching itself properly!!!!!!!!!!!!!!!!!!
+            if (!r.isLeaf) {
+                //link the node of the specified child node
+                r.child[i + 1 - 1] = getNode(r.childIndex[i + 1 - 1]);///////////////////////////////
+                //recursively link you the rest of the BTree
+                loadTree(r.child[i + 1 - 1]);
+            }
+        }
+    }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////it is going through everything///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public boolean isEmptyArray(short[] objects) {
+        for (int i = 0; i < objects.length; i++)
+            if (objects[i] != 0)
+                return false;
+        return true;
     }
 
-    public void readTreeRoot() throws IOException, ClassNotFoundException {
-        raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "rw");
 
-        //seek to the end of the degree of tree location
-        raf.seek(ROOT_LOCATION);
-        this.root = getRoot(raf.readShort());/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues 2
-        //close the file
-        raf.close();
-    }
 
-    public Node getRoot(short pos) throws IOException, ClassNotFoundException {
-        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "rw");
+    public Node getNode(short pos) throws IOException, ClassNotFoundException {
+        RandomAccessFile raf;
+        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
 
         //adjust the pointer
         raf.seek(pos * RECORD_SIZE);
 
-        //read in all the parts and create the BTree OR CREATE THE ROOT >>>>>>>> then write a method to create the BTree using its node >>>>>>>_____________ NOTE that the NODE array is EMPTY TO START IF YOU DO THIS & WHEN YOU CREATE THE BTree, >>>>> REALLY YOU WILL JUST BE RECURSIVELY FILLING THE node arrays >>>> starting with the root
-
-
-
-
-
+        //read in all the parts and create the root
         byte[] objectMask = new byte[RECORD_SIZE];
         raf.read(objectMask);
 
@@ -298,7 +394,7 @@ public class BTree implements Serializable {
         raf.close();
 
         //create a temporary record
-        Record<Short, Integer, Boolean> temp = (Record<Short, Integer, Boolean>) deserialize(objectMask);
+        Record temp = (Record) deserialize(objectMask);
 
         //create an empty node
         Node node = new Node();
@@ -306,56 +402,91 @@ public class BTree implements Serializable {
         //set all the features of the node
         node.key = temp.key;
         node.index = temp.index;
-        node.nodeIndex = temp.nodeIndex;
+        node.childIndex = temp.childIndex;
         node.valIndex = temp.valIndex;
+        node.child = new Node[this.order];
         node.NKeys = temp.NKeys;
         node.isLeaf = temp.isLeaf;
 
-        return node;////////////////////////////////REMEMBER THAT THE NODE ARRAY IS EMPTY & THAT YOU WILL HAVE TO CREATE A BTREE CREATE METHOD THAT FILLS THIS ARRAY APPROPRIATELY!!!!!!!!!!!!!!!
+        return node;
     }
 
-//    public void readNode(Node r) throws IOException, ClassNotFoundException {
-//        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "rw");
-//
-//        //seek to the node specified
-//        raf.seek(ROOT_LOCATION);
-//        this.root = getRoot(raf.readShort());/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues 2
-//        //close the file
-//        raf.close();
-//    }
-//
-//    public Node readNode(short pos) throws IOException, ClassNotFoundException {
-//        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "rw");
-//
-//        //adjust the pointer
-//        raf.seek(pos * RECORD_SIZE);
-//        byte[] objectMask = new byte[RECORD_SIZE];
-//        raf.read(objectMask);
-//
-//        //close the file
-//        raf.close();
-//
-//        return (Node) deserialize(objectMask);/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues start here 1
-//    }
 
 
 
-    private byte[] serialize(Object obj) throws IOException {
-        try(ByteArrayOutputStream b = new ByteArrayOutputStream()){
-            try(ObjectOutputStream o = new ObjectOutputStream(b)){
-                o.writeObject(obj);
-            }
-            return b.toByteArray();
+
+
+
+
+
+
+    /**
+     * Returns the value corresponding to a specific index
+     * @param k is the specified index to find the value in the btreecacheValue file
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     */
+    public Exoplanet getValue(short k) throws IOException, ClassNotFoundException {
+        RandomAccessFile raf;
+        raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "r");
+        byte[] objectMask = new byte[EXOPLANET_SIZE];
+
+        //get the object
+        raf.seek(k * EXOPLANET_SIZE);
+        raf.read(objectMask);
+        Exoplanet temp = (Exoplanet) deserialize(objectMask);
+        //close the file
+        raf.close();
+
+        return temp;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public void diskWrite(Node n) throws IOException, ClassNotFoundException {
+        //is node root = n >>> if so >>set the root's index to this index;n.index = root.index;>>>>>>>>>>>>>>>>>>>>>>>then update root!!!!!!!!!!!!!!!!!!!!!!!!!!
+        if (n == this.root) {
+            n.index = root.index;
+            System.out.print("ROOT NODE IS " + n.index);///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            for (int i = 0; i < n.NKeys; i++)
+                System.out.print("\t" + n.key[i]);
+            System.out.println();
+            overwriteRootToFile();
         }
+        overwriteNode(n);
     }
 
-    private Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
-        try(ByteArrayInputStream b = new ByteArrayInputStream(bytes)){
-            try(ObjectInputStream o = new ObjectInputStream(b)){
-                return o.readObject();/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues
-            }
-        }
-    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     public Exoplanet BTreeSearch(short k) throws IOException, ClassNotFoundException {
         return BTreeSearch(this.root, k);
@@ -384,12 +515,17 @@ public class BTree implements Serializable {
             z.valIndex[j - 1] = y.valIndex[j + t - 1];
         }
         if (!y.isLeaf)
-            for (int j = 1; j <= t; j++)
+            for (int j = 1; j <= t; j++) {
                 z.child[j - 1] = y.child[j + t - 1];
+                z.childIndex[j - 1] = y.childIndex[j + t - 1];///////////////////////////////DOES ORDER MATTER??? SHOULD I HAVE THIS COME BEFORE THE CHILD's assignment????
+            }
         y.NKeys = t - 1;
-        for (int j = x.NKeys + 1; j >= i + 1; j--)
+        for (int j = x.NKeys + 1; j >= i + 1; j--) {
             x.child[j + 1 - 1] = x.child[j - 1];
+            x.childIndex[j + 1 - 1] = x.childIndex[j - 1];
+        }
         x.child[i + 1 - 1] = z;
+        x.childIndex[i + 1 - 1] = z.index;
         for (int j = x.NKeys; j >= i; j--){
             x.key[j + 1 - 1] = x.key[j - 1];
             x.valIndex[j + 1 - 1] = x.valIndex[j - 1];
@@ -412,8 +548,9 @@ public class BTree implements Serializable {
             s.isLeaf = false;
             s.NKeys = 0;
             s.child[1 - 1] = r;
+            s.childIndex[1 - 1] = r.index;//////////////////////////////////////////////////////////////////////////////////////////////this is the issue >>>>>>>>> i must have to do this somewhere else here to fix the problem BECAUSE THE ISSUE IS THAT the pointer ARRAY to the children nodes is empty
             BTreeSplitChild(s, (short) 1);
-            BTreeInsertNonFull(s, k, valIndex);
+            BTreeInsertNonFull(s, k, valIndex);///////////DO I NEED TO PASS THE CHILDINDEX AROUND LIKE I DID FOR THE VALUEINDEX?????
         } else
             BTreeInsertNonFull(r, k, valIndex);
     }
@@ -440,6 +577,34 @@ public class BTree implements Serializable {
                     i = i + 1;
             }
             BTreeInsertNonFull(x.child[i - 1], k, v);
+        }
+    }
+
+    /**
+     * Creates an array of bytes after serializing a given object.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @param obj is the object you are serializing.
+     */
+    private byte[] serialize(Object obj) throws IOException {
+        try(ByteArrayOutputStream b = new ByteArrayOutputStream()){
+            try(ObjectOutputStream o = new ObjectOutputStream(b)){
+                o.writeObject(obj);
+            }
+            return b.toByteArray();
+        }
+    }
+
+    /**
+     * Returns a deserialized object given by a byte array.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @param bytes is your object in bytes.
+     * @return returns a deserialized object given by a byte array.
+     */
+    private Object deserialize(byte[] bytes) throws IOException, ClassNotFoundException {
+        try(ByteArrayInputStream b = new ByteArrayInputStream(bytes)){
+            try(ObjectInputStream o = new ObjectInputStream(b)){
+                return o.readObject();
+            }
         }
     }
 }

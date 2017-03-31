@@ -1,8 +1,11 @@
 import java.awt.*;
 import javax.swing.*;
 import javax.swing.GroupLayout;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.logging.Level;
@@ -22,7 +25,7 @@ public class GUI extends JFrame {
     /**
      * The constructor calls initComponents() to initialize all of the components of the graphical user interface
      */
-    public GUI() {
+    public GUI() throws IOException, ClassNotFoundException {
         initComponents();
     }
 
@@ -45,11 +48,13 @@ public class GUI extends JFrame {
         label6 = new JLabel();
         label7 = new JLabel();
         textField2 = new JTextField();
+        cluster = new JLabel();
+        clusterselect = new JComboBox<>();
+        label8 = new JLabel();
+        comboBox1 = new JComboBox<>();
         panel2 = new JPanel();
         scrollPane1 = new JScrollPane();
         textArea1 = new JTextArea();
-
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         //======== this ========
         Container contentPane = getContentPane();
@@ -60,146 +65,191 @@ public class GUI extends JFrame {
 
             // JFormDesigner evaluation mark
             panel1.setBorder(new javax.swing.border.CompoundBorder(
-                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-                            "365 HW1", javax.swing.border.TitledBorder.CENTER,
-                            javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-                            java.awt.Color.red), panel1.getBorder())); panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
+                new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
+                    "JFormDesigner Evaluation", javax.swing.border.TitledBorder.CENTER,
+                    javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
+                    java.awt.Color.red), panel1.getBorder())); panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
 
 
             //---- label1 ----
             label1.setText("Welcome to StarLabs");
             label1.setHorizontalAlignment(SwingConstants.CENTER);
             label1.setFont(new Font("Segoe UI", Font.BOLD, 30));
+            label1.setForeground(Color.black);
 
             //---- label2 ----
             label2.setText("Please Select A Classifier Type:");
             label2.setFont(label2.getFont().deriveFont(label2.getFont().getStyle() | Font.BOLD));
+            label2.setForeground(Color.black);
 
             //---- typeSelect ----
             typeSelect.setModel(new DefaultComboBoxModel<>(new String[] {
-                    "None",
-                    "A",
-                    "DEC",
-                    "RSTAR",
-                    "TSTAR",
-                    "KMAG",
-                    "TPLANET",
-                    "T0",
-                    "UT0",
-                    "PER",
-                    "RA",
-                    "MSTAR"
+                "None",
+                "A",
+                "DEC",
+                "RSTAR",
+                "TSTAR",
+                "KMAG",
+                "TPLANET",
+                "T0",
+                "UT0",
+                "PER",
+                "RA",
+                "MSTAR"
             }));
 
             //---- button1 ----
             button1.setText("OK");
             button1.setBackground(new Color(51, 204, 255));
-            button1.addActionListener(new java.awt.event.ActionListener() {
-                public void actionPerformed(java.awt.event.ActionEvent evt) {
-                    try {
-                        okButton(evt);
-                    } catch (FileNotFoundException ex) {
-                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (UnsupportedEncodingException ex) {
-                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-            });
 
             //---- label3 ----
             label3.setText("Please Select An Object Limit (1 - 2500):");
             label3.setFont(label3.getFont().deriveFont(label3.getFont().getStyle() | Font.BOLD));
+            label3.setForeground(Color.black);
 
             //---- label4 ----
             label4.setText("Simularity Metric:");
             label4.setFont(label4.getFont().deriveFont(label4.getFont().getStyle() | Font.BOLD));
+            label4.setForeground(Color.black);
 
             //---- checkBox1 ----
             checkBox1.setText("Compares Interstellar Objects");
             checkBox1.setBackground(new Color(51, 204, 255));
+            checkBox1.setForeground(Color.black);
 
             //---- label5 ----
             label5.setText("Please Set Classifier Type to None");
+            label5.setForeground(Color.black);
 
             //---- label6 ----
             label6.setText("The comparisons are made by: {period, planet size, star size, star temperature, and stellar mass}");
+            label6.setForeground(Color.black);
 
             //---- label7 ----
             label7.setText("Please Provide An Object Key:");
             label7.setFont(label7.getFont().deriveFont(label7.getFont().getStyle() | Font.BOLD));
+            label7.setForeground(Color.black);
+
+            //---- cluster ----
+            cluster.setForeground(Color.black);
+            cluster.setBackground(new Color(51, 204, 255));
+            cluster.setFont(cluster.getFont().deriveFont(cluster.getFont().getStyle() | Font.BOLD));
+            cluster.setText("Please Select Cluster Amount:");
+
+            //---- clusterselect ----
+            clusterselect.setModel(new DefaultComboBoxModel<>(new String[] {
+                "None",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6"
+            }));
+
+            //---- label8 ----
+            label8.setText("Please Pick a Cluster to View:");
+            label8.setBackground(new Color(51, 204, 255));
+            label8.setForeground(Color.black);
+            label8.setFont(label8.getFont().deriveFont(label8.getFont().getStyle() | Font.BOLD));
+
+            //---- comboBox1 ----
+            comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
+                "None",
+                "All",
+                "1",
+                "2",
+                "3",
+                "4",
+                "5",
+                "6"
+            }));
 
             GroupLayout panel1Layout = new GroupLayout(panel1);
             panel1.setLayout(panel1Layout);
             panel1Layout.setHorizontalGroup(
-                    panel1Layout.createParallelGroup()
+                panel1Layout.createParallelGroup()
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addGroup(panel1Layout.createParallelGroup()
                             .addGroup(panel1Layout.createSequentialGroup()
-                                    .addGroup(panel1Layout.createParallelGroup()
-                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addGap(152, 152, 152)
-                                                    .addComponent(label1))
-                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addGap(131, 131, 131)
-                                                    .addComponent(label7, GroupLayout.PREFERRED_SIZE, 191, GroupLayout.PREFERRED_SIZE)
-                                                    .addGap(18, 18, 18)
-                                                    .addComponent(textField2, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)))
-                                    .addContainerGap(151, Short.MAX_VALUE))
+                                .addGap(152, 152, 152)
+                                .addComponent(label1))
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addGap(112, 112, 112)
+                                .addGroup(panel1Layout.createParallelGroup()
+                                    .addComponent(label8, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cluster)
+                                    .addComponent(label7))
+                                .addGap(51, 51, 51)
+                                .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(clusterselect, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                    .addComponent(comboBox1, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                    .addComponent(textField2, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
+                        .addContainerGap(150, Short.MAX_VALUE))
+                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addGap(60, 114, Short.MAX_VALUE)
+                        .addGroup(panel1Layout.createParallelGroup()
                             .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                    .addGap(0, 45, Short.MAX_VALUE)
-                                    .addGroup(panel1Layout.createParallelGroup()
-                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                    .addComponent(checkBox1, GroupLayout.PREFERRED_SIZE, 201, GroupLayout.PREFERRED_SIZE)
-                                                    .addGap(18, 18, 18)
-                                                    .addComponent(label5, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(label6, GroupLayout.PREFERRED_SIZE, 554, GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addGap(60, 60, 60)
-                                                    .addGroup(panel1Layout.createParallelGroup()
-                                                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                                                    .addComponent(button1)
-                                                                    .addGap(267, 267, 267))
-                                                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                                                    .addGroup(panel1Layout.createParallelGroup()
-                                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 196, GroupLayout.PREFERRED_SIZE)
-                                                                                    .addGap(18, 18, 18)
-                                                                                    .addComponent(typeSelect, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
-                                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                                    .addComponent(label3, GroupLayout.PREFERRED_SIZE, 249, GroupLayout.PREFERRED_SIZE)
-                                                                                    .addGap(18, 18, 18)
-                                                                                    .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
-                                                                    .addGap(119, 119, 119))))))
+                                .addComponent(button1)
+                                .addGap(276, 276, 276))
+                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                .addGroup(panel1Layout.createParallelGroup()
+                                    .addGroup(panel1Layout.createSequentialGroup()
+                                        .addComponent(label2)
+                                        .addGap(45, 45, 45)
+                                        .addComponent(typeSelect, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(panel1Layout.createSequentialGroup()
+                                        .addComponent(label3)
+                                        .addGap(45, 45, 45)
+                                        .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
+                                .addGap(128, 128, 128))))
+                    .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                        .addGap(0, 46, Short.MAX_VALUE)
+                        .addGroup(panel1Layout.createParallelGroup()
+                            .addComponent(label6)
+                            .addGroup(panel1Layout.createSequentialGroup()
+                                .addComponent(label4)
+                                .addGap(27, 27, 27)
+                                .addComponent(checkBox1, GroupLayout.PREFERRED_SIZE, 183, GroupLayout.PREFERRED_SIZE)
+                                .addGap(36, 36, 36)
+                                .addComponent(label5)))
+                        .addGap(31, 31, 31))
             );
             panel1Layout.setVerticalGroup(
-                    panel1Layout.createParallelGroup()
-                            .addGroup(panel1Layout.createSequentialGroup()
-                                    .addContainerGap()
-                                    .addComponent(label1)
-                                    .addGap(81, 81, 81)
-                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(typeSelect)
-                                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                            .addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(label3, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                            .addComponent(label4, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(checkBox1)
-                                            .addComponent(label5))
-                                    .addGap(18, 18, 18)
-                                    .addComponent(label6)
-                                    .addGap(18, 18, 18)
-                                    .addGroup(panel1Layout.createParallelGroup()
-                                            .addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(label7, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                    .addComponent(button1)
-                                    .addContainerGap())
+                panel1Layout.createParallelGroup()
+                    .addGroup(panel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(label1)
+                        .addGap(81, 81, 81)
+                        .addGroup(panel1Layout.createParallelGroup()
+                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(typeSelect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(label3, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                            .addComponent(label5)
+                            .addComponent(checkBox1)
+                            .addComponent(label4, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(label6)
+                        .addGap(18, 18, 18)
+                        .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                            .addComponent(clusterselect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cluster, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(panel1Layout.createParallelGroup()
+                            .addComponent(label8, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(panel1Layout.createParallelGroup()
+                            .addComponent(label7, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+                            .addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
+                        .addComponent(button1)
+                        .addContainerGap())
             );
         }
 
@@ -217,38 +267,38 @@ public class GUI extends JFrame {
             GroupLayout panel2Layout = new GroupLayout(panel2);
             panel2.setLayout(panel2Layout);
             panel2Layout.setHorizontalGroup(
-                    panel2Layout.createParallelGroup()
-                            .addGroup(panel2Layout.createSequentialGroup()
-                                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 559, GroupLayout.PREFERRED_SIZE)
-                                    .addGap(0, 408, Short.MAX_VALUE))
+                panel2Layout.createParallelGroup()
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
             );
             panel2Layout.setVerticalGroup(
-                    panel2Layout.createParallelGroup()
-                            .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                panel2Layout.createParallelGroup()
+                    .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
             );
         }
 
         GroupLayout contentPaneLayout = new GroupLayout(contentPane);
         contentPane.setLayout(contentPaneLayout);
         contentPaneLayout.setHorizontalGroup(
-                contentPaneLayout.createParallelGroup()
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                    .addGap(408, 408, 408))
         );
         contentPaneLayout.setVerticalGroup(
-                contentPaneLayout.createParallelGroup()
+            contentPaneLayout.createParallelGroup()
+                .addGroup(contentPaneLayout.createSequentialGroup()
+                    .addContainerGap()
+                    .addGroup(contentPaneLayout.createParallelGroup()
+                        .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(contentPaneLayout.createSequentialGroup()
-                                .addContainerGap()
-                                .addGroup(contentPaneLayout.createParallelGroup()
-                                        .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 3, Short.MAX_VALUE)))
+                    .addContainerGap(10, Short.MAX_VALUE))
         );
-        setSize(1190, 660);
+        setSize(1195, 660);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -268,6 +318,10 @@ public class GUI extends JFrame {
     private JLabel label6;
     private JLabel label7;
     private JTextField textField2;
+    private JLabel cluster;
+    private JComboBox<String> clusterselect;
+    private JLabel label8;
+    private JComboBox<String> comboBox1;
     private JPanel panel2;
     private JScrollPane scrollPane1;
     private JTextArea textArea1;
@@ -276,27 +330,109 @@ public class GUI extends JFrame {
     //load in all kepler objects from the API
     private final int MAX_AMOUNT = 2500;
 
-    //create a json parser object to collect the data from the API
-    private JSONParser http = new JSONParser();
+    //create a hashcache object to use the data as needed
+    private HashCache APIcache = new HashCache();
 
     /**
-     * Handles the loading of the data from the API
+     * Loads the BTree either from the Kepler API or from disk.
+     * @throws Exception is used for the exceptions that might occur
      */
-    public void loadData() throws Exception {
-        //clear everything out of the hashtable
-        http.exoplanets.clear();
+    public void generalLoad() throws Exception {
+        //check to see if the cache file exists
+        if (new File(".\\Cache\\hashcache").exists()) {
+            //get the current timestamp
+            LocalDateTime currentTime = LocalDateTime.now();
+            //get the past timestamp
+            LocalDateTime pastTime = APIcache.readTimeStamp();
+            //check to see if the timestamp is out of date
+            if ((currentTime.getYear() > pastTime.getYear()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() > pastTime.getMonthValue())) {////////////////////////////////////////
+                //run the API loader b/c the data is out of date
+                System.out.println("API");
+                loadFromAPI();
+            } else {
+                //run the file loader b/c the data is up to date
+                System.out.println("FILE");
+                loadFromFile();
+            }
+        } else {
+            //write a timestamp to file
+            APIcache.writeTimeStamp(LocalDateTime.now());
+            //create and write the API response and API call to file and populate the BTree
+            System.out.println("API");
+            loadFromAPI();
+        }
+    }
+
+    //create a BTree to quickly find information
+    BTree btree = new BTree();
+
+
+
+    /**
+     * Loads the BTree from file.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     */
+    public void loadFromFile() throws IOException, ClassNotFoundException {
+        //load the BTree
+        btree.readTreeDegree();
+        btree.readTreeRoot();
+        //recursively build up the BTree
+        btree.loadTree();
+
+        //System.out.println(btree.counterForNodes);///////////////////////////////////////////////////////////////////////////////////////////////////////////////IT IS PRINTING ZERO
+        //System.out.println(btree.getKeyCount());
+    }
+
+    /**
+     * Gets all the data from the API, writes the API response to file, loads the API response into main memory, and then loads the BTree.
+     * @throws Exception is used for the exceptions that might occur
+     */
+    public void loadFromAPI() throws Exception {
+        //create a json parser object to collect the data from the API
+        JSONParser http = new JSONParser();
+
+        //clear everything out of the tuple list
+        http.clearTupleList();
 
         //load all the API data
-        String url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000}}&limit=" + MAX_AMOUNT;
-        http.sendGet(url);
-        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000}}&limit=" + MAX_AMOUNT;
-        http.sendGet(url);
-        url = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
-        http.sendGet(url);
+        String url1 = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":2000}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url1);
+        String url2 = "http://asterank.com/api/kepler?query={\"KOI\":{\"$gt\":1000}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url2);
+        String url3 = "http://asterank.com/api/kepler?query={\"KOI\":{\"$exists\":true}}&limit=" + MAX_AMOUNT;
+        http.sendGet(url3);
+
+        //write the API response to file
+        APIcache.overwrite(new Triple<String>(url1, url2, url3), http.getAPIResponse());
+
+        //load the API response into main memory
+        //create an arraylist of key, value tuples
+        http.createTuples(APIcache.getResponse());
+
+
+        //System.out.println(http.getTupleList().size());////////////////////////////////////
+
+
+
+        //get all the keys and values of the kepler objects
+        ArrayList<Pair<Short, Exoplanet>> tuples = http.getTupleList();
+
+        //populate the BTree
+        for (Pair<Short, Exoplanet> pair : tuples) {
+            //insert a key into the BTree and the value into the file
+            btree.BTreeInsert(pair.pairShort, pair.pairExoplanet);
+        }
+
+        //write the root node & degree of btree to the btreecache file
+        btree.overwriteDegreeToFile();
+        btree.overwriteRootToFile();
     }
 
     /**
      * Handles the requests of the user: including the type & amount of data to retrieve and toggling the similarity metric
+     * @throws Exception is used for the exceptions that might occur
+     * @param evt is the event handler for this button
      */
     private void okButton(java.awt.event.ActionEvent evt) throws Exception {
         Random rand = new Random();
@@ -308,7 +444,13 @@ public class GUI extends JFrame {
         String text_key = textField2.getText();
 
         //get all the keys of the kepler objects
-        ArrayList<Short> temp = http.exoplanets.keySet();
+        ArrayList<Short> temp = btree.getKeys();///////////////////////////////////////////////////////this is now not returning
+
+        //System.out.println(btree.countNodes());//API FINDS 2287 nodes//load from file sees 2287 nodes>> THIS MEANS THAT ALL THE DATA IS IN THE FILE>>so I'm either not reading the data correctly or loading the tree correctly >>
+
+        System.out.println(temp.size());//////////////////////////////////////////////////////////////////////////////////////////
+        btree.printProperties();
+        ///////////////////
 
         //set a limit for the user to give as an amount
         int USER_MAX_AMOUNT = temp.size();
@@ -331,7 +473,7 @@ public class GUI extends JFrame {
                     //remove all the data without information on the period, planet temperature, star temperature, stellar radius, or stellar mass
                     if (temp.size() != 0) {
                         for (int i = 0; i < temp.size(); i++) {
-                            if (http.exoplanets.getValue(temp.get(i)).getPER() == 0 || http.exoplanets.getValue(temp.get(i)).getTPLANET() == 0 || http.exoplanets.getValue(temp.get(i)).getRSTAR() == 0 || http.exoplanets.getValue(temp.get(i)).getTSTAR() == 0 || http.exoplanets.getValue(temp.get(i)).getMSTAR() == 0)
+                            if (btree.BTreeSearch(temp.get(i)).getPER() == 0 || btree.BTreeSearch(temp.get(i)).getTPLANET() == 0 || btree.BTreeSearch(temp.get(i)).getRSTAR() == 0 || btree.BTreeSearch(temp.get(i)).getTSTAR() == 0 || btree.BTreeSearch(temp.get(i)).getMSTAR() == 0)
                                 temp.remove(i);
                         }
 
@@ -355,7 +497,7 @@ public class GUI extends JFrame {
                             Short[] sim = pearsonCorrelationCoefficient(temp, Short.parseShort(text_key));
 
                             for(int i = 0; i < sim.length; i++){
-                                textArea1.append("KEY IS: " + sim[i] + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
+                                textArea1.append("KEY IS: " + sim[i] + "\n\t\tDATA IS: \n" + btree.BTreeSearch(sim[i]).toString() + "\n");
                             }
                         }
                     }
@@ -366,7 +508,7 @@ public class GUI extends JFrame {
                             Short[] sim = pearsonCorrelationCoefficient(temp);
 
                             for(int i = 0; i < sim.length; i++){
-                                textArea1.append("KEY IS: " + sim[i] + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
+                                textArea1.append("KEY IS: " + sim[i] + "\n\t\tDATA IS: \n" + btree.BTreeSearch(sim[i]).toString() + "\n");
                             }
                         }
                     }
@@ -375,7 +517,7 @@ public class GUI extends JFrame {
                     //display the specific amount of kepler objects
                     if (temp.size() != 0){
                         for(int i = 0; i < amount; i++){
-                            textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     }
                 }
@@ -385,63 +527,63 @@ public class GUI extends JFrame {
                 if (temp.size() != 0){
                     if (keplerObject.equalsIgnoreCase("A")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getA() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getA() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("DEC")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getDEC() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getDEC() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("RSTAR")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getRSTAR() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getRSTAR() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("TSTAR")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getTSTAR() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getTSTAR() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("KMAG")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getKMAG() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getKMAG() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("TPLANET")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getTPLANET() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getTPLANET() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("T0")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getT0() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getT0() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("UT0")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getUT0() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getUT0() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("PER")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getPER() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getPER() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("RA")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getRA() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getRA() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("RPLANET")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getRPLANET() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getRPLANET() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     } else if (keplerObject.equalsIgnoreCase("MSTAR")) {
                         for(int i = 0; i < amount; i++){
-                            if (http.exoplanets.getValue(temp.get(i)).getMSTAR() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
+                            if (btree.BTreeSearch(temp.get(i)).getMSTAR() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
                         }
                     }
                 }
@@ -455,8 +597,8 @@ public class GUI extends JFrame {
      * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
      * @return returns the score value for the 2 objects based on their features
      */
-    private double ED(Short key1, Short key2) {   //returns the score value for the 2 objects based on their features
-        return Math.sqrt(Math.pow(http.exoplanets.getValue(key2).getPER()-http.exoplanets.getValue(key1).getPER(), 2) + Math.pow(http.exoplanets.getValue(key2).getTPLANET()-http.exoplanets.getValue(key1).getTPLANET(), 2) + Math.pow(http.exoplanets.getValue(key2).getRSTAR()-http.exoplanets.getValue(key1).getRSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getTSTAR()-http.exoplanets.getValue(key1).getTSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getMSTAR()-http.exoplanets.getValue(key1).getMSTAR(), 2));
+    private double ED(Short key1, Short key2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+        return Math.sqrt(Math.pow(btree.BTreeSearch(key2).getPER()-btree.BTreeSearch(key1).getPER(), 2) + Math.pow(btree.BTreeSearch(key2).getTPLANET()-btree.BTreeSearch(key1).getTPLANET(), 2) + Math.pow(btree.BTreeSearch(key2).getRSTAR()-btree.BTreeSearch(key1).getRSTAR(), 2) + Math.pow(btree.BTreeSearch(key2).getTSTAR()-btree.BTreeSearch(key1).getTSTAR(), 2) + Math.pow(btree.BTreeSearch(key2).getMSTAR()-btree.BTreeSearch(key1).getMSTAR(), 2));
     }
 
     /**
@@ -465,20 +607,20 @@ public class GUI extends JFrame {
      * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
      * @return returns the score value for the 2 objects based on their features
      */
-    private double PCC(Short key1, Short key2) {   //returns the score value for the 2 objects based on their features
+    private double PCC(Short key1, Short key2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
         //The number of features
         final short FEATURE_AMOUNT = 5;
 
         //sum the product of the features between the objects
-        float SOP = (http.exoplanets.getValue(key2).getPER() * http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key2).getTPLANET() * http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR() * http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR() * http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR() * http.exoplanets.getValue(key1).getMSTAR());
+        float SOP = (btree.BTreeSearch(key2).getPER() * btree.BTreeSearch(key1).getPER())+(btree.BTreeSearch(key2).getTPLANET() * btree.BTreeSearch(key1).getTPLANET())+(btree.BTreeSearch(key2).getRSTAR() * btree.BTreeSearch(key1).getRSTAR())+(btree.BTreeSearch(key2).getTSTAR() * btree.BTreeSearch(key1).getTSTAR())+(btree.BTreeSearch(key2).getMSTAR() * btree.BTreeSearch(key1).getMSTAR());
         //sum the features of the first object
-        float sum1 = (http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key1).getMSTAR());
+        float sum1 = (btree.BTreeSearch(key1).getPER())+(btree.BTreeSearch(key1).getTPLANET())+(btree.BTreeSearch(key1).getRSTAR())+(btree.BTreeSearch(key1).getTSTAR())+(btree.BTreeSearch(key1).getMSTAR());
         //sum the features of the second object
-        float sum2 = (http.exoplanets.getValue(key2).getPER())+(http.exoplanets.getValue(key2).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR());
+        float sum2 = (btree.BTreeSearch(key2).getPER())+(btree.BTreeSearch(key2).getTPLANET())+(btree.BTreeSearch(key2).getRSTAR())+(btree.BTreeSearch(key2).getTSTAR())+(btree.BTreeSearch(key2).getMSTAR());
         //square of the sum the features of the first object
-        double squareSum1 = (Math.pow(http.exoplanets.getValue(key1).getPER(), 2)+Math.pow((http.exoplanets.getValue(key1).getTPLANET()), 2)+Math.pow((http.exoplanets.getValue(key1).getRSTAR()), 2)+Math.pow((http.exoplanets.getValue(key1).getTSTAR()), 2)+Math.pow((http.exoplanets.getValue(key1).getMSTAR()), 2));
+        double squareSum1 = (Math.pow(btree.BTreeSearch(key1).getPER(), 2)+Math.pow((btree.BTreeSearch(key1).getTPLANET()), 2)+Math.pow((btree.BTreeSearch(key1).getRSTAR()), 2)+Math.pow((btree.BTreeSearch(key1).getTSTAR()), 2)+Math.pow((btree.BTreeSearch(key1).getMSTAR()), 2));
         //square of the sum the features of the second object
-        double squareSum2 = (Math.pow(http.exoplanets.getValue(key2).getPER(), 2)+Math.pow((http.exoplanets.getValue(key2).getTPLANET()), 2)+Math.pow((http.exoplanets.getValue(key2).getRSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getTSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getMSTAR()), 2));
+        double squareSum2 = (Math.pow(btree.BTreeSearch(key2).getPER(), 2)+Math.pow((btree.BTreeSearch(key2).getTPLANET()), 2)+Math.pow((btree.BTreeSearch(key2).getRSTAR()), 2)+Math.pow((btree.BTreeSearch(key2).getTSTAR()), 2)+Math.pow((btree.BTreeSearch(key2).getMSTAR()), 2));
 
         return ((SOP)-((sum1)*(sum2)/FEATURE_AMOUNT))/(Math.sqrt(((squareSum1)-(Math.pow(sum1, 2)/FEATURE_AMOUNT))*((squareSum2)-(Math.pow(sum2, 2)/FEATURE_AMOUNT))));
     }
@@ -489,7 +631,7 @@ public class GUI extends JFrame {
      * @param testKey is a key to a specified exoplanet
      * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
      */
-    private Short[] pearsonCorrelationCoefficient(ArrayList<Short> keys, short testKey){  //Pearson Correlation Coefficient
+    private Short[] pearsonCorrelationCoefficient(ArrayList<Short> keys, short testKey) throws IOException, ClassNotFoundException {  //Pearson Correlation Coefficient
         ArrayList<Short[]> largeList = new ArrayList<>();
         double pastVal = 0;
         double currentVal;
@@ -519,7 +661,7 @@ public class GUI extends JFrame {
      * @param keys is the list of all the keys to all of their respective exoplanet objects
      * @return returns a list of the 2 most similar exoplanets in the list
      */
-    private Short[] pearsonCorrelationCoefficient(ArrayList<Short> keys){  //Pearson Correlation Coefficient
+    private Short[] pearsonCorrelationCoefficient(ArrayList<Short> keys) throws IOException, ClassNotFoundException {  //Pearson Correlation Coefficient
         ArrayList<Short[]> largeList = new ArrayList<>();
         double pastVal = 0;
         double currentVal;
@@ -552,7 +694,7 @@ public class GUI extends JFrame {
      * @param testKey is a key to a specified exoplanet
      * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
      */
-    private Short[] euclideanDistance(ArrayList<Short> keys, short testKey){    //EUCLIDEAN DISTANCE
+    private Short[] euclideanDistance(ArrayList<Short> keys, short testKey) throws IOException, ClassNotFoundException {    //EUCLIDEAN DISTANCE
         ArrayList<Short[]> largeList = new ArrayList<>();
         double pastVal = 0;
         double currentVal;
@@ -582,7 +724,7 @@ public class GUI extends JFrame {
      * @param keys is the list of all the keys to all of their respective exoplanet objects
      * @return returns a list of the 2 most similar exoplanets in the list
      */
-    private Short[] euclideanDistance(ArrayList<Short> keys){    //EUCLIDEAN DISTANCE
+    private Short[] euclideanDistance(ArrayList<Short> keys) throws IOException, ClassNotFoundException {    //EUCLIDEAN DISTANCE
         ArrayList<Short[]> largeList = new ArrayList<>();
         double pastVal = 0;
         double currentVal;

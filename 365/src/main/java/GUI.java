@@ -95,21 +95,21 @@ public class GUI extends JFrame {
             }));
 
             //---- button1 ----
-//            button1.setText("OK");
-//            button1.setBackground(new Color(51, 204, 255));
-//            button1.addActionListener(new java.awt.event.ActionListener() {
-//                public void actionPerformed(java.awt.event.ActionEvent evt) {
-//                    try {
-//                        okButton(evt);
-//                    } catch (FileNotFoundException ex) {
-//                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-//                    } catch (UnsupportedEncodingException ex) {
-//                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            });
+            button1.setText("OK");
+            button1.setBackground(new Color(51, 204, 255));
+            button1.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    try {
+                        okButton(evt);
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
             //---- label3 ----
             label3.setText("Please Select An Object Limit (1 - 2500):");
@@ -282,6 +282,10 @@ public class GUI extends JFrame {
     //create a hashcache object to use the data as needed
     private HashCache APIcache = new HashCache();
 
+    /**
+     * Loads the BTree either from the Kepler API or from disk.
+     * @throws Exception is used for the exceptions that might occur
+     */
     public void generalLoad() throws Exception {
         //check to see if the cache file exists
         if (new File(".\\Cache\\hashcache").exists()) {
@@ -290,37 +294,45 @@ public class GUI extends JFrame {
             //get the past timestamp
             LocalDateTime pastTime = APIcache.readTimeStamp();
             //check to see if the timestamp is out of date
-            if ((currentTime.getYear() > pastTime.getYear()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() > pastTime.getMonthValue()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() == pastTime.getMonthValue() && currentTime.getDayOfMonth() > pastTime.getDayOfMonth()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() == pastTime.getMonthValue() && currentTime.getDayOfMonth() == pastTime.getDayOfMonth() && currentTime.getHour() > pastTime.getHour())) {
+            if ((currentTime.getYear() > pastTime.getYear()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() > pastTime.getMonthValue())) {////////////////////////////////////////
                 //run the API loader b/c the data is out of date
+                System.out.println("API");/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 loadFromAPI();
             } else {
                 //run the file loader b/c the data is up to date
-                loadFromFile();/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues
+                System.out.println("FILE");/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                loadFromFile();
             }
         } else {
             //write a timestamp to file
             APIcache.writeTimeStamp(LocalDateTime.now());
             //create and write the API response and API call to file and populate the BTree
+            System.out.println("API");/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             loadFromAPI();
         }
     }
 
     //create a BTree to quickly find information
-    BTree btree = new BTree();
+    BTree btree;
 
 
 
     /**
      * Loads the BTree from file.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
      */
-    public void loadFromFile() throws IOException, ClassNotFoundException {
+    public void loadFromFile() throws IOException, ClassNotFoundException {///////////////////////IT WON'T LET ME RUN THE btree variable because it is null
         //load the BTree
-        btree.readTreeDegree();
-        btree.readTreeRoot();/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////issues
+        btree = new BTree(btree);///////
+
+        //recursively build up the BTree
+        btree.loadTree();
     }
 
     /**
      * Gets all the data from the API, writes the API response to file, loads the API response into main memory, and then loads the BTree.
+     * @throws Exception is used for the exceptions that might occur
      */
     public void loadFromAPI() throws Exception {
         //create a json parser object to collect the data from the API
@@ -344,10 +356,16 @@ public class GUI extends JFrame {
         //create an arraylist of key, value tuples
         http.createTuples(APIcache.getResponse());
 
+
+        //System.out.println(http.getTupleList().size());/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
         //get all the keys and values of the kepler objects
         ArrayList<Pair<Short, Exoplanet>> tuples = http.getTupleList();
 
         //populate the BTree
+        btree = new BTree();
         for (Pair<Short, Exoplanet> pair : tuples) {
             //insert a key into the BTree and the value into the file
             btree.BTreeInsert(pair.pairShort, pair.pairExoplanet);
@@ -358,388 +376,407 @@ public class GUI extends JFrame {
         btree.overwriteRootToFile();
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//    /**
-//     * Handles the requests of the user: including the type & amount of data to retrieve and toggling the similarity metric
-//     */
-//    private void okButton(java.awt.event.ActionEvent evt) throws Exception {
-//        Random rand = new Random();
+    /**
+     * Handles the requests of the user: including the type & amount of data to retrieve and toggling the similarity metric
+     * @throws Exception is used for the exceptions that might occur
+     * @param evt is the event handler for this button
+     */
+    private void okButton(java.awt.event.ActionEvent evt) throws Exception {
+        Random rand = new Random();
+
+        //set all the fields
+        textArea1.setText("");
+        String text_amount = textField1.getText();
+        String keplerObject = typeSelect.getSelectedItem().toString();
+        String text_key = textField2.getText();
+
+        //get all the keys of the kepler objects
+        ArrayList<Short> temp = btree.getKeys();///////////////////////////////////////////////////////this is now not returning
+
+        //System.out.println(btree.countNodes());//API FINDS 2287 nodes//load from file sees 2287 nodes>> THIS MEANS THAT ALL THE DATA IS IN THE FILE>>so I'm either not reading the data correctly or loading the tree correctly >>
+
+        System.out.println("KEYS ARRAYLIST SIZE : " + temp.size());///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        btree.printProperties();/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        btree.printAt(0);/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//        System.out.println(btree.counterGlobal);
+//        System.out.println(btree.totalCounter);
+//        System.out.println(btree.otherGlobal);
+        System.out.println("NODES TRAVERSED : " + btree.finalCounter);
+        System.out.println("NKEY total after traversal of nodes : " + btree.keyCount);
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+        //System.out.println("KEY COUNT METHOD IS : " + btree.getKeyCount());
+
+
+
+
+
+
+
+
+        //set a limit for the user to give as an amount
+        int USER_MAX_AMOUNT = temp.size();
+
+        if (!text_amount.equalsIgnoreCase("") && Integer.parseInt(text_amount) < USER_MAX_AMOUNT) {
+
+            //set all the fields
+            int amount = Integer.parseInt(text_amount);
+
+            if (keplerObject.equals("None")) {
+                if (checkBox1.isSelected()) {
+
+                    //set all the fields
+                    String obj1 = "PER";
+                    String obj2 = "TPLANET";
+                    String obj3 = "RSTAR";
+                    String obj4 = "TSTAR";
+                    String obj5 = "MSTAR";
+
+                    //remove all the data without information on the period, planet temperature, star temperature, stellar radius, or stellar mass
+                    if (temp.size() != 0) {
+                        for (int i = 0; i < temp.size(); i++) {
+                            if (btree.BTreeSearch(temp.get(i)).getPER() == 0 || btree.BTreeSearch(temp.get(i)).getTPLANET() == 0 || btree.BTreeSearch(temp.get(i)).getRSTAR() == 0 || btree.BTreeSearch(temp.get(i)).getTSTAR() == 0 || btree.BTreeSearch(temp.get(i)).getMSTAR() == 0)
+                                temp.remove(i);
+                        }
+
+                        //update the new limit size
+                        USER_MAX_AMOUNT = temp.size();
+
+                        //remove extra objects if the total size of the list still exceeds the number of requested items to compare
+                        while (USER_MAX_AMOUNT > amount) {
+                            //remove an item randomly
+                            temp.remove(rand.nextInt(USER_MAX_AMOUNT));
+
+                            //update the new limit size
+                            USER_MAX_AMOUNT = temp.size();
+                        }
+                    }
+
+                    if (!text_key.equalsIgnoreCase("")) {
+                        //display the two most common kepler objects using a specified number of kepler objects and a specified kepler object key
+                        //return the most common kepler object to the specified kepler object
+                        if (temp.size() != 0){
+                            Short[] sim = pearsonCorrelationCoefficient(temp, Short.parseShort(text_key));
+
+                            for(int i = 0; i < sim.length; i++){
+                                textArea1.append("KEY IS: " + sim[i] + "\n\t\tDATA IS: \n" + btree.BTreeSearch(sim[i]).toString() + "\n");
+                            }
+                        }
+                    }
+                    else {
+                        //display the two most common kepler objects using a specified number of kepler objects
+                        //return the two most common kepler objects
+                        if (temp.size() != 0){
+                            Short[] sim = pearsonCorrelationCoefficient(temp);
+
+                            for(int i = 0; i < sim.length; i++){
+                                textArea1.append("KEY IS: " + sim[i] + "\n\t\tDATA IS: \n" + btree.BTreeSearch(sim[i]).toString() + "\n");
+                            }
+                        }
+                    }
+                }
+                else {
+                    //display the specific amount of kepler objects
+                    if (temp.size() != 0){
+                        for(int i = 0; i < amount; i++){
+                            textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    }
+                }
+            }
+            else {
+                //display the specific amount and only the matching type of kepler objects
+                if (temp.size() != 0){
+                    if (keplerObject.equalsIgnoreCase("A")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getA() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("DEC")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getDEC() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("RSTAR")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getRSTAR() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("TSTAR")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getTSTAR() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("KMAG")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getKMAG() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("TPLANET")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getTPLANET() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("T0")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getT0() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("UT0")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getUT0() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("PER")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getPER() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("RA")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getRA() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("RPLANET")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getRPLANET() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    } else if (keplerObject.equalsIgnoreCase("MSTAR")) {
+                        for(int i = 0; i < amount; i++){
+                            if (btree.BTreeSearch(temp.get(i)).getMSTAR() != 0)
+                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Retrieves the comparison score value between 2 Exoplanet objects using Euclidean Distance
+     * @param key1 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @return returns the score value for the 2 objects based on their features
+     */
+    private double ED(Short key1, Short key2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+        return Math.sqrt(Math.pow(btree.BTreeSearch(key2).getPER()-btree.BTreeSearch(key1).getPER(), 2) + Math.pow(btree.BTreeSearch(key2).getTPLANET()-btree.BTreeSearch(key1).getTPLANET(), 2) + Math.pow(btree.BTreeSearch(key2).getRSTAR()-btree.BTreeSearch(key1).getRSTAR(), 2) + Math.pow(btree.BTreeSearch(key2).getTSTAR()-btree.BTreeSearch(key1).getTSTAR(), 2) + Math.pow(btree.BTreeSearch(key2).getMSTAR()-btree.BTreeSearch(key1).getMSTAR(), 2));
+    }
+
+    /**
+     * Retrieves the comparison score value between 2 Exoplanet objects using Pearson Correlation Coefficient
+     * @param key1 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
+     * @return returns the score value for the 2 objects based on their features
+     */
+    private double PCC(Short key1, Short key2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+        //The number of features
+        final short FEATURE_AMOUNT = 5;
+
+        //sum the product of the features between the objects
+        float SOP = (btree.BTreeSearch(key2).getPER() * btree.BTreeSearch(key1).getPER())+(btree.BTreeSearch(key2).getTPLANET() * btree.BTreeSearch(key1).getTPLANET())+(btree.BTreeSearch(key2).getRSTAR() * btree.BTreeSearch(key1).getRSTAR())+(btree.BTreeSearch(key2).getTSTAR() * btree.BTreeSearch(key1).getTSTAR())+(btree.BTreeSearch(key2).getMSTAR() * btree.BTreeSearch(key1).getMSTAR());
+        //sum the features of the first object
+        float sum1 = (btree.BTreeSearch(key1).getPER())+(btree.BTreeSearch(key1).getTPLANET())+(btree.BTreeSearch(key1).getRSTAR())+(btree.BTreeSearch(key1).getTSTAR())+(btree.BTreeSearch(key1).getMSTAR());
+        //sum the features of the second object
+        float sum2 = (btree.BTreeSearch(key2).getPER())+(btree.BTreeSearch(key2).getTPLANET())+(btree.BTreeSearch(key2).getRSTAR())+(btree.BTreeSearch(key2).getTSTAR())+(btree.BTreeSearch(key2).getMSTAR());
+        //square of the sum the features of the first object
+        double squareSum1 = (Math.pow(btree.BTreeSearch(key1).getPER(), 2)+Math.pow((btree.BTreeSearch(key1).getTPLANET()), 2)+Math.pow((btree.BTreeSearch(key1).getRSTAR()), 2)+Math.pow((btree.BTreeSearch(key1).getTSTAR()), 2)+Math.pow((btree.BTreeSearch(key1).getMSTAR()), 2));
+        //square of the sum the features of the second object
+        double squareSum2 = (Math.pow(btree.BTreeSearch(key2).getPER(), 2)+Math.pow((btree.BTreeSearch(key2).getTPLANET()), 2)+Math.pow((btree.BTreeSearch(key2).getRSTAR()), 2)+Math.pow((btree.BTreeSearch(key2).getTSTAR()), 2)+Math.pow((btree.BTreeSearch(key2).getMSTAR()), 2));
+
+        return ((SOP)-((sum1)*(sum2)/FEATURE_AMOUNT))/(Math.sqrt(((squareSum1)-(Math.pow(sum1, 2)/FEATURE_AMOUNT))*((squareSum2)-(Math.pow(sum2, 2)/FEATURE_AMOUNT))));
+    }
+
+    /**
+     * Retrieves the most similar Exoplanet object to the one selected
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @param testKey is a key to a specified exoplanet
+     * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
+     */
+    private Short[] pearsonCorrelationCoefficient(ArrayList<Short> keys, short testKey) throws IOException, ClassNotFoundException {  //Pearson Correlation Coefficient
+        ArrayList<Short[]> largeList = new ArrayList<>();
+        double pastVal = 0;
+        double currentVal;
+        short counter = 0;
+
+        for(int i = 0; i < keys.size(); i++) {
+            if(i == 0 && keys.get(i) != testKey){
+                pastVal = PCC(testKey, keys.get(i));
+                largeList.add(new Short[]{testKey, keys.get(i)});
+                counter++;
+            }
+            else {
+                currentVal = PCC(testKey, keys.get(i));
+
+                if (currentVal > pastVal && keys.get(i) != testKey) {
+                    largeList.remove((counter-1));
+                    largeList.add(new Short[]{testKey, keys.get(i)});
+                    pastVal = currentVal;
+                }
+            }
+        }
+        return largeList.get(0);
+    }
+
+    /**
+     * Retrieves the 2 most similar Exoplanet objects in the data set specified
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @return returns a list of the 2 most similar exoplanets in the list
+     */
+    private Short[] pearsonCorrelationCoefficient(ArrayList<Short> keys) throws IOException, ClassNotFoundException {  //Pearson Correlation Coefficient
+        ArrayList<Short[]> largeList = new ArrayList<>();
+        double pastVal = 0;
+        double currentVal;
+        short counter = 0;
+
+        for(int i = 0; i < keys.size(); i++) {
+            for (int j = 0; j < keys.size(); j++) {
+                if(j == 0){
+                    pastVal = PCC(keys.get(j+1), keys.get(i));
+                    largeList.add(new Short[]{keys.get(i), keys.get(j)});
+                    counter++;
+                }
+                else {
+                    currentVal = PCC(keys.get(j), keys.get(i));
+
+                    if (currentVal > pastVal) {
+                        largeList.remove((counter-1));
+                        largeList.add(new Short[]{keys.get(i), keys.get(j)});
+                        pastVal = currentVal;
+                    }
+                }
+            }
+        }
+        return largeList.get(0);
+    }
+
+    /**
+     * Retrieves the most similar Exoplanet object to the one selected
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @param testKey is a key to a specified exoplanet
+     * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
+     */
+    private Short[] euclideanDistance(ArrayList<Short> keys, short testKey) throws IOException, ClassNotFoundException {    //EUCLIDEAN DISTANCE
+        ArrayList<Short[]> largeList = new ArrayList<>();
+        double pastVal = 0;
+        double currentVal;
+        short counter = 0;
+
+        for(int i = 0; i < keys.size(); i++) {
+            if(i == 0  && keys.get(i) != testKey){
+                pastVal = ED(testKey, keys.get(i));
+                largeList.add(new Short[]{testKey, keys.get(i)});
+                counter++;
+            }
+            else {
+                currentVal = ED(testKey, keys.get(i));
+
+                if (currentVal < pastVal && keys.get(i) != testKey) {
+                    largeList.remove((counter-1));
+                    largeList.add(new Short[]{testKey, keys.get(i)});
+                    pastVal = currentVal;
+                }
+            }
+        }
+        return largeList.get(0);
+    }
+
+    /**
+     * Retrieves the 2 most similar Exoplanet objects in the data set specified
+     * @param keys is the list of all the keys to all of their respective exoplanet objects
+     * @return returns a list of the 2 most similar exoplanets in the list
+     */
+    private Short[] euclideanDistance(ArrayList<Short> keys) throws IOException, ClassNotFoundException {    //EUCLIDEAN DISTANCE
+        ArrayList<Short[]> largeList = new ArrayList<>();
+        double pastVal = 0;
+        double currentVal;
+        short counter = 0;
+
+        for(int i = 0; i < keys.size(); i++) {
+            for (int j = 0; j < keys.size(); j++) {
+                if(j == 0){
+                    pastVal = ED(keys.get(j+1), keys.get(i));
+                    largeList.add(new Short[]{keys.get(i), keys.get(j)});
+                    counter++;
+                }
+                else {
+                    currentVal = ED(keys.get(j), keys.get(i));
+
+                    if (currentVal < pastVal) {
+                        largeList.remove((counter-1));
+                        largeList.add(new Short[]{keys.get(i), keys.get(j)});
+                        pastVal = currentVal;
+                    }
+                }
+            }
+        }
+        return largeList.get(0);
+    }
+
+//    final int K_CENTROIDS = 10;
+//    public ArrayList<Exoplanet> kMeansClustering(ArrayList<Short> keys) {
+//        ArrayList<Exoplanet> largeList = new ArrayList<>();
+//        //DO STUFF
+//        for (short k : keys) {
+//            //find the nearest centroid for each point >>> using similarity metric between each point and the cluster center >>>> then assign the point to the new cluster
 //
-//        //set all the fields
-//        textArea1.setText("");
-//        String text_amount = textField1.getText();
-//        String keplerObject = typeSelect.getSelectedItem().toString();
-//        String text_key = textField2.getText();
-//
-//        //get all the keys of the kepler objects
-//        ArrayList<Short> temp = http.exoplanets.keySet();
-//
-//        //set a limit for the user to give as an amount
-//        int USER_MAX_AMOUNT = temp.size();
-//
-//        if (!text_amount.equalsIgnoreCase("") && Integer.parseInt(text_amount) < USER_MAX_AMOUNT) {
-//
-//            //set all the fields
-//            int amount = Integer.parseInt(text_amount);
-//
-//            if (keplerObject.equals("None")) {
-//                if (checkBox1.isSelected()) {
-//
-//                    //set all the fields
-//                    String obj1 = "PER";
-//                    String obj2 = "TPLANET";
-//                    String obj3 = "RSTAR";
-//                    String obj4 = "TSTAR";
-//                    String obj5 = "MSTAR";
-//
-//                    //remove all the data without information on the period, planet temperature, star temperature, stellar radius, or stellar mass
-//                    if (temp.size() != 0) {
-//                        for (int i = 0; i < temp.size(); i++) {
-//                            if (http.exoplanets.getValue(temp.get(i)).getPER() == 0 || http.exoplanets.getValue(temp.get(i)).getTPLANET() == 0 || http.exoplanets.getValue(temp.get(i)).getRSTAR() == 0 || http.exoplanets.getValue(temp.get(i)).getTSTAR() == 0 || http.exoplanets.getValue(temp.get(i)).getMSTAR() == 0)
-//                                temp.remove(i);
-//                        }
-//
-//                        //update the new limit size
-//                        USER_MAX_AMOUNT = temp.size();
-//
-//                        //remove extra objects if the total size of the list still exceeds the number of requested items to compare
-//                        while (USER_MAX_AMOUNT > amount) {
-//                            //remove an item randomly
-//                            temp.remove(rand.nextInt(USER_MAX_AMOUNT));
-//
-//                            //update the new limit size
-//                            USER_MAX_AMOUNT = temp.size();
-//                        }
-//                    }
-//
-//                    if (!text_key.equalsIgnoreCase("")) {
-//                        //display the two most common kepler objects using a specified number of kepler objects and a specified kepler object key
-//                        //return the most common kepler object to the specified kepler object
-//                        if (temp.size() != 0){
-//                            Short[] sim = pearsonCorrelationCoefficient(temp, Short.parseShort(text_key));
-//
-//                            for(int i = 0; i < sim.length; i++){
-//                                textArea1.append("KEY IS: " + sim[i] + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
-//                            }
-//                        }
-//                    }
-//                    else {
-//                        //display the two most common kepler objects using a specified number of kepler objects
-//                        //return the two most common kepler objects
-//                        if (temp.size() != 0){
-//                            Short[] sim = pearsonCorrelationCoefficient(temp);
-//
-//                            for(int i = 0; i < sim.length; i++){
-//                                textArea1.append("KEY IS: " + sim[i] + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(sim[i]).toString() + "\n");
-//                            }
-//                        }
-//                    }
-//                }
-//                else {
-//                    //display the specific amount of kepler objects
-//                    if (temp.size() != 0){
-//                        for(int i = 0; i < amount; i++){
-//                            textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    }
-//                }
-//            }
-//            else {
-//                //display the specific amount and only the matching type of kepler objects
-//                if (temp.size() != 0){
-//                    if (keplerObject.equalsIgnoreCase("A")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getA() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    } else if (keplerObject.equalsIgnoreCase("DEC")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getDEC() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    } else if (keplerObject.equalsIgnoreCase("RSTAR")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getRSTAR() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    } else if (keplerObject.equalsIgnoreCase("TSTAR")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getTSTAR() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    } else if (keplerObject.equalsIgnoreCase("KMAG")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getKMAG() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    } else if (keplerObject.equalsIgnoreCase("TPLANET")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getTPLANET() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    } else if (keplerObject.equalsIgnoreCase("T0")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getT0() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    } else if (keplerObject.equalsIgnoreCase("UT0")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getUT0() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    } else if (keplerObject.equalsIgnoreCase("PER")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getPER() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    } else if (keplerObject.equalsIgnoreCase("RA")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getRA() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    } else if (keplerObject.equalsIgnoreCase("RPLANET")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getRPLANET() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    } else if (keplerObject.equalsIgnoreCase("MSTAR")) {
-//                        for(int i = 0; i < amount; i++){
-//                            if (http.exoplanets.getValue(temp.get(i)).getMSTAR() != 0)
-//                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + http.exoplanets.getValue(temp.get(i)).toString() + "\n");
-//                        }
-//                    }
-//                }
-//            }
 //        }
-//    }
+//        for (int j = 0; j < K_CENTROIDS; j++) {
+//            //get a new centroid as an average of all the points in that cluster
 //
-//    /**
-//     * Retrieves the comparison score value between 2 Exoplanet objects using Euclidean Distance
-//     * @param key1 is a String that is used to retrieve the features of it's respective exoplanet object
-//     * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
-//     * @return returns the score value for the 2 objects based on their features
-//     */
-//    private double ED(Short key1, Short key2) {   //returns the score value for the 2 objects based on their features
-//        return Math.sqrt(Math.pow(http.exoplanets.getValue(key2).getPER()-http.exoplanets.getValue(key1).getPER(), 2) + Math.pow(http.exoplanets.getValue(key2).getTPLANET()-http.exoplanets.getValue(key1).getTPLANET(), 2) + Math.pow(http.exoplanets.getValue(key2).getRSTAR()-http.exoplanets.getValue(key1).getRSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getTSTAR()-http.exoplanets.getValue(key1).getTSTAR(), 2) + Math.pow(http.exoplanets.getValue(key2).getMSTAR()-http.exoplanets.getValue(key1).getMSTAR(), 2));
-//    }
-//
-//    /**
-//     * Retrieves the comparison score value between 2 Exoplanet objects using Pearson Correlation Coefficient
-//     * @param key1 is a String that is used to retrieve the features of it's respective exoplanet object
-//     * @param key2 is a String that is used to retrieve the features of it's respective exoplanet object
-//     * @return returns the score value for the 2 objects based on their features
-//     */
-//    private double PCC(Short key1, Short key2) {   //returns the score value for the 2 objects based on their features
-//        //The number of features
-//        final short FEATURE_AMOUNT = 5;
-//
-//        //sum the product of the features between the objects
-//        float SOP = (http.exoplanets.getValue(key2).getPER() * http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key2).getTPLANET() * http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR() * http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR() * http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR() * http.exoplanets.getValue(key1).getMSTAR());
-//        //sum the features of the first object
-//        float sum1 = (http.exoplanets.getValue(key1).getPER())+(http.exoplanets.getValue(key1).getTPLANET())+(http.exoplanets.getValue(key1).getRSTAR())+(http.exoplanets.getValue(key1).getTSTAR())+(http.exoplanets.getValue(key1).getMSTAR());
-//        //sum the features of the second object
-//        float sum2 = (http.exoplanets.getValue(key2).getPER())+(http.exoplanets.getValue(key2).getTPLANET())+(http.exoplanets.getValue(key2).getRSTAR())+(http.exoplanets.getValue(key2).getTSTAR())+(http.exoplanets.getValue(key2).getMSTAR());
-//        //square of the sum the features of the first object
-//        double squareSum1 = (Math.pow(http.exoplanets.getValue(key1).getPER(), 2)+Math.pow((http.exoplanets.getValue(key1).getTPLANET()), 2)+Math.pow((http.exoplanets.getValue(key1).getRSTAR()), 2)+Math.pow((http.exoplanets.getValue(key1).getTSTAR()), 2)+Math.pow((http.exoplanets.getValue(key1).getMSTAR()), 2));
-//        //square of the sum the features of the second object
-//        double squareSum2 = (Math.pow(http.exoplanets.getValue(key2).getPER(), 2)+Math.pow((http.exoplanets.getValue(key2).getTPLANET()), 2)+Math.pow((http.exoplanets.getValue(key2).getRSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getTSTAR()), 2)+Math.pow((http.exoplanets.getValue(key2).getMSTAR()), 2));
-//
-//        return ((SOP)-((sum1)*(sum2)/FEATURE_AMOUNT))/(Math.sqrt(((squareSum1)-(Math.pow(sum1, 2)/FEATURE_AMOUNT))*((squareSum2)-(Math.pow(sum2, 2)/FEATURE_AMOUNT))));
-//    }
-//
-//    /**
-//     * Retrieves the most similar Exoplanet object to the one selected
-//     * @param keys is the list of all the keys to all of their respective exoplanet objects
-//     * @param testKey is a key to a specified exoplanet
-//     * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
-//     */
-//    private Short[] pearsonCorrelationCoefficient(ArrayList<Short> keys, short testKey){  //Pearson Correlation Coefficient
-//        ArrayList<Short[]> largeList = new ArrayList<>();
-//        double pastVal = 0;
-//        double currentVal;
-//        short counter = 0;
-//
-//        for(int i = 0; i < keys.size(); i++) {
-//            if(i == 0 && keys.get(i) != testKey){
-//                pastVal = PCC(testKey, keys.get(i));
-//                largeList.add(new Short[]{testKey, keys.get(i)});
-//                counter++;
-//            }
-//            else {
-//                currentVal = PCC(testKey, keys.get(i));
-//
-//                if (currentVal > pastVal && keys.get(i) != testKey) {
-//                    largeList.remove((counter-1));
-//                    largeList.add(new Short[]{testKey, keys.get(i)});
-//                    pastVal = currentVal;
-//                }
-//            }
 //        }
-//        return largeList.get(0);
+//
+//
+//
+//
+//        /////////////////////////keep doing this until none of the cluster assignments change----------------------typically run for N iterations
+//
+//        return largeList;
 //    }
-//
-//    /**
-//     * Retrieves the 2 most similar Exoplanet objects in the data set specified
-//     * @param keys is the list of all the keys to all of their respective exoplanet objects
-//     * @return returns a list of the 2 most similar exoplanets in the list
-//     */
-//    private Short[] pearsonCorrelationCoefficient(ArrayList<Short> keys){  //Pearson Correlation Coefficient
-//        ArrayList<Short[]> largeList = new ArrayList<>();
-//        double pastVal = 0;
-//        double currentVal;
-//        short counter = 0;
-//
-//        for(int i = 0; i < keys.size(); i++) {
-//            for (int j = 0; j < keys.size(); j++) {
-//                if(j == 0){
-//                    pastVal = PCC(keys.get(j+1), keys.get(i));
-//                    largeList.add(new Short[]{keys.get(i), keys.get(j)});
-//                    counter++;
-//                }
-//                else {
-//                    currentVal = PCC(keys.get(j), keys.get(i));
-//
-//                    if (currentVal > pastVal) {
-//                        largeList.remove((counter-1));
-//                        largeList.add(new Short[]{keys.get(i), keys.get(j)});
-//                        pastVal = currentVal;
-//                    }
-//                }
-//            }
-//        }
-//        return largeList.get(0);
-//    }
-//
-//    /**
-//     * Retrieves the most similar Exoplanet object to the one selected
-//     * @param keys is the list of all the keys to all of their respective exoplanet objects
-//     * @param testKey is a key to a specified exoplanet
-//     * @return returns a list of the exoplanet from the key specified and an exoplanet most similar to the one given
-//     */
-//    private Short[] euclideanDistance(ArrayList<Short> keys, short testKey){    //EUCLIDEAN DISTANCE
-//        ArrayList<Short[]> largeList = new ArrayList<>();
-//        double pastVal = 0;
-//        double currentVal;
-//        short counter = 0;
-//
-//        for(int i = 0; i < keys.size(); i++) {
-//            if(i == 0  && keys.get(i) != testKey){
-//                pastVal = ED(testKey, keys.get(i));
-//                largeList.add(new Short[]{testKey, keys.get(i)});
-//                counter++;
-//            }
-//            else {
-//                currentVal = ED(testKey, keys.get(i));
-//
-//                if (currentVal < pastVal && keys.get(i) != testKey) {
-//                    largeList.remove((counter-1));
-//                    largeList.add(new Short[]{testKey, keys.get(i)});
-//                    pastVal = currentVal;
-//                }
-//            }
-//        }
-//        return largeList.get(0);
-//    }
-//
-//    /**
-//     * Retrieves the 2 most similar Exoplanet objects in the data set specified
-//     * @param keys is the list of all the keys to all of their respective exoplanet objects
-//     * @return returns a list of the 2 most similar exoplanets in the list
-//     */
-//    private Short[] euclideanDistance(ArrayList<Short> keys){    //EUCLIDEAN DISTANCE
-//        ArrayList<Short[]> largeList = new ArrayList<>();
-//        double pastVal = 0;
-//        double currentVal;
-//        short counter = 0;
-//
-//        for(int i = 0; i < keys.size(); i++) {
-//            for (int j = 0; j < keys.size(); j++) {
-//                if(j == 0){
-//                    pastVal = ED(keys.get(j+1), keys.get(i));
-//                    largeList.add(new Short[]{keys.get(i), keys.get(j)});
-//                    counter++;
-//                }
-//                else {
-//                    currentVal = ED(keys.get(j), keys.get(i));
-//
-//                    if (currentVal < pastVal) {
-//                        largeList.remove((counter-1));
-//                        largeList.add(new Short[]{keys.get(i), keys.get(j)});
-//                        pastVal = currentVal;
-//                    }
-//                }
-//            }
-//        }
-//        return largeList.get(0);
-//    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 }

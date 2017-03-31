@@ -1,7 +1,7 @@
 /**
  * @author Kyle Zeller
  * This class provides a way to retrieve and parse the JSON formatted information coming from the database.
- * It after it parses the data, it will create Exoplanet objects, and store them in the hash table.
+ * It after it parses the data, it can create a hashtable or an arraylist of tuples out of the data.
  */
 
 import java.io.BufferedReader;
@@ -20,22 +20,40 @@ public class JSONParser {
     private int apiCounter = 1;
     private String totalAPIResponse = "";
 
+    /**
+     * Retrieves the overall API response as one string.
+     * @return returns the overall API response as one string.
+     */
     public String getAPIResponse() {
         return totalAPIResponse;
     }
 
+    /**
+     * Retrieves an arrayList of the key value pairs.
+     * @return returns an arrayList of tuples.
+     */
     public ArrayList<Pair<Short, Exoplanet>> getTupleList() {return tuples;}
 
+    /**
+     * Retrieves the constructed hashtable.
+     * @return returns the constructed hashtable.
+     */
     public HashAlgorithm<Short, Exoplanet> getHashTable() {return exoplanets;}
 
+    /**
+     * Clears out the hashtable.
+     */
     public void clearHashTable() {exoplanets.clear();}
 
+    /**
+     * Clears out the arrayList of tuples.
+     */
     public void clearTupleList() {tuples.clear();}
 
     /**
-     * Pulls in the Kepler Object data, creates Exoplanet objects, and stores them in the hash table
-     * @param u is the url with what and how much information to retrieve from the database
-     * @throws Exception is used for the IO exceptions that might occur
+     * Pulls in the Kepler Object data, and builds up the API response.
+     * @param u is the url with what and how much information to retrieve from the database.
+     * @throws Exception is used for the IO exceptions that might occur.
      */
     // HTTP GET request
     public void sendGet(String u) throws Exception {
@@ -76,6 +94,11 @@ public class JSONParser {
         apiCounter++;
     }
 
+    /**
+     * Creates and populates the tuple arrayList using the API response.
+     * @param s is the API response.
+     * @throws Exception is used for the IO exceptions that might occur.
+     */
     public void createTuples(String s) {
         //parse the data out of the JSON object
         JsonParser parser = new JsonParser();
@@ -153,6 +176,11 @@ public class JSONParser {
         }
     }
 
+    /**
+     * Creates and populates the hashtable using the API response.
+     * @param s is the API response.
+     * @throws Exception is used for the IO exceptions that might occur.
+     */
     public void createHashTable(String s) {
         //parse the data out of the JSON object
         JsonParser parser = new JsonParser();
