@@ -48,6 +48,10 @@ public class GUI extends JFrame {
         label6 = new JLabel();
         label7 = new JLabel();
         textField2 = new JTextField();
+        cluster = new JLabel();
+        clusterselect = new JComboBox<>();
+        label8 = new JLabel();
+        comboBox1 = new JComboBox<>();
         panel2 = new JPanel();
         scrollPane1 = new JScrollPane();
         textArea1 = new JTextArea();
@@ -61,22 +65,16 @@ public class GUI extends JFrame {
         {
             panel1.setBackground(new Color(51, 204, 255));
 
-            // JFormDesigner evaluation mark
-            panel1.setBorder(new javax.swing.border.CompoundBorder(
-                    new javax.swing.border.TitledBorder(new javax.swing.border.EmptyBorder(0, 0, 0, 0),
-                            "365 HW1", javax.swing.border.TitledBorder.CENTER,
-                            javax.swing.border.TitledBorder.BOTTOM, new java.awt.Font("Dialog", java.awt.Font.BOLD, 12),
-                            java.awt.Color.red), panel1.getBorder())); panel1.addPropertyChangeListener(new java.beans.PropertyChangeListener(){public void propertyChange(java.beans.PropertyChangeEvent e){if("border".equals(e.getPropertyName()))throw new RuntimeException();}});
-
-
             //---- label1 ----
             label1.setText("Welcome to StarLabs");
             label1.setHorizontalAlignment(SwingConstants.CENTER);
             label1.setFont(new Font("Segoe UI", Font.BOLD, 30));
+            label1.setForeground(Color.black);
 
             //---- label2 ----
             label2.setText("Please Select A Classifier Type:");
             label2.setFont(label2.getFont().deriveFont(label2.getFont().getStyle() | Font.BOLD));
+            label2.setForeground(Color.black);
 
             //---- typeSelect ----
             typeSelect.setModel(new DefaultComboBoxModel<>(new String[] {
@@ -114,26 +112,68 @@ public class GUI extends JFrame {
             //---- label3 ----
             label3.setText("Please Select An Object Limit (1 - 2500):");
             label3.setFont(label3.getFont().deriveFont(label3.getFont().getStyle() | Font.BOLD));
+            label3.setForeground(Color.black);
 
             //---- label4 ----
             label4.setText("Simularity Metric:");
             label4.setFont(label4.getFont().deriveFont(label4.getFont().getStyle() | Font.BOLD));
+            label4.setForeground(Color.black);
 
             //---- checkBox1 ----
             checkBox1.setText("Compares Interstellar Objects");
             checkBox1.setBackground(new Color(51, 204, 255));
+            checkBox1.setForeground(Color.black);
 
             //---- label5 ----
             label5.setText("Please Set Classifier Type to None");
+            label5.setForeground(Color.black);
 
             //---- label6 ----
             label6.setText("The comparisons are made by: {period, planet size, star size, star temperature, and stellar mass}");
+            label6.setForeground(Color.black);
 
             //---- label7 ----
             label7.setText("Please Provide An Object Key:");
             label7.setFont(label7.getFont().deriveFont(label7.getFont().getStyle() | Font.BOLD));
+            label7.setForeground(Color.black);
+
+            //---- cluster ----
+            cluster.setForeground(Color.black);
+            cluster.setBackground(new Color(51, 204, 255));
+            cluster.setFont(cluster.getFont().deriveFont(cluster.getFont().getStyle() | Font.BOLD));
+            cluster.setText("Please Select Cluster Amount:");
+
+            //---- clusterselect ----
+            clusterselect.setModel(new DefaultComboBoxModel<>(new String[] {
+                    "None",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6"
+            }));
+
+            //---- label8 ----
+            label8.setText("Please Pick a Cluster to View:");
+            label8.setBackground(new Color(51, 204, 255));
+            label8.setForeground(Color.black);
+            label8.setFont(label8.getFont().deriveFont(label8.getFont().getStyle() | Font.BOLD));
+
+            //---- comboBox1 ----
+            comboBox1.setModel(new DefaultComboBoxModel<>(new String[] {
+                    "None",
+                    "All",
+                    "1",
+                    "2",
+                    "3",
+                    "4",
+                    "5",
+                    "6"
+            }));
 
             GroupLayout panel1Layout = new GroupLayout(panel1);
+            panel1Layout.setHonorsVisibility(false);
             panel1.setLayout(panel1Layout);
             panel1Layout.setHorizontalGroup(
                     panel1Layout.createParallelGroup()
@@ -143,38 +183,45 @@ public class GUI extends JFrame {
                                                     .addGap(152, 152, 152)
                                                     .addComponent(label1))
                                             .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addGap(131, 131, 131)
-                                                    .addComponent(label7, GroupLayout.PREFERRED_SIZE, 191, GroupLayout.PREFERRED_SIZE)
-                                                    .addGap(18, 18, 18)
-                                                    .addComponent(textField2, GroupLayout.PREFERRED_SIZE, 99, GroupLayout.PREFERRED_SIZE)))
-                                    .addContainerGap(151, Short.MAX_VALUE))
-                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                    .addGap(0, 45, Short.MAX_VALUE)
-                                    .addGroup(panel1Layout.createParallelGroup()
-                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addComponent(label4, GroupLayout.PREFERRED_SIZE, 114, GroupLayout.PREFERRED_SIZE)
-                                                    .addPreferredGap(LayoutStyle.ComponentPlacement.UNRELATED)
-                                                    .addComponent(checkBox1, GroupLayout.PREFERRED_SIZE, 201, GroupLayout.PREFERRED_SIZE)
-                                                    .addGap(18, 18, 18)
-                                                    .addComponent(label5, GroupLayout.PREFERRED_SIZE, 200, GroupLayout.PREFERRED_SIZE))
-                                            .addComponent(label6, GroupLayout.PREFERRED_SIZE, 554, GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                    .addGap(60, 60, 60)
+                                                    .addGap(112, 112, 112)
                                                     .addGroup(panel1Layout.createParallelGroup()
-                                                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                                                    .addComponent(button1)
-                                                                    .addGap(267, 267, 267))
-                                                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
-                                                                    .addGroup(panel1Layout.createParallelGroup()
-                                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                                    .addComponent(label2, GroupLayout.PREFERRED_SIZE, 196, GroupLayout.PREFERRED_SIZE)
-                                                                                    .addGap(18, 18, 18)
-                                                                                    .addComponent(typeSelect, GroupLayout.PREFERRED_SIZE, 115, GroupLayout.PREFERRED_SIZE))
-                                                                            .addGroup(panel1Layout.createSequentialGroup()
-                                                                                    .addComponent(label3, GroupLayout.PREFERRED_SIZE, 249, GroupLayout.PREFERRED_SIZE)
-                                                                                    .addGap(18, 18, 18)
-                                                                                    .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
-                                                                    .addGap(119, 119, 119))))))
+                                                            .addComponent(label8, GroupLayout.PREFERRED_SIZE, 166, GroupLayout.PREFERRED_SIZE)
+                                                            .addComponent(cluster)
+                                                            .addComponent(label7))
+                                                    .addGap(51, 51, 51)
+                                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
+                                                            .addComponent(clusterselect, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                                            .addComponent(comboBox1, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                                            .addComponent(textField2, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
+                                    .addContainerGap(150, Short.MAX_VALUE))
+                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                    .addGap(60, 114, Short.MAX_VALUE)
+                                    .addGroup(panel1Layout.createParallelGroup()
+                                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                                    .addComponent(button1)
+                                                    .addGap(276, 276, 276))
+                                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                                    .addGroup(panel1Layout.createParallelGroup()
+                                                            .addGroup(panel1Layout.createSequentialGroup()
+                                                                    .addComponent(label2)
+                                                                    .addGap(45, 45, 45)
+                                                                    .addComponent(typeSelect, GroupLayout.PREFERRED_SIZE, 120, GroupLayout.PREFERRED_SIZE))
+                                                            .addGroup(panel1Layout.createSequentialGroup()
+                                                                    .addComponent(label3)
+                                                                    .addGap(45, 45, 45)
+                                                                    .addComponent(textField1, GroupLayout.PREFERRED_SIZE, 90, GroupLayout.PREFERRED_SIZE)))
+                                                    .addGap(128, 128, 128))))
+                            .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
+                                    .addGap(0, 46, Short.MAX_VALUE)
+                                    .addGroup(panel1Layout.createParallelGroup()
+                                            .addComponent(label6)
+                                            .addGroup(panel1Layout.createSequentialGroup()
+                                                    .addComponent(label4)
+                                                    .addGap(27, 27, 27)
+                                                    .addComponent(checkBox1, GroupLayout.PREFERRED_SIZE, 183, GroupLayout.PREFERRED_SIZE)
+                                                    .addGap(36, 36, 36)
+                                                    .addComponent(label5)))
+                                    .addGap(31, 31, 31))
             );
             panel1Layout.setVerticalGroup(
                     panel1Layout.createParallelGroup()
@@ -182,25 +229,33 @@ public class GUI extends JFrame {
                                     .addContainerGap()
                                     .addComponent(label1)
                                     .addGap(81, 81, 81)
-                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
-                                            .addComponent(typeSelect)
-                                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(panel1Layout.createParallelGroup()
+                                            .addComponent(label2, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(typeSelect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                     .addGap(18, 18, 18)
                                     .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                             .addComponent(textField1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                             .addComponent(label3, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addGap(18, 18, 18)
                                     .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
-                                            .addComponent(label4, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(label5)
                                             .addComponent(checkBox1)
-                                            .addComponent(label5))
+                                            .addComponent(label4, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
                                     .addGap(18, 18, 18)
                                     .addComponent(label6)
                                     .addGap(18, 18, 18)
+                                    .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.TRAILING)
+                                            .addComponent(clusterselect, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(cluster, GroupLayout.PREFERRED_SIZE, 26, GroupLayout.PREFERRED_SIZE))
+                                    .addGap(18, 18, 18)
                                     .addGroup(panel1Layout.createParallelGroup()
-                                            .addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(label7, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE))
-                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                            .addComponent(label8, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(comboBox1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addGap(18, 18, 18)
+                                    .addGroup(panel1Layout.createParallelGroup()
+                                            .addComponent(label7, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
                                     .addComponent(button1)
                                     .addContainerGap())
             );
@@ -221,13 +276,11 @@ public class GUI extends JFrame {
             panel2.setLayout(panel2Layout);
             panel2Layout.setHorizontalGroup(
                     panel2Layout.createParallelGroup()
-                            .addGroup(panel2Layout.createSequentialGroup()
-                                    .addComponent(scrollPane1, GroupLayout.PREFERRED_SIZE, 559, GroupLayout.PREFERRED_SIZE)
-                                    .addGap(0, 408, Short.MAX_VALUE))
+                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 559, Short.MAX_VALUE)
             );
             panel2Layout.setVerticalGroup(
                     panel2Layout.createParallelGroup()
-                            .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                            .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
             );
         }
 
@@ -238,9 +291,9 @@ public class GUI extends JFrame {
                         .addGroup(contentPaneLayout.createSequentialGroup()
                                 .addContainerGap()
                                 .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                .addContainerGap())
+                                .addGap(103, 103, 103))
         );
         contentPaneLayout.setVerticalGroup(
                 contentPaneLayout.createParallelGroup()
@@ -248,10 +301,10 @@ public class GUI extends JFrame {
                                 .addContainerGap()
                                 .addGroup(contentPaneLayout.createParallelGroup()
                                         .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addContainerGap(GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                        .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                .addContainerGap())
         );
-        setSize(1190, 660);
+        setSize(1235, 670);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }
@@ -271,6 +324,10 @@ public class GUI extends JFrame {
     private JLabel label6;
     private JLabel label7;
     private JTextField textField2;
+    private JLabel cluster;
+    private JComboBox<String> clusterselect;
+    private JLabel label8;
+    private JComboBox<String> comboBox1;
     private JPanel panel2;
     private JScrollPane scrollPane1;
     private JTextArea textArea1;
@@ -404,13 +461,6 @@ public class GUI extends JFrame {
         ArrayList<Short> temp = btree.getKeys();
 
         System.out.println("KEYS ARRAYLIST SIZE : " + temp.size());///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-
-
-
-
-
 
         //set a limit for the user to give as an amount
         int USER_MAX_AMOUNT = temp.size();

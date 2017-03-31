@@ -56,6 +56,8 @@ public class GUI extends JFrame {
         scrollPane1 = new JScrollPane();
         textArea1 = new JTextArea();
 
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
         //======== this ========
         Container contentPane = getContentPane();
 
@@ -101,6 +103,19 @@ public class GUI extends JFrame {
             //---- button1 ----
             button1.setText("OK");
             button1.setBackground(new Color(51, 204, 255));
+            button1.addActionListener(new java.awt.event.ActionListener() {
+                public void actionPerformed(java.awt.event.ActionEvent evt) {
+                    try {
+                        okButton(evt);
+                    } catch (FileNotFoundException ex) {
+                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (UnsupportedEncodingException ex) {
+                        Logger.getLogger(GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
 
             //---- label3 ----
             label3.setText("Please Select An Object Limit (1 - 2500):");
@@ -166,6 +181,7 @@ public class GUI extends JFrame {
             }));
 
             GroupLayout panel1Layout = new GroupLayout(panel1);
+            panel1Layout.setHonorsVisibility(false);
             panel1.setLayout(panel1Layout);
             panel1Layout.setHorizontalGroup(
                 panel1Layout.createParallelGroup()
@@ -247,7 +263,7 @@ public class GUI extends JFrame {
                         .addGroup(panel1Layout.createParallelGroup()
                             .addComponent(label7, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
                             .addComponent(textField2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 170, Short.MAX_VALUE)
+                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, 167, Short.MAX_VALUE)
                         .addComponent(button1)
                         .addContainerGap())
             );
@@ -272,7 +288,7 @@ public class GUI extends JFrame {
             );
             panel2Layout.setVerticalGroup(
                 panel2Layout.createParallelGroup()
-                    .addComponent(scrollPane1, GroupLayout.Alignment.TRAILING, GroupLayout.DEFAULT_SIZE, 609, Short.MAX_VALUE)
+                    .addComponent(scrollPane1, GroupLayout.DEFAULT_SIZE, 618, Short.MAX_VALUE)
             );
         }
 
@@ -283,22 +299,20 @@ public class GUI extends JFrame {
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
                     .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                     .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                    .addGap(408, 408, 408))
+                    .addGap(103, 103, 103))
         );
         contentPaneLayout.setVerticalGroup(
             contentPaneLayout.createParallelGroup()
                 .addGroup(contentPaneLayout.createSequentialGroup()
                     .addContainerGap()
                     .addGroup(contentPaneLayout.createParallelGroup()
-                        .addComponent(panel1, GroupLayout.DEFAULT_SIZE, GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(contentPaneLayout.createSequentialGroup()
-                            .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
-                            .addGap(0, 3, Short.MAX_VALUE)))
-                    .addContainerGap(10, Short.MAX_VALUE))
+                        .addComponent(panel2, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                        .addComponent(panel1, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                    .addContainerGap())
         );
-        setSize(1195, 660);
+        setSize(1235, 670);
         setLocationRelativeTo(getOwner());
         // JFormDesigner - End of component initialization  //GEN-END:initComponents
     }

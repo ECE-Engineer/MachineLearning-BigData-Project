@@ -1,5 +1,3 @@
-import com.sun.org.apache.xpath.internal.operations.Bool;
-
 import java.io.*;
 import java.util.ArrayList;
 
@@ -25,7 +23,7 @@ public class BTree implements Serializable {
     public BTree() throws IOException, ClassNotFoundException {
         Node x = allocateNode();
         x.isLeaf = true;
-        x.NKeys = 0;///////////////////////////////////////////////////
+        x.NKeys = 0;
         diskWrite(x);
         this.root = x;
     }
@@ -35,6 +33,9 @@ public class BTree implements Serializable {
         readTreeRoot();
     }
 
+    public void setOrder(int newOrder) {
+        order = newOrder;
+    }
 
     public void readTreeDegree() throws IOException {
         RandomAccessFile raf;
@@ -58,7 +59,7 @@ public class BTree implements Serializable {
 
         short temp = raf.readShort();
 
-        System.out.println("INDEX OF ROOT : " + temp);/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 
         //set the root of the BTree
@@ -68,81 +69,6 @@ public class BTree implements Serializable {
         raf.close();
     }
 
-
-
-    public void setOrder(int newOrder) {
-        order = newOrder;
-    }
-
-    private int getLength(Object[] o) {
-        int counter = 0;
-        for (int i = 0; i < o.length; i++)
-            if (o[i] != null)
-                counter++;
-        return counter;
-    }
-
-    /**
-     * Returns the number count of Nodes in the btreecacheNode file
-     * @throws IOException is used for the IO exceptions that might occur
-     */
-    public short getNumberOfNodes() throws IOException {
-        RandomAccessFile raf;
-        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
-        return (short) (raf.length()/(RECORD_SIZE));
-    }
-
-//    public short getKeyCount() throws IOException, ClassNotFoundException {
-//        return getKeyCount(this.root);
-//    }
-
-//    int loadCounter = 0;
-//    public short getKeyCount(Node x) throws IOException, ClassNotFoundException {//////////////////////////////////this does not work
-////        finalCounter++;
-////        keyCount += r.NKeys;
-////        if (!r.isLeaf) {
-////            //link the node of the specified child node
-////            r.child[1 - 1] = getNode(r.childIndex[1 - 1]);
-////            //recursively link you the rest of the BTree
-////            loadTree(r.child[1 - 1]);
-////        }
-////        for (int i = 1; i <= r.NKeys; i++) {
-////            //link the node of the specified child node
-////            r.child[i - 1] = getNode(r.childIndex[i - 1]);
-////            if (!r.isLeaf) {
-////                //link the node of the specified child node
-////                r.child[i + 1 - 1] = getNode(r.childIndex[i + 1 - 1]);
-////                //recursively link you the rest of the BTree
-////                loadTree(r.child[i + 1 - 1]);
-////            }
-////        }
-////
-//
-//
-//        loadCounter++;
-//        short counter = 0;
-//        if (x != null) {
-//            if (!x.isLeaf) {
-//                if (x.child[1 - 1] == null) {
-//                    System.out.println("LOOKED AT THIS MANY KEYS : " + loadCounter);
-//                    System.out.println("KEY IS : " + x.key[1 - 1]);
-//                }
-//                counter += getKeyCount(x.child[1 - 1]);
-//            }
-//            for (int i = 1; i <= x.NKeys; i++) {
-//                counter += x.key[i - 1];
-//                if (!x.isLeaf) {
-//                    if (x.child[i + 1 - 1] == null) {
-//                        System.out.println("LOOKED AT THIS MANY KEYS : " + loadCounter);
-//                        System.out.println("KEY IS : " + x.key[i + 1 - 1]);
-//                    }
-//                    counter += getKeyCount(x.child[i + 1 - 1]);
-//                }
-//            }
-//        }
-//        return counter;
-//    }
-
     public ArrayList<Short> getKeys() throws IOException, ClassNotFoundException {
         return getKeys(this.root);
     }
@@ -150,12 +76,12 @@ public class BTree implements Serializable {
     public ArrayList<Short> getKeys(Node x) throws IOException, ClassNotFoundException {
         ArrayList<Short> keys = new ArrayList<>();
         if (!x.isLeaf)
-            for (short eachKey : getKeys(getNode(x.childIndex[1 - 1])))//////////////////////////////////
+            for (short eachKey : getKeys(getNode(x.childIndex[1 - 1])))
                 keys.add(eachKey);
         for (int i = 1; i <= x.NKeys; i++) {
             keys.add(x.key[i - 1]);
             if (!x.isLeaf)
-                for (short eachKey : getKeys(getNode(x.childIndex[i + 1 - 1])))/////////////////////////////
+                for (short eachKey : getKeys(getNode(x.childIndex[i + 1 - 1])))
                     keys.add(eachKey);
         }
         return keys;
@@ -177,8 +103,6 @@ public class BTree implements Serializable {
         return n;
     }
 
-
-
     /**
      * Overwrite
      * @param n is the specified index to find the value in the btreecacheValue file
@@ -187,22 +111,6 @@ public class BTree implements Serializable {
     public void overwriteNode(Node n) throws IOException {
         RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "rw");
-
-
-
-
-//        if (isEmptyArray(n.childIndex)) {
-//            System.out.println("THIS NODE "+ n.index + " HAS 0 POINTERS TO IT'S CHILD NODES");///////////////////////////////////////////////////////////////////////this verifies the issue I'm having!!!!!!!!!!!!!!!!!!!!
-//        }
-
-//        if (!isEmptyArray(n.childIndex)) {
-//            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.THIS NODE "+ n.index + " HAS POINTERS TO IT'S CHILD NODES");
-//        }
-
-
-        //////////////////////////////////////////////////////THE STUFF ABOVE HAS TOLD ME THAT NOT ALL THE NODES HAVE POINTERS TO CHILD NODES AND THIS IS POSSIBLY THE CAUSE OF THE ISSUE I'M HAVING!!!!!!!!
-
-
 
         //adjust the pointer
         raf.seek(n.index * RECORD_SIZE);
@@ -213,81 +121,6 @@ public class BTree implements Serializable {
         //close the file
         raf.close();
     }
-
-
-
-
-
-
-
-
-
-
-    public void printProperties() throws IOException, ClassNotFoundException {
-        RandomAccessFile raf;
-        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
-
-        System.out.println("NUMBER OF NODES : " + (raf.length() / RECORD_SIZE));
-
-        int tempcounter = 0;
-        int morecounter = 0;
-        for (int i = 0; i < (raf.length() / RECORD_SIZE); i++) {
-            morecounter++;
-            raf.seek(i*RECORD_SIZE);
-            byte[] mask = new byte[RECORD_SIZE];
-            raf.read(mask);
-            Record temp = (Record) deserialize(mask);
-            if (isEmptyArray(temp.childIndex)) {
-                System.out.println("THIS NODE "+ temp.index + " HAS 0 POINTERS TO IT'S CHILD NODES");///////////////////////////////////////////////////////////////////////this verifies the issue I'm having!!!!!!!!!!!!!!!!!!!!
-            }
-            if (!isEmptyArray(temp.childIndex)) {
-            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>.THIS NODE "+ temp.index + " HAS POINTERS TO IT'S CHILD NODES");
-            }
-            tempcounter += temp.NKeys;
-        }
-        raf.close();
-        System.out.println("# keys : " + tempcounter);////////////////NUMBER OF KEYS//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        System.out.println("# nodes : " + morecounter);
-    }
-
-    public void printAt(int i) throws IOException, ClassNotFoundException {
-        RandomAccessFile raf;
-        raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
-
-        raf.seek(i*RECORD_SIZE);
-        byte[] mask = new byte[RECORD_SIZE];
-        raf.read(mask);
-        Record temp = (Record) deserialize(mask);
-        raf.close();
-
-        System.out.println("NKEYS IS : " + temp.NKeys);/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public short overwriteValue(Exoplanet e) throws IOException, ClassNotFoundException {
         RandomAccessFile raf;
@@ -329,68 +162,6 @@ public class BTree implements Serializable {
         raf.close();
     }
 
-
-
-
-
-
-
-
-
-
-//    public void loadTree() throws IOException, ClassNotFoundException {
-//        loadTree(this.root);
-//    }
-///////////////////////////////ADD A CHECK TO MAKE SURE THAT A NODE HAS AN EMPTY ARRAY IF IT HAS NO CHILDREN
-//
-//
-//
-//    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////THIS MUST BE WHAT IS WRONG////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//    int finalCounter = 0;
-//    int keyCount = 0;
-//    public void loadTree(Node r) throws IOException, ClassNotFoundException {
-//        finalCounter++;
-//        keyCount += r.NKeys;
-////        if (isEmptyArray(r.childIndex)) {
-////            System.out.println("THIS NODE "+ r.index + " HAS 0 POINTERS TO IT'S CHILD NODES");
-////        }
-//        if (!r.isLeaf) {
-//            //link the node of the specified child node
-//            r.child[1 - 1] = getNode(r.childIndex[1 - 1]);/////////////////////////////////////because it is going through all the nodes and all the data does seem intact-----------
-//            //recursively link you the rest of the BTree
-//            loadTree(r.child[1 - 1]);
-//        }
-//        for (int i = 1; i <= r.NKeys; i++) {
-//            //link the node of the specified child node
-//            r.child[i - 1] = getNode(r.childIndex[i - 1]);////////////////////////////////>>>>>>>>>>>>>>>>>>>>>>>>>>>>>it's almost like the data isn't attaching itself properly!!!!!!!!!!!!!!!!!!
-//            if (!r.isLeaf) {
-//                //link the node of the specified child node
-//                r.child[i + 1 - 1] = getNode(r.childIndex[i + 1 - 1]);///////////////////////////////
-//                //recursively link you the rest of the BTree
-//                loadTree(r.child[i + 1 - 1]);
-//            }
-//        }
-//    }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////it is going through everything///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    public boolean isEmptyArray(short[] objects) {
-        for (int i = 0; i < objects.length; i++)
-            if (objects[i] != 0)
-                return false;
-        return true;
-    }
-
-
-
-
-
-
-
-
-
-
-
-
     /**
      * Returns the value corresponding to a specific index
      * @param k is the specified index to find the value in the btreecacheValue file
@@ -412,25 +183,10 @@ public class BTree implements Serializable {
         return temp;
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public void diskWrite(Node n) throws IOException, ClassNotFoundException {
-        //is node root = n >>> if so >>set the root's index to this index;n.index = root.index;>>>>>>>>>>>>>>>>>>>>>>>then update root!!!!!!!!!!!!!!!!!!!!!!!!!!
         if (n == this.root) {
             n.index = root.index;
-            System.out.print("ROOT NODE IS " + n.index);///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            System.out.print("ROOT NODE IS " + n.index);
             for (int i = 0; i < n.NKeys; i++)
                 System.out.print("\t" + n.key[i]);
             System.out.println();
@@ -438,25 +194,6 @@ public class BTree implements Serializable {
         }
         overwriteNode(n);
     }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public Node getNode(short pos) throws IOException, ClassNotFoundException {
         RandomAccessFile raf;
@@ -495,7 +232,7 @@ public class BTree implements Serializable {
         return BTreeSearch(this.root, k);
     }
 
-    public Exoplanet BTreeSearch(Node x, short k) throws IOException, ClassNotFoundException {///////////////////////////////good for getting the values given any key
+    public Exoplanet BTreeSearch(Node x, short k) throws IOException, ClassNotFoundException {
         int i = 1;
         while (i <= x.NKeys && k > x.key[i - 1])
             i = i + 1;
@@ -504,7 +241,7 @@ public class BTree implements Serializable {
         else if (x.isLeaf)
             return null;
         else {
-            return BTreeSearch(getNode(x.childIndex[i - 1]), k);////////////changed to child index
+            return BTreeSearch(getNode(x.childIndex[i - 1]), k);
         }
     }
 
@@ -520,7 +257,7 @@ public class BTree implements Serializable {
         if (!y.isLeaf)
             for (int j = 1; j <= t; j++) {
                 z.child[j - 1] = y.child[j + t - 1];
-                z.childIndex[j - 1] = y.childIndex[j + t - 1];///////////////////////////////DOES ORDER MATTER??? SHOULD I HAVE THIS COME BEFORE THE CHILD's assignment????
+                z.childIndex[j - 1] = y.childIndex[j + t - 1];
             }
         y.NKeys = t - 1;
         for (int j = x.NKeys + 1; j >= i + 1; j--) {
@@ -551,9 +288,9 @@ public class BTree implements Serializable {
             s.isLeaf = false;
             s.NKeys = 0;
             s.child[1 - 1] = r;
-            s.childIndex[1 - 1] = r.index;//////////////////////////////////////////////////////////////////////////////////////////////this is the issue >>>>>>>>> i must have to do this somewhere else here to fix the problem BECAUSE THE ISSUE IS THAT the pointer ARRAY to the children nodes is empty
+            s.childIndex[1 - 1] = r.index;
             BTreeSplitChild(s, (short) 1);
-            BTreeInsertNonFull(s, k, valIndex);///////////DO I NEED TO PASS THE CHILDINDEX AROUND LIKE I DID FOR THE VALUEINDEX?????
+            BTreeInsertNonFull(s, k, valIndex);
         } else
             BTreeInsertNonFull(r, k, valIndex);
     }
