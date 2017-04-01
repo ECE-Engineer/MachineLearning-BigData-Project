@@ -805,6 +805,12 @@ public class GUI extends JFrame {
             tempExoplanetList.remove(value);
         }
 
+
+
+
+
+
+
         //iterate for a certain amount of time
         for (int z = 0; z < ITERATIONS; z++) {
             //calculate the distance of every data point to all the centroids to determine which cluster to place the point into
@@ -816,9 +822,14 @@ public class GUI extends JFrame {
                 }
                 //find the best similarity value
                 int position = 0;
+                double bestValue = 0;
                 for (int i = 0; i < similarityValues.length-1; i++) {
-                    if (similarityValues[i+1] < similarityValues[i])
+                    if (i == 0)
+                        bestValue = similarityValues[i+1];
+                    if (bestValue < similarityValues[i]) {
                         position = i;
+                        bestValue = similarityValues[i];
+                    }
                 }
                 //add to the cluster
                 clusters.get(position).add(v);
@@ -833,6 +844,7 @@ public class GUI extends JFrame {
                 newCentroid.setRSTAR(0);
                 newCentroid.setTSTAR((short) 0);
                 newCentroid.setMSTAR(0);
+
                 for (int j = 0; j < clusters.get(i).size(); j++) {
                     newCentroid = SUM(newCentroid, clusters.get(i).get(j));
                 }
