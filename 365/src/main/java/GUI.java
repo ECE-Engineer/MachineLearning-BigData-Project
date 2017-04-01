@@ -354,15 +354,18 @@ public class GUI extends JFrame {
             if ((currentTime.getYear() > pastTime.getYear()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() > pastTime.getMonthValue())) {
                 //run the API loader b/c the data is out of date
                 loadFromAPI();
+                System.out.println("LOADING FROM API");
             } else {
                 //run the file loader b/c the data is up to date
                 loadFromFile();
+                System.out.println("LOADING FROM FILE");
             }
         } else {
             //write a timestamp to file
             APIcache.writeTimeStamp(LocalDateTime.now());
             //create and write the API response and API call to file and populate the BTree
             loadFromAPI();
+            System.out.println("LOADING FROM API");
         }
     }
 
@@ -783,26 +786,32 @@ public class GUI extends JFrame {
      * @throws ClassNotFoundException is used for the class not found exceptions that might occur
      * @return returns a list of a specified number of clusters, using k-means-clustering.
      */
-    public ArrayList<ArrayList<Exoplanet>> kMeansClustering(int numberOfValues, int clusterAmount) throws IOException, ClassNotFoundException {
-        final int ITERATIONS = 30;
+    public ArrayList<ArrayList<Exoplanet>> kMeansClustering(int numberOfValues, int clusterAmount) throws IOException, ClassNotFoundException {//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        final int ITERATIONS = 100;
         final int CENTROID_LOCATION = 0;
-        ArrayList<Exoplanet> tempExoplanetList = new ArrayList<>();
+
+        //keep an array to keep track of the INDICES for each vector placed in WHICH clusters
+        ArrayList<Integer> indices = new ArrayList<>(numberOfValues);
+
+        ArrayList<PrecisionExoplanet> tempExoplanetList = new ArrayList<>();
 
         Random rand = new Random();
         for (int i = 0; i < numberOfValues; i++) {
+            //keep track of the indices of the Exoplanets being added
+            indices.add(i);
             //add values till you have the amount they want to look at
-            tempExoplanetList.add(exoplanetList.get(i));
+            tempExoplanetList.add(new PrecisionExoplanet(exoplanetList.get(i).getA(), exoplanetList.get(i).getDEC(), exoplanetList.get(i).getRSTAR(), exoplanetList.get(i).getTSTAR(), exoplanetList.get(i).getKMAG(), exoplanetList.get(i).getTPLANET(), exoplanetList.get(i).getT0(), exoplanetList.get(i).getUT0(), exoplanetList.get(i).getPER(), exoplanetList.get(i).getRA(), exoplanetList.get(i).getRPLANET(), exoplanetList.get(i).getMSTAR()));
         }
 
         //calculate the average vector
-        Exoplanet averageVector = new Exoplanet(0, 0 ,0,(short) 0, 0,(short) 0, 0, 0, 0, 0, 0, 0);
+        PrecisionExoplanet averageVector = new PrecisionExoplanet(0, 0 ,0,(short) 0, 0,(short) 0, 0, 0, 0, 0, 0, 0);
         for (int j = 0; j < tempExoplanetList.size(); j++) {
             averageVector = SUM(averageVector, tempExoplanetList.get(j));
         }
         averageVector = DIVIDE(averageVector, tempExoplanetList.size());
 
         //calculate the standard deviation vector
-        Exoplanet SDVector = new Exoplanet(0, 0 ,0,(short) 0, 0,(short) 0, 0, 0, 0, 0, 0, 0);
+        PrecisionExoplanet SDVector = new PrecisionExoplanet(0, 0 ,0,(short) 0, 0,(short) 0, 0, 0, 0, 0, 0, 0);
         for (int j = 0; j < tempExoplanetList.size(); j++) {
             SDVector = SUM(SDVector, calcDiffOfSquares(averageVector, tempExoplanetList.get(j)));
         }
@@ -810,53 +819,66 @@ public class GUI extends JFrame {
         SDVector = SQUAREROOT(SDVector);
 
         //calculate the z-scores
-        Exoplanet ZScore;
-        ArrayList<Exoplanet> ZScoreList = new ArrayList<>();
+        PrecisionExoplanet ZScore;
+        ArrayList<PrecisionExoplanet> ZScoreList = new ArrayList<>();
         for (int j = 0; j < tempExoplanetList.size(); j++) {
             ZScore = DIVIDE(SUBTRACT(tempExoplanetList.get(j), averageVector), SDVector);
             ZScoreList.add(ZScore);
         }
 
         //make the amount of clusters specified
-        ArrayList<ArrayList<Exoplanet>> clusters = new ArrayList<>(clusterAmount);
+        ArrayList<ArrayList<PrecisionExoplanet>> clusters = new ArrayList<>(clusterAmount);
+        //keep track of the indices found in each cluster
+        ArrayList<ArrayList<Integer>> clusterIndices = new ArrayList<>(clusterAmount);
 
         //select N centroids at random
         for (int i = 0; i < clusterAmount; i++) {
-            Exoplanet value = ZScoreList.get(rand.nextInt(ZScoreList.size()));
-            ArrayList<Exoplanet> temp2 = new ArrayList<>();
+            int random = rand.nextInt(ZScoreList.size());
+            PrecisionExoplanet value = ZScoreList.get(random);
+            ArrayList<PrecisionExoplanet> temp2 = new ArrayList<>();
             temp2.add(value);
             clusters.add(i, temp2);
+            //track the clusters where the specific Exoplanet indices are being stored
+            ArrayList<Integer> tempIndexCluster = new ArrayList<>();
+            tempIndexCluster.add(random);
+            //System.out.println(exoplanetList.get(random).toString());//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            clusterIndices.add(i, tempIndexCluster);
+            //remove value from list
             ZScoreList.remove(value);
+            //remove index from list
+            indices.remove(random);
         }
 
         //iterate for a certain amount of time
         for (int z = 0; z < ITERATIONS; z++) {
             //calculate the distance of every data point to all the centroids to determine which cluster to place the point into
-            for (Exoplanet v : ZScoreList) {
+            for (int j = 0; j < ZScoreList.size(); j++) {
                 //calculate one point to every centroid and place it into a cluster
                 double[] similarityValues = new double[clusterAmount];
                 for (int i = 0; i < similarityValues.length; i++) {
-                    similarityValues[i] = ED(clusters.get(i).get(CENTROID_LOCATION), v);
+                    similarityValues[i] = ED(clusters.get(i).get(CENTROID_LOCATION), ZScoreList.get(j));/////////////////////////////////////////////////////////////////////THIS IS THE ISSUE OF WHY I'M NOT GETTING ALL THE CLUSTERS I SHOULD BE!!!
                 }
                 //find the best similarity value
                 int position = 0;
                 double bestValue = 0;
-                for (int i = 0; i < similarityValues.length-1; i++) {
+                for (int i = 0; i < similarityValues.length-1; i++) {/////////////////////////////////////////////////////////////////////////////////////////////
                     if (i == 0)
                         bestValue = similarityValues[i+1];
-                    if (bestValue < similarityValues[i]) {
+                    if (bestValue < similarityValues[i]) {/////////////////////////////////////////////////////////////////////////////
                         position = i;
                         bestValue = similarityValues[i];
                     }
                 }
                 //add to the cluster
-                clusters.get(position).add(v);
+                clusters.get(position).add(ZScoreList.get(j));
+                //add the position of the actual Exoplanet
+                clusterIndices.get(position).add(j);
             }
 
             //recalculate the new centroid for every cluster
             for (int i = 0; i < clusterAmount; i++) {
                 //get a new centroid as an average of all the points in that cluster
-                Exoplanet newCentroid = clusters.get(i).get(CENTROID_LOCATION);
+                PrecisionExoplanet newCentroid = clusters.get(i).get(CENTROID_LOCATION);//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                 newCentroid.setPER(0);
                 newCentroid.setTPLANET((short) 0);
                 newCentroid.setRSTAR(0);
@@ -868,25 +890,45 @@ public class GUI extends JFrame {
                 }
                 newCentroid = DIVIDE(newCentroid, clusters.get(i).size());
 
-
-
                 //add the 1st centroid back onto the ZScore
                 if (z == 0) {
                     ZScoreList.add(clusters.get(i).get(CENTROID_LOCATION));
+                    //add the 1st index back on the list as well
+                    indices.add(clusterIndices.get(i).get(CENTROID_LOCATION));
                 }
                 if (z == ITERATIONS - 1) {
+//                    System.out.println(clusters.size());///////////////////////////////////////////////////////////
+//                    System.out.println(clusters.get(i).get(CENTROID_LOCATION));////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     //remove the centroids
                     clusters.get(i).remove(CENTROID_LOCATION);
                 } else {
                     //clear the cluster
                     clusters.get(i).clear();
+                    //clear the old indexes
+                    clusterIndices.get(i).clear();
                     //add the new centroid
                     clusters.get(i).add(CENTROID_LOCATION, newCentroid);
                 }
             }
         }
 
-        return clusters;
+        //use this to rebuild the list of actual exoplanet objects
+        ArrayList<ArrayList<Exoplanet>> regularExoplanetList = new ArrayList<>();
+
+        System.out.println("INDEX CLUSTER SIZE:" + clusterIndices.size());
+
+
+
+        //build the list
+        for (int i = 0; i < clusterIndices.size(); i++) {
+            System.out.println("INDIVIDUAL INDEX CLUSTER SIZE:" + clusterIndices.get(i).size());
+            regularExoplanetList.add(new ArrayList<Exoplanet>());
+            for (int j = 0; j < clusterIndices.get(i).size(); j++) {
+                regularExoplanetList.get(i).add(exoplanetList.get(j));
+            }
+        }
+
+        return regularExoplanetList;
     }
 
     /**
@@ -895,7 +937,7 @@ public class GUI extends JFrame {
      * @param val2 is an Exoplanet that is used to retrieve the features
      * @return returns the score value for the 2 objects based on their features
      */
-    private double ED(Exoplanet val1, Exoplanet val2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+    private double ED(PrecisionExoplanet val1, PrecisionExoplanet val2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
         return Math.sqrt(Math.pow(val2.getPER()-val1.getPER(), 2) + Math.pow(val2.getTPLANET()-val1.getTPLANET(), 2) + Math.pow(val2.getRSTAR()-val1.getRSTAR(), 2) + Math.pow(val2.getTSTAR()-val1.getTSTAR(), 2) + Math.pow(val2.getMSTAR()-val1.getMSTAR(), 2));
     }
 
@@ -905,7 +947,7 @@ public class GUI extends JFrame {
      * @param value2 is an Exoplanet that is used to retrieve the features
      * @return returns the sum of each feature from two Exoplanet objects
      */
-    private Exoplanet SUM(Exoplanet value1, Exoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+    private PrecisionExoplanet SUM(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
         value1.setPER(value1.getPER() + value2.getPER());
         value1.setTPLANET((short) (value1.getTPLANET() + value2.getTPLANET()));
         value1.setRSTAR(value1.getRSTAR() + value2.getRSTAR());
@@ -914,7 +956,7 @@ public class GUI extends JFrame {
         return value1;
     }
 
-    private Exoplanet SUBTRACT(Exoplanet value1, Exoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+    private PrecisionExoplanet SUBTRACT(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
         value1.setPER(value1.getPER() - value2.getPER());
         value1.setTPLANET((short) (value1.getTPLANET()- value2.getTPLANET()));
         value1.setRSTAR(value1.getRSTAR() - value2.getRSTAR());
@@ -923,7 +965,7 @@ public class GUI extends JFrame {
         return value1;
     }
 
-    private Exoplanet DIVIDE(Exoplanet value1, Exoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+    private PrecisionExoplanet DIVIDE(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
         value1.setPER(value1.getPER() / value2.getPER());
         value1.setTPLANET((short) (value1.getTPLANET()/ value2.getTPLANET()));
         value1.setRSTAR(value1.getRSTAR() / value2.getRSTAR());
@@ -932,7 +974,7 @@ public class GUI extends JFrame {
         return value1;
     }
 
-    public Exoplanet DIVIDE(Exoplanet e, int val) {
+    public PrecisionExoplanet DIVIDE(PrecisionExoplanet e, int val) {
         e.setPER(e.getPER() / val);
         e.setTPLANET((short) (e.getTPLANET() / val));
         e.setRSTAR(e.getRSTAR() / val);
@@ -942,7 +984,7 @@ public class GUI extends JFrame {
         return e;
     }
 
-    public Exoplanet SQUAREROOT(Exoplanet e) {
+    public PrecisionExoplanet SQUAREROOT(PrecisionExoplanet e) {
         e.setPER((float) Math.sqrt(e.getPER()));
         e.setTPLANET((short) (Math.sqrt(e.getTPLANET())));
         e.setRSTAR((float) Math.sqrt(e.getRSTAR()));
@@ -952,7 +994,7 @@ public class GUI extends JFrame {
         return e;
     }
 
-    public Exoplanet calcDiffOfSquares(Exoplanet value1, Exoplanet value2) {
+    public PrecisionExoplanet calcDiffOfSquares(PrecisionExoplanet value1, PrecisionExoplanet value2) {
         value1.setPER((float) (Math.pow(value1.getPER() - value2.getPER(), 2)));
         value1.setTPLANET((short) (Math.pow(value1.getTPLANET() - value2.getTPLANET(), 2)));
         value1.setRSTAR((float) (Math.pow(value1.getRSTAR() - value2.getRSTAR(), 2)));
