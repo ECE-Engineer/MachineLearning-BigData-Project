@@ -500,7 +500,7 @@ public class GUI extends JFrame {
                 }
                 else {
                     if (!clusterSelect.getSelectedItem().toString().equalsIgnoreCase("None") && !clusterView.getSelectedItem().toString().equalsIgnoreCase("None")) {
-                        ArrayList<ArrayList<Exoplanet>> clusters = kMeansClustering(amount, Integer.parseInt(clusterSelect.getSelectedItem().toString()));////////////////////////////////////////////////////////////////////
+                        ArrayList<ArrayList<Exoplanet>> clusters = kMeansClustering(amount, Integer.parseInt(clusterSelect.getSelectedItem().toString()));
                         //print out all the necessary clusters
                         if (clusterView.getSelectedItem().toString().equalsIgnoreCase("All")) {
                             for (int i = 0; i < clusters.size(); i++) {
@@ -775,8 +775,15 @@ public class GUI extends JFrame {
         return largeList.get(0);
     }
 
-
-    public ArrayList<ArrayList<Exoplanet>> kMeansClustering(int numberOfValues, int clusterAmount) throws IOException, ClassNotFoundException {/////////////YOU ARE TAKING IN TOO MANY OBJECTS THAN THE AMOUNT SPECIFIED!!!!
+    /**
+     * Returns a list of a specified number of clusters, using k-means-clustering.
+     * @param numberOfValues is the number of Exoplanets that is being observed.
+     * @param clusterAmount is the amount of clusters specified.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     * @return returns a list of a specified number of clusters, using k-means-clustering.
+     */
+    public ArrayList<ArrayList<Exoplanet>> kMeansClustering(int numberOfValues, int clusterAmount) throws IOException, ClassNotFoundException {
         final int ITERATIONS = 30;
         final int CENTROID_LOCATION = 0;
         ArrayList<Exoplanet> tempExoplanetList = new ArrayList<>();
@@ -805,7 +812,7 @@ public class GUI extends JFrame {
                 //calculate one point to every centroid and place it into a cluster
                 double[] similarityValues = new double[clusterAmount];
                 for (int i = 0; i < similarityValues.length; i++) {
-                    similarityValues[i] = ED(clusters.get(i).get(CENTROID_LOCATION), v);//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////ADD Z-SCORING BEFORE doing this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                    similarityValues[i] = ED(clusters.get(i).get(CENTROID_LOCATION), v);//////////////////////////////////////////////////////////////////////ADD Z-SCORING BEFORE doing this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 }
                 //find the best similarity value
                 int position = 0;
@@ -816,13 +823,7 @@ public class GUI extends JFrame {
                 //add to the cluster
                 clusters.get(position).add(v);
             }
-
-
-
-
-
-
-
+/////////////////////////////////////////////////////////////////////////////////////////////////IT IS NOT GIVING ALL THE CLUSTERS IT SHOULD BE!!!!!!!!!!!!!!!!!!out of 6 it is giving 2 and out of 3 it is giving 2 or in the case of 2 it is only giving 1!!!!!!!!
             //recalculate the new centroid for every cluster
             for (int i = 0; i < clusterAmount; i++) {
                 //get a new centroid as an average of all the points in that cluster

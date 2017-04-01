@@ -28,15 +28,27 @@ public class BTree implements Serializable {
         this.root = x;
     }
 
+    /**
+     * Loads the root node of the BTree.
+     * @param T is an empty BTree.
+     */
     public BTree(BTree T) throws IOException, ClassNotFoundException {
         readTreeDegree();
         readTreeRoot();
     }
 
+    /**
+     * Sets the order of the the Btree.
+     * @param newOrder is the new order of the BTree.
+     */
     public void setOrder(int newOrder) {
         order = newOrder;
     }
 
+    /**
+     * Reads the degree of the BTree from file and sets the order of the BTree.
+     * @throws IOException is used for the IO exceptions that might occur
+     */
     public void readTreeDegree() throws IOException {
         RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "r");
@@ -49,6 +61,11 @@ public class BTree implements Serializable {
         raf.close();
     }
 
+    /**
+     * Reads the root of the BTree from file and sets the root of the BTree.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     */
     public void readTreeRoot() throws IOException, ClassNotFoundException {
         RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "r");
@@ -65,10 +82,23 @@ public class BTree implements Serializable {
         raf.close();
     }
 
+    /**
+     * Returns all the keys from the persistant BTree.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     * @return returns all the keys from the persistant BTree.
+     */
     public ArrayList<Short> getKeys() throws IOException, ClassNotFoundException {
         return getKeys(this.root);
     }
 
+    /**
+     * Returns all the keys from the persistant BTree.
+     * @param x is a root node of a tree or subtree.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     * @return returns all the keys from the persistant BTree.
+     */
     public ArrayList<Short> getKeys(Node x) throws IOException, ClassNotFoundException {
         ArrayList<Short> keys = new ArrayList<>();
         if (!x.isLeaf)
@@ -83,10 +113,23 @@ public class BTree implements Serializable {
         return keys;
     }
 
+    /**
+     * Returns all the values from the persistant BTree.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     * @return all the values from the persistant BTree.
+     */
     public ArrayList<Exoplanet> getValues() throws IOException, ClassNotFoundException {
         return getValues(this.root);
     }
 
+    /**
+     * Returns all the values from the persistant BTree.
+     * @param x is a root node of a tree or subtree.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     * @return returns all the values from the persistant BTree.
+     */
     public ArrayList<Exoplanet> getValues(Node x) throws IOException, ClassNotFoundException {
         ArrayList<Exoplanet> values = new ArrayList<>();
         if (!x.isLeaf)
@@ -105,6 +148,7 @@ public class BTree implements Serializable {
      * Creates space for a Node on disk, then returns the Node
      * @throws IOException is used for the IO exceptions that might occur
      * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     * @return returns a deserialized object given by a byte array.
      */
     public Node allocateNode() throws IOException, ClassNotFoundException {
         //create a new node
@@ -118,8 +162,8 @@ public class BTree implements Serializable {
     }
 
     /**
-     * Overwrite
-     * @param n is the specified index to find the value in the btreecacheValue file
+     * Overwrites the node on disk.
+     * @param n is the specified index to find the node in the btreecacheNode file
      * @throws IOException is used for the IO exceptions that might occur
      */
     public void overwriteNode(Node n) throws IOException {
@@ -136,6 +180,13 @@ public class BTree implements Serializable {
         raf.close();
     }
 
+    /**
+     * Returns the index corresponding to a specific value.
+     * @param e is the Exoplanet to overwrite the current value found at its respective position on file.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     * @return returns the index corresponding to a specific value.
+     */
     public short overwriteValue(Exoplanet e) throws IOException, ClassNotFoundException {
         RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheValue", "rw");
@@ -152,6 +203,10 @@ public class BTree implements Serializable {
         return (short) (valueCounter - 1);
     }
 
+    /**
+     * Overwrites the current tree degree to file.
+     * @throws IOException is used for the IO exceptions that might occur
+     */
     public void overwriteDegreeToFile() throws IOException {
         RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "rw");
@@ -164,6 +219,10 @@ public class BTree implements Serializable {
         raf.close();
     }
 
+    /**
+     * Overwrites the current tree root to file.
+     * @throws IOException is used for the IO exceptions that might occur
+     */
     public void overwriteRootToFile() throws IOException {
         RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheTree", "rw");
@@ -177,10 +236,11 @@ public class BTree implements Serializable {
     }
 
     /**
-     * Returns the value corresponding to a specific index
-     * @param k is the specified index to find the value in the btreecacheValue file
+     * Returns the value corresponding to a specific index.
+     * @param k is the specified index to find the value in the btreecacheValue file.
      * @throws IOException is used for the IO exceptions that might occur
      * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     * @return returns a deserialized object given by a byte array.
      */
     public Exoplanet getValue(short k) throws IOException, ClassNotFoundException {
         RandomAccessFile raf;
@@ -197,6 +257,12 @@ public class BTree implements Serializable {
         return temp;
     }
 
+    /**
+     * Writes a given node to disk and updates the pointer to the root.
+     * @param n is the node that will be written to disk.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     */
     public void diskWrite(Node n) throws IOException, ClassNotFoundException {
         if (n == this.root) {
             n.index = root.index;
@@ -205,6 +271,13 @@ public class BTree implements Serializable {
         overwriteNode(n);
     }
 
+    /**
+     * Returns the node at the specified position.
+     * @param pos is the specified index to find the node in the btreecacheNode file.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     * @return returns the node at the specified position.
+     */
     public Node getNode(short pos) throws IOException, ClassNotFoundException {
         RandomAccessFile raf;
         raf = new RandomAccessFile(".\\Cache\\btreecacheNode", "r");
@@ -237,10 +310,25 @@ public class BTree implements Serializable {
         return node;
     }
 
+    /**
+     * Returns the value corresponding to a specific index.
+     * @param k is the specified key to find the value corresponding to it.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     * @return returns a deserialized object given by a byte array.
+     */
     public Exoplanet BTreeSearch(short k) throws IOException, ClassNotFoundException {
         return BTreeSearch(this.root, k);
     }
 
+    /**
+     * Returns the value corresponding to a specific index.
+     * @param x is a root node of a tree or subtree.
+     * @param k is the specified key to find the value corresponding to it.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     * @return returns a deserialized object given by a byte array.
+     */
     public Exoplanet BTreeSearch(Node x, short k) throws IOException, ClassNotFoundException {
         int i = 1;
         while (i <= x.NKeys && k > x.key[i - 1])
@@ -254,6 +342,13 @@ public class BTree implements Serializable {
         }
     }
 
+    /**
+     * Splits the nodes when they become full & readjusts the BTree afterwards.
+     * @param x is the node being split and readjusted.
+     * @param i is the key value being stored in the node.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     */
     public void BTreeSplitChild(Node x, short i) throws IOException, ClassNotFoundException {
         Node z = allocateNode();
         Node y = x.child[i - 1];
@@ -287,6 +382,13 @@ public class BTree implements Serializable {
         diskWrite(x);
     }
 
+    /**
+     * Inserts a key and corresponding value into the BTree.
+     * @param k is the key value being stored in the node.
+     * @param e is the Exoplanet being stored in file.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     */
     public void BTreeInsert(short k, Exoplanet e) throws IOException, ClassNotFoundException {
         short valIndex = overwriteValue(e);
         Node r = this.root;
@@ -304,6 +406,14 @@ public class BTree implements Serializable {
             BTreeInsertNonFull(r, k, valIndex);
     }
 
+    /**
+     * Inserts a key and corresponding value into the BTree when the node is non-full.
+     * @param x is a root node of a tree or subtree.
+     * @param k is the key value being stored in the node.
+     * @param v is the value index corresponding to the Exoplanet being stored in file.
+     * @throws IOException is used for the IO exceptions that might occur
+     * @throws ClassNotFoundException is used for the class not found exceptions that might occur
+     */
     public void BTreeInsertNonFull(Node x, short k, short v) throws IOException, ClassNotFoundException {
         int i = x.NKeys;
         if (x.isLeaf) {
