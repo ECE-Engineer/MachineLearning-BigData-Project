@@ -500,7 +500,7 @@ public class GUI extends JFrame {
                 }
                 else {
                     if (!clusterSelect.getSelectedItem().toString().equalsIgnoreCase("None") && !clusterView.getSelectedItem().toString().equalsIgnoreCase("None")) {
-                        ArrayList<ArrayList<Exoplanet>> clusters = kMeansClustering(amount, Integer.parseInt(clusterSelect.getSelectedItem().toString()));
+                        ArrayList<ArrayList<Exoplanet>> clusters = kMeansClustering(amount, Integer.parseInt(clusterSelect.getSelectedItem().toString()));////////////////////////////////////////////////////////////////////
                         //print out all the necessary clusters
                         if (clusterView.getSelectedItem().toString().equalsIgnoreCase("All")) {
                             for (int i = 0; i < clusters.size(); i++) {
@@ -787,9 +787,6 @@ public class GUI extends JFrame {
             tempExoplanetList.add(exoplanetList.get(i));
         }
 
-
-
-
         //make the amount of clusters specified
         ArrayList<ArrayList<Exoplanet>> clusters = new ArrayList<>(clusterAmount);
         //select N centroids at random
@@ -801,10 +798,6 @@ public class GUI extends JFrame {
             tempExoplanetList.remove(value);
         }
 
-
-
-
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //iterate for a certain amount of time
         for (int z = 0; z < ITERATIONS; z++) {
             //calculate the distance of every data point to all the centroids to determine which cluster to place the point into
@@ -823,7 +816,9 @@ public class GUI extends JFrame {
                 //add to the cluster
                 clusters.get(position).add(v);
             }
-////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
 
 
@@ -845,12 +840,20 @@ public class GUI extends JFrame {
                 newCentroid.setRSTAR(newCentroid.getRSTAR() / clusters.get(i).size());
                 newCentroid.setTSTAR((short) (newCentroid.getTSTAR() / clusters.get(i).size()));
                 newCentroid.setMSTAR(newCentroid.getMSTAR() / clusters.get(i).size());
-                if (z > 0) {
-                    //remove the old centroids
-                    clusters.get(i).remove(CENTROID_LOCATION);
+
+                //add the 1st centroid back onto the tempExoplanetList
+                if (z == 0) {
+                    tempExoplanetList.add(clusters.get(i).get(CENTROID_LOCATION));
                 }
-                //add on the new centroids
-                clusters.get(i).add(CENTROID_LOCATION, newCentroid);
+                if (z == ITERATIONS - 1) {
+                    //remove the centroids
+                    clusters.get(i).remove(CENTROID_LOCATION);
+                } else {
+                    //clear the cluster
+                    clusters.get(i).clear();
+                    //add the new centroid
+                    clusters.get(i).add(CENTROID_LOCATION, newCentroid);
+                }
             }
         }
 
