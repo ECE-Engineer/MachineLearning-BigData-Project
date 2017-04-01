@@ -792,7 +792,7 @@ public class GUI extends JFrame {
      * @throws ClassNotFoundException is used for the class not found exceptions that might occur
      * @return returns a list of a specified number of clusters, using k-means-clustering.
      */
-    public ArrayList<ArrayList<Exoplanet>> kMeansClustering(int numberOfValues, int clusterAmount) throws IOException, ClassNotFoundException {//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    public ArrayList<ArrayList<Exoplanet>> kMeansClustering(int numberOfValues, int clusterAmount) throws IOException, ClassNotFoundException {
         final int ITERATIONS = 100;
         final int CENTROID_LOCATION = 0;
 
@@ -809,14 +809,12 @@ public class GUI extends JFrame {
             tempExoplanetList.add(new PrecisionExoplanet(exoplanetList.get(i).getA(), exoplanetList.get(i).getDEC(), exoplanetList.get(i).getRSTAR(), exoplanetList.get(i).getTSTAR(), exoplanetList.get(i).getKMAG(), exoplanetList.get(i).getTPLANET(), exoplanetList.get(i).getT0(), exoplanetList.get(i).getUT0(), exoplanetList.get(i).getPER(), exoplanetList.get(i).getRA(), exoplanetList.get(i).getRPLANET(), exoplanetList.get(i).getMSTAR()));
         }
 
-
-
         //calculate the average vector
         PrecisionExoplanet averageVector = new PrecisionExoplanet(0, 0 ,0, 0, 0,0, 0, 0, 0, 0, 0, 0);
         for (int j = 0; j < tempExoplanetList.size(); j++) {
             averageVector = SUM(averageVector, tempExoplanetList.get(j));
         }
-        averageVector = DIVIDE(averageVector, tempExoplanetList.size());//////ALL ARE INFINITY
+        averageVector = DIVIDE(averageVector, tempExoplanetList.size());
 
         //calculate the standard deviation vector
         PrecisionExoplanet SDVector = new PrecisionExoplanet(0, 0 ,0, 0, 0,0, 0, 0, 0, 0, 0, 0);
@@ -849,7 +847,6 @@ public class GUI extends JFrame {
             //track the clusters where the specific Exoplanet indices are being stored
             ArrayList<Integer> tempIndexCluster = new ArrayList<>();
             tempIndexCluster.add(random);
-            //System.out.println(exoplanetList.get(random).toString());//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             clusterIndices.add(i, tempIndexCluster);
             //remove value from list
             ZScoreList.remove(value);
@@ -865,15 +862,14 @@ public class GUI extends JFrame {
                 double similarityValue = 0;
                 int position = 0;
                 for (int i = 0; i < clusterAmount; i++) {
-//                    System.out.println("CENTROIDS ARE : " + clusters.get(i).get(CENTROID_LOCATION));////////////////////////////////////////////////////////////////////////////////////////////
-                    double temp = ED(clusters.get(i).get(CENTROID_LOCATION), ZScoreList.get(j));////////////////////////////////////RSTAR AND PER ARE BOTH NaN>>>>>>>>>TPLANET AND TSTAR SHOWING AS NAN
+                    double temp = ED(clusters.get(i).get(CENTROID_LOCATION), ZScoreList.get(j));
                     if (i == 0) {
-                        similarityValue = temp;/////////////////////////////////SHOWING AS NaN
+                        similarityValue = temp;
                     } else {
                         //find the best similarity value
-                        if (temp < similarityValue) {////////////////////////////////////////////////////////////////////////////////////////////
+                        if (temp < similarityValue) {
                             similarityValue = temp;
-                            position = i;///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////THIS IS NEVER BEING UPDATED!!!!!
+                            position = i;
                         }
                     }
                 }
@@ -887,7 +883,7 @@ public class GUI extends JFrame {
             //recalculate the new centroid for every cluster
             for (int i = 0; i < clusterAmount; i++) {
                 //get a new centroid as an average of all the points in that cluster
-                PrecisionExoplanet newCentroid = clusters.get(i).get(CENTROID_LOCATION);//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+                PrecisionExoplanet newCentroid = clusters.get(i).get(CENTROID_LOCATION);
                 newCentroid.setPER(0);
                 newCentroid.setTPLANET((short) 0);
                 newCentroid.setRSTAR(0);
@@ -906,8 +902,6 @@ public class GUI extends JFrame {
                     indices.add(clusterIndices.get(i).get(CENTROID_LOCATION));
                 }
                 if (z == ITERATIONS - 1) {
-//                    System.out.println(clusters.size());///////////////////////////////////////////////////////////
-//                    System.out.println(clusters.get(i).get(CENTROID_LOCATION));////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
                     //remove the centroids
                     clusters.get(i).remove(CENTROID_LOCATION);
                 } else {
@@ -924,13 +918,8 @@ public class GUI extends JFrame {
         //use this to rebuild the list of actual exoplanet objects
         ArrayList<ArrayList<Exoplanet>> regularExoplanetList = new ArrayList<>();
 
-//        System.out.println("INDEX CLUSTER SIZE:" + clusterIndices.size());
-
-
-
         //build the list
         for (int i = 0; i < clusterIndices.size(); i++) {
-//            System.out.println("INDIVIDUAL INDEX CLUSTER SIZE:" + clusterIndices.get(i).size());
             regularExoplanetList.add(new ArrayList<Exoplanet>());
             for (int j = 0; j < clusterIndices.get(i).size(); j++) {
                 regularExoplanetList.get(i).add(exoplanetList.get(j));
@@ -956,7 +945,7 @@ public class GUI extends JFrame {
      * @param value2 is an Exoplanet that is used to retrieve the features
      * @return returns the sum of each feature from two Exoplanet objects
      */
-    private PrecisionExoplanet SUM(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+    private PrecisionExoplanet SUM(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {
         PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
 
         temp.setPER(value1.getPER() + value2.getPER());
@@ -968,7 +957,7 @@ public class GUI extends JFrame {
         return temp;
     }
 
-    private PrecisionExoplanet SUBTRACT(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+    private PrecisionExoplanet SUBTRACT(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {
         PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
 
         temp.setPER(value1.getPER() - value2.getPER());
@@ -980,7 +969,7 @@ public class GUI extends JFrame {
         return temp;
     }
 
-    private PrecisionExoplanet DIVIDE(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
+    private PrecisionExoplanet DIVIDE(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {
         PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
 
         temp.setPER(value1.getPER() / value2.getPER());
