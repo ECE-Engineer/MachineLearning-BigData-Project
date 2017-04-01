@@ -51,7 +51,7 @@ public class GUI extends JFrame {
         cluster = new JLabel();
         clusterSelect = new JComboBox<>();
         label8 = new JLabel();
-        clusterViewAmount = new JComboBox<>();
+        clusterView = new JComboBox<>();
         panel2 = new JPanel();
         scrollPane1 = new JScrollPane();
         textArea1 = new JTextArea();
@@ -115,7 +115,7 @@ public class GUI extends JFrame {
             label3.setForeground(Color.black);
 
             //---- label4 ----
-            label4.setText("similarity Metric:");
+            label4.setText("Similarity Metric:");
             label4.setFont(label4.getFont().deriveFont(label4.getFont().getStyle() | Font.BOLD));
             label4.setForeground(Color.black);
 
@@ -160,8 +160,8 @@ public class GUI extends JFrame {
             label8.setForeground(Color.black);
             label8.setFont(label8.getFont().deriveFont(label8.getFont().getStyle() | Font.BOLD));
 
-            //---- clusterViewAmount ----
-            clusterViewAmount.setModel(new DefaultComboBoxModel<>(new String[] {
+            //---- clusterView ----
+            clusterView.setModel(new DefaultComboBoxModel<>(new String[] {
                     "None",
                     "All",
                     "1",
@@ -191,7 +191,7 @@ public class GUI extends JFrame {
                                                     .addGap(51, 51, 51)
                                                     .addGroup(panel1Layout.createParallelGroup(GroupLayout.Alignment.LEADING, false)
                                                             .addComponent(clusterSelect, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                                                            .addComponent(clusterViewAmount, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
+                                                            .addComponent(clusterView, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
                                                             .addComponent(textField2, GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))))
                                     .addContainerGap(150, Short.MAX_VALUE))
                             .addGroup(GroupLayout.Alignment.TRAILING, panel1Layout.createSequentialGroup()
@@ -250,7 +250,7 @@ public class GUI extends JFrame {
                                     .addGap(18, 18, 18)
                                     .addGroup(panel1Layout.createParallelGroup()
                                             .addComponent(label8, GroupLayout.PREFERRED_SIZE, 28, GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(clusterViewAmount, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
+                                            .addComponent(clusterView, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE))
                                     .addGap(18, 18, 18)
                                     .addGroup(panel1Layout.createParallelGroup()
                                             .addComponent(label7, GroupLayout.PREFERRED_SIZE, 24, GroupLayout.PREFERRED_SIZE)
@@ -327,7 +327,7 @@ public class GUI extends JFrame {
     private JLabel cluster;
     private JComboBox<String> clusterSelect;
     private JLabel label8;
-    private JComboBox<String> clusterViewAmount;
+    private JComboBox<String> clusterView;
     private JPanel panel2;
     private JScrollPane scrollPane1;
     private JTextArea textArea1;
@@ -377,6 +377,9 @@ public class GUI extends JFrame {
     public void loadFromFile() throws IOException, ClassNotFoundException {
         //load the BTree
         btree = new BTree(btree);
+
+        temp = btree.getKeys();
+        exoplanetList = btree.getValues();
     }
 
     /**
@@ -418,7 +421,16 @@ public class GUI extends JFrame {
         //write the root node & degree of btree to the btreecache file
         btree.overwriteDegreeToFile();
         btree.overwriteRootToFile();
+
+        temp = btree.getKeys();
+        exoplanetList = btree.getValues();
     }
+
+    //get all the keys of the kepler objects
+    ArrayList<Short> temp;
+
+    //make a list of all the objects up to the number of objects being looked at
+    ArrayList<Exoplanet> exoplanetList;
 
     /**
      * Handles the requests of the user: including the type & amount of data to retrieve and toggling the similarity metric
@@ -433,11 +445,6 @@ public class GUI extends JFrame {
         String text_amount = textField1.getText();
         String keplerObject = typeSelect.getSelectedItem().toString();
         String text_key = textField2.getText();
-
-        //get all the keys of the kepler objects
-        ArrayList<Short> temp = btree.getKeys();
-
-        System.out.println("KEYS ARRAYLIST SIZE : " + temp.size());///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         //set a limit for the user to give as an amount
         int USER_MAX_AMOUNT = temp.size();
@@ -457,23 +464,14 @@ public class GUI extends JFrame {
                     String obj4 = "TSTAR";
                     String obj5 = "MSTAR";
 
+                    //create an arraylist of only the specified amount of keys
+                    ArrayList<Short> shortList = new ArrayList<>();
+
                     //remove all the data without information on the period, planet temperature, star temperature, stellar radius, or stellar mass
                     if (temp.size() != 0) {
-                        for (int i = 0; i < temp.size(); i++) {
-                            if (btree.BTreeSearch(temp.get(i)).getPER() == 0 || btree.BTreeSearch(temp.get(i)).getTPLANET() == 0 || btree.BTreeSearch(temp.get(i)).getRSTAR() == 0 || btree.BTreeSearch(temp.get(i)).getTSTAR() == 0 || btree.BTreeSearch(temp.get(i)).getMSTAR() == 0)
-                                temp.remove(i);
-                        }
-
-                        //update the new limit size
-                        USER_MAX_AMOUNT = temp.size();
-
-                        //remove extra objects if the total size of the list still exceeds the number of requested items to compare
-                        while (USER_MAX_AMOUNT > amount) {
-                            //remove an item randomly
-                            temp.remove(rand.nextInt(USER_MAX_AMOUNT));
-
-                            //update the new limit size
-                            USER_MAX_AMOUNT = temp.size();
+                        //fill the arraylist of the size specified
+                        for (int i = 0; i < amount; i++) {
+                            shortList.add(temp.get(i));
                         }
                     }
 
@@ -481,7 +479,7 @@ public class GUI extends JFrame {
                         //display the two most common kepler objects using a specified number of kepler objects and a specified kepler object key
                         //return the most common kepler object to the specified kepler object
                         if (temp.size() != 0){
-                            Short[] sim = pearsonCorrelationCoefficient(temp, Short.parseShort(text_key));
+                            Short[] sim = pearsonCorrelationCoefficient(shortList, Short.parseShort(text_key));
 
                             for(int i = 0; i < sim.length; i++){
                                 textArea1.append("KEY IS: " + sim[i] + "\n\t\tDATA IS: \n" + btree.BTreeSearch(sim[i]).toString() + "\n");
@@ -500,9 +498,23 @@ public class GUI extends JFrame {
                         }
                     }
                 }
-                else {///////////////////////////////////////////////////////////////////////////////////////////THIS IS WHERE YOU DO STUFF IF THE similarity METRIC CHECK BOX IS DISABLED!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-                    if (!clusterSelect.getSelectedItem().toString().equalsIgnoreCase("None")) {
-                        ///////////////////////////////////////////////////////////ALL CLUSTER STUFF WILL HAPPEN HERE
+                else {
+                    if (!clusterSelect.getSelectedItem().toString().equalsIgnoreCase("None") && !clusterView.getSelectedItem().toString().equalsIgnoreCase("None")) {
+                        ArrayList<ArrayList<Exoplanet>> clusters = kMeansClustering(amount, Integer.parseInt(clusterSelect.getSelectedItem().toString()));
+                        //print out all the necessary clusters
+                        if (clusterView.getSelectedItem().toString().equalsIgnoreCase("All")) {
+                            for (int i = 0; i < clusters.size(); i++) {
+                                for (int j = 0; j < clusters.get(i).size(); j++) {
+                                    textArea1.append("CLUSTER IS: " + (i+1) + "\n\t\tDATA IS: \n" + clusters.get(i).get(j).toString() + "\n");
+                                }
+                            }
+                        } else {
+                            if (Integer.parseInt(clusterView.getSelectedItem().toString()) <= clusters.size()) {
+                                for (int j = 0; j < clusters.get(Integer.parseInt(clusterView.getSelectedItem().toString()) - 1).size(); j++) {
+                                    textArea1.append("CLUSTER IS: " + Integer.parseInt(clusterView.getSelectedItem().toString()) + "\n\t\tDATA IS: \n" + clusters.get(Integer.parseInt(clusterView.getSelectedItem().toString()) - 1).get(j).toString() + "\n");
+                                }
+                            }
+                        }
                     } else {
                         //display the specific amount of kepler objects
                         if (temp.size() != 0){
@@ -514,67 +526,85 @@ public class GUI extends JFrame {
                 }
             }
             else {
-                //display the specific amount and only the matching type of kepler objects
-                if (temp.size() != 0){
-                    if (keplerObject.equalsIgnoreCase("A")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getA() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                if (!clusterSelect.getSelectedItem().toString().equalsIgnoreCase("None") && !clusterView.getSelectedItem().toString().equalsIgnoreCase("None")) {
+                    ArrayList<ArrayList<Exoplanet>> clusters = kMeansClustering(amount, Integer.parseInt(clusterSelect.getSelectedItem().toString()));
+                    //print out all the necessary clusters
+                    if (clusterView.getSelectedItem().toString().equalsIgnoreCase("All")) {
+                        for (int i = 0; i < clusters.size(); i++) {
+                            for (int j = 0; j < clusters.get(i).size(); j++) {
+                                textArea1.append("CLUSTER IS: " + (i+1) + "\n\t\tDATA IS: \n" + clusters.get(i).get(j).toString() + "\n");
+                            }
                         }
-                    } else if (keplerObject.equalsIgnoreCase("DEC")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getDEC() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                    } else {
+                        if (Integer.parseInt(clusterView.getSelectedItem().toString()) <= clusters.size()) {
+                            for (int j = 0; j < clusters.get(Integer.parseInt(clusterView.getSelectedItem().toString()) - 1).size(); j++) {
+                                textArea1.append("CLUSTER IS: " + Integer.parseInt(clusterView.getSelectedItem().toString()) + "\n\t\tDATA IS: \n" + clusters.get(Integer.parseInt(clusterView.getSelectedItem().toString()) - 1).get(j).toString() + "\n");
+                            }
                         }
-                    } else if (keplerObject.equalsIgnoreCase("RSTAR")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getRSTAR() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
-                        }
-                    } else if (keplerObject.equalsIgnoreCase("TSTAR")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getTSTAR() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
-                        }
-                    } else if (keplerObject.equalsIgnoreCase("KMAG")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getKMAG() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
-                        }
-                    } else if (keplerObject.equalsIgnoreCase("TPLANET")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getTPLANET() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
-                        }
-                    } else if (keplerObject.equalsIgnoreCase("T0")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getT0() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
-                        }
-                    } else if (keplerObject.equalsIgnoreCase("UT0")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getUT0() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
-                        }
-                    } else if (keplerObject.equalsIgnoreCase("PER")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getPER() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
-                        }
-                    } else if (keplerObject.equalsIgnoreCase("RA")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getRA() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
-                        }
-                    } else if (keplerObject.equalsIgnoreCase("RPLANET")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getRPLANET() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
-                        }
-                    } else if (keplerObject.equalsIgnoreCase("MSTAR")) {
-                        for(int i = 0; i < amount; i++){
-                            if (btree.BTreeSearch(temp.get(i)).getMSTAR() != 0)
-                                textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                    }
+                } else {
+                    //display the specific amount and only the matching type of kepler objects
+                    if (temp.size() != 0){
+                        if (keplerObject.equalsIgnoreCase("A")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getA() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
+                        } else if (keplerObject.equalsIgnoreCase("DEC")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getDEC() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
+                        } else if (keplerObject.equalsIgnoreCase("RSTAR")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getRSTAR() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
+                        } else if (keplerObject.equalsIgnoreCase("TSTAR")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getTSTAR() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
+                        } else if (keplerObject.equalsIgnoreCase("KMAG")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getKMAG() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
+                        } else if (keplerObject.equalsIgnoreCase("TPLANET")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getTPLANET() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
+                        } else if (keplerObject.equalsIgnoreCase("T0")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getT0() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
+                        } else if (keplerObject.equalsIgnoreCase("UT0")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getUT0() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
+                        } else if (keplerObject.equalsIgnoreCase("PER")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getPER() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
+                        } else if (keplerObject.equalsIgnoreCase("RA")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getRA() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
+                        } else if (keplerObject.equalsIgnoreCase("RPLANET")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getRPLANET() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
+                        } else if (keplerObject.equalsIgnoreCase("MSTAR")) {
+                            for(int i = 0; i < amount; i++){
+                                if (btree.BTreeSearch(temp.get(i)).getMSTAR() != 0)
+                                    textArea1.append("KEY IS: " + temp.get(i) + "\n\t\tDATA IS: \n" + btree.BTreeSearch(temp.get(i)).toString() + "\n");
+                            }
                         }
                     }
                 }
@@ -636,9 +666,9 @@ public class GUI extends JFrame {
             }
             else {
                 currentVal = PCC(testKey, keys.get(i));
-
                 if (currentVal > pastVal && keys.get(i) != testKey) {
-                    largeList.remove((counter-1));
+                    if (counter > 0)
+                        largeList.remove((counter - 1));
                     largeList.add(new Short[]{testKey, keys.get(i)});
                     pastVal = currentVal;
                 }
@@ -669,7 +699,8 @@ public class GUI extends JFrame {
                     currentVal = PCC(keys.get(j), keys.get(i));
 
                     if (currentVal > pastVal) {
-                        largeList.remove((counter-1));
+                        if (counter > 0)
+                            largeList.remove((counter - 1));
                         largeList.add(new Short[]{keys.get(i), keys.get(j)});
                         pastVal = currentVal;
                     }
@@ -701,7 +732,8 @@ public class GUI extends JFrame {
                 currentVal = ED(testKey, keys.get(i));
 
                 if (currentVal < pastVal && keys.get(i) != testKey) {
-                    largeList.remove((counter-1));
+                    if (counter > 0)
+                        largeList.remove((counter - 1));
                     largeList.add(new Short[]{testKey, keys.get(i)});
                     pastVal = currentVal;
                 }
@@ -732,7 +764,8 @@ public class GUI extends JFrame {
                     currentVal = ED(keys.get(j), keys.get(i));
 
                     if (currentVal < pastVal) {
-                        largeList.remove((counter-1));
+                        if (counter > 0)
+                            largeList.remove((counter - 1));
                         largeList.add(new Short[]{keys.get(i), keys.get(j)});
                         pastVal = currentVal;
                     }
@@ -743,38 +776,43 @@ public class GUI extends JFrame {
     }
 
 
-    public ArrayList<ArrayList<Exoplanet>> kMeansClustering(int numberOfValues, int clusterAmount) throws IOException, ClassNotFoundException {
+    public ArrayList<ArrayList<Exoplanet>> kMeansClustering(int numberOfValues, int clusterAmount) throws IOException, ClassNotFoundException {/////////////YOU ARE TAKING IN TOO MANY OBJECTS THAN THE AMOUNT SPECIFIED!!!!
         final int ITERATIONS = 30;
         final int CENTROID_LOCATION = 0;
-        //make a list of all the objects up to the number of objects being looked at
-        ArrayList<Exoplanet> largeList = btree.getValues();
-        int deletionAmount = largeList.size() - numberOfValues;
+        ArrayList<Exoplanet> tempExoplanetList = new ArrayList<>();
+
         Random rand = new Random();
-        for (int i = 0; i < deletionAmount; i++) {
-            //delete values till you have the amount they want to look at
-            //randomly remove values
-            largeList.remove(rand.nextInt(largeList.size()));
+        for (int i = 0; i < numberOfValues; i++) {
+            //add values till you have the amount they want to look at
+            tempExoplanetList.add(exoplanetList.get(i));
         }
+
+
+
 
         //make the amount of clusters specified
         ArrayList<ArrayList<Exoplanet>> clusters = new ArrayList<>(clusterAmount);
         //select N centroids at random
         for (int i = 0; i < clusterAmount; i++) {
-            Exoplanet value = largeList.get(rand.nextInt(largeList.size()));
+            Exoplanet value = tempExoplanetList.get(rand.nextInt(tempExoplanetList.size()));
             ArrayList<Exoplanet> temp2 = new ArrayList<>();
             temp2.add(value);
             clusters.add(i, temp2);
-            largeList.remove(value);
+            tempExoplanetList.remove(value);
         }
 
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         //iterate for a certain amount of time
         for (int z = 0; z < ITERATIONS; z++) {
             //calculate the distance of every data point to all the centroids to determine which cluster to place the point into
-            for (Exoplanet v : largeList) {
+            for (Exoplanet v : tempExoplanetList) {
                 //calculate one point to every centroid and place it into a cluster
                 double[] similarityValues = new double[clusterAmount];
                 for (int i = 0; i < similarityValues.length; i++) {
-                    similarityValues[i] = ED(clusters.get(i).get(CENTROID_LOCATION), v);
+                    similarityValues[i] = ED(clusters.get(i).get(CENTROID_LOCATION), v);//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////ADD Z-SCORING BEFORE doing this!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 }
                 //find the best similarity value
                 int position = 0;
@@ -785,6 +823,10 @@ public class GUI extends JFrame {
                 //add to the cluster
                 clusters.get(position).add(v);
             }
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
 
             //recalculate the new centroid for every cluster
             for (int i = 0; i < clusterAmount; i++) {

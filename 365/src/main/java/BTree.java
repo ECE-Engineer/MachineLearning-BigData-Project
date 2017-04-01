@@ -200,10 +200,6 @@ public class BTree implements Serializable {
     public void diskWrite(Node n) throws IOException, ClassNotFoundException {
         if (n == this.root) {
             n.index = root.index;
-            System.out.print("ROOT NODE IS " + n.index);
-            for (int i = 0; i < n.NKeys; i++)
-                System.out.print("\t" + n.key[i]);
-            System.out.println();
             overwriteRootToFile();
         }
         overwriteNode(n);
