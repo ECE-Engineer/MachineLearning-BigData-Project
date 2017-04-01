@@ -11,6 +11,8 @@ import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static java.lang.Float.NaN;
+
 /**
  * @author Kyle Zeller
  * This project is about providing a GUI that interfaces with a custom implementation of a HashTable Algorithm,
@@ -383,6 +385,8 @@ public class GUI extends JFrame {
 
         temp = btree.getKeys();
         exoplanetList = btree.getValues();
+
+        deleteBadData();
     }
 
     /**
@@ -421,12 +425,21 @@ public class GUI extends JFrame {
             btree.BTreeInsert(pair.pairShort, pair.pairExoplanet);
         }
 
-        //write the root node & degree of btree to the btreecache file
+        //write the root node & degree of btree to the btreecache files
         btree.overwriteDegreeToFile();
         btree.overwriteRootToFile();
 
         temp = btree.getKeys();
         exoplanetList = btree.getValues();
+
+        deleteBadData();
+    }
+
+    public void deleteBadData() {
+        for (int i = 0; i < exoplanetList.size(); i++) {
+            if (exoplanetList.get(i).getPER() == 0 || exoplanetList.get(i).getTPLANET() == 0 || exoplanetList.get(i).getRSTAR() == 0 || exoplanetList.get(i).getTSTAR() == 0 || exoplanetList.get(i).getMSTAR() == 0 || exoplanetList.get(i).getPER() == NaN || exoplanetList.get(i).getTPLANET() == NaN || exoplanetList.get(i).getRSTAR() == NaN || exoplanetList.get(i).getTSTAR() == NaN || exoplanetList.get(i).getMSTAR() == NaN)
+                exoplanetList.remove(exoplanetList.get(i));
+        }
     }
 
     //get all the keys of the kepler objects
@@ -457,26 +470,19 @@ public class GUI extends JFrame {
             //set all the fields
             int amount = Integer.parseInt(text_amount);
 
+            //create an arraylist of only the specified amount of keys
+            ArrayList<Short> shortList = new ArrayList<>();
+
+            //remove all the data without information on the period, planet temperature, star temperature, stellar radius, or stellar mass
+            if (temp.size() != 0) {
+                //fill the arraylist of the size specified
+                for (int i = 0; i < amount; i++) {
+                    shortList.add(temp.get(i));
+                }
+            }
+
             if (keplerObject.equals("None")) {
                 if (checkBox1.isSelected()) {
-
-                    //set all the fields
-                    String obj1 = "PER";
-                    String obj2 = "TPLANET";
-                    String obj3 = "RSTAR";
-                    String obj4 = "TSTAR";
-                    String obj5 = "MSTAR";
-
-                    //create an arraylist of only the specified amount of keys
-                    ArrayList<Short> shortList = new ArrayList<>();
-
-                    //remove all the data without information on the period, planet temperature, star temperature, stellar radius, or stellar mass
-                    if (temp.size() != 0) {
-                        //fill the arraylist of the size specified
-                        for (int i = 0; i < amount; i++) {
-                            shortList.add(temp.get(i));
-                        }
-                    }
 
                     if (!text_key.equalsIgnoreCase("")) {
                         //display the two most common kepler objects using a specified number of kepler objects and a specified kepler object key
@@ -803,15 +809,17 @@ public class GUI extends JFrame {
             tempExoplanetList.add(new PrecisionExoplanet(exoplanetList.get(i).getA(), exoplanetList.get(i).getDEC(), exoplanetList.get(i).getRSTAR(), exoplanetList.get(i).getTSTAR(), exoplanetList.get(i).getKMAG(), exoplanetList.get(i).getTPLANET(), exoplanetList.get(i).getT0(), exoplanetList.get(i).getUT0(), exoplanetList.get(i).getPER(), exoplanetList.get(i).getRA(), exoplanetList.get(i).getRPLANET(), exoplanetList.get(i).getMSTAR()));
         }
 
+
+
         //calculate the average vector
-        PrecisionExoplanet averageVector = new PrecisionExoplanet(0, 0 ,0,(short) 0, 0,(short) 0, 0, 0, 0, 0, 0, 0);
+        PrecisionExoplanet averageVector = new PrecisionExoplanet(0, 0 ,0, 0, 0,0, 0, 0, 0, 0, 0, 0);
         for (int j = 0; j < tempExoplanetList.size(); j++) {
             averageVector = SUM(averageVector, tempExoplanetList.get(j));
         }
-        averageVector = DIVIDE(averageVector, tempExoplanetList.size());
+        averageVector = DIVIDE(averageVector, tempExoplanetList.size());//////ALL ARE INFINITY
 
         //calculate the standard deviation vector
-        PrecisionExoplanet SDVector = new PrecisionExoplanet(0, 0 ,0,(short) 0, 0,(short) 0, 0, 0, 0, 0, 0, 0);
+        PrecisionExoplanet SDVector = new PrecisionExoplanet(0, 0 ,0, 0, 0,0, 0, 0, 0, 0, 0, 0);
         for (int j = 0; j < tempExoplanetList.size(); j++) {
             SDVector = SUM(SDVector, calcDiffOfSquares(averageVector, tempExoplanetList.get(j)));
         }
@@ -854,21 +862,22 @@ public class GUI extends JFrame {
             //calculate the distance of every data point to all the centroids to determine which cluster to place the point into
             for (int j = 0; j < ZScoreList.size(); j++) {
                 //calculate one point to every centroid and place it into a cluster
-                double[] similarityValues = new double[clusterAmount];
-                for (int i = 0; i < similarityValues.length; i++) {
-                    similarityValues[i] = ED(clusters.get(i).get(CENTROID_LOCATION), ZScoreList.get(j));/////////////////////////////////////////////////////////////////////THIS IS THE ISSUE OF WHY I'M NOT GETTING ALL THE CLUSTERS I SHOULD BE!!!
-                }
-                //find the best similarity value
+                double similarityValue = 0;
                 int position = 0;
-                double bestValue = 0;
-                for (int i = 0; i < similarityValues.length-1; i++) {/////////////////////////////////////////////////////////////////////////////////////////////
-                    if (i == 0)
-                        bestValue = similarityValues[i+1];
-                    if (bestValue < similarityValues[i]) {/////////////////////////////////////////////////////////////////////////////
-                        position = i;
-                        bestValue = similarityValues[i];
+                for (int i = 0; i < clusterAmount; i++) {
+//                    System.out.println("CENTROIDS ARE : " + clusters.get(i).get(CENTROID_LOCATION));////////////////////////////////////////////////////////////////////////////////////////////
+                    double temp = ED(clusters.get(i).get(CENTROID_LOCATION), ZScoreList.get(j));////////////////////////////////////RSTAR AND PER ARE BOTH NaN>>>>>>>>>TPLANET AND TSTAR SHOWING AS NAN
+                    if (i == 0) {
+                        similarityValue = temp;/////////////////////////////////SHOWING AS NaN
+                    } else {
+                        //find the best similarity value
+                        if (temp < similarityValue) {////////////////////////////////////////////////////////////////////////////////////////////
+                            similarityValue = temp;
+                            position = i;///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////THIS IS NEVER BEING UPDATED!!!!!
+                        }
                     }
                 }
+
                 //add to the cluster
                 clusters.get(position).add(ZScoreList.get(j));
                 //add the position of the actual Exoplanet
@@ -915,13 +924,13 @@ public class GUI extends JFrame {
         //use this to rebuild the list of actual exoplanet objects
         ArrayList<ArrayList<Exoplanet>> regularExoplanetList = new ArrayList<>();
 
-        System.out.println("INDEX CLUSTER SIZE:" + clusterIndices.size());
+//        System.out.println("INDEX CLUSTER SIZE:" + clusterIndices.size());
 
 
 
         //build the list
         for (int i = 0; i < clusterIndices.size(); i++) {
-            System.out.println("INDIVIDUAL INDEX CLUSTER SIZE:" + clusterIndices.get(i).size());
+//            System.out.println("INDIVIDUAL INDEX CLUSTER SIZE:" + clusterIndices.get(i).size());
             regularExoplanetList.add(new ArrayList<Exoplanet>());
             for (int j = 0; j < clusterIndices.get(i).size(); j++) {
                 regularExoplanetList.get(i).add(exoplanetList.get(j));
@@ -948,58 +957,74 @@ public class GUI extends JFrame {
      * @return returns the sum of each feature from two Exoplanet objects
      */
     private PrecisionExoplanet SUM(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
-        value1.setPER(value1.getPER() + value2.getPER());
-        value1.setTPLANET((short) (value1.getTPLANET() + value2.getTPLANET()));
-        value1.setRSTAR(value1.getRSTAR() + value2.getRSTAR());
-        value1.setTSTAR((short) (value1.getTSTAR() + value2.getTSTAR()));
-        value1.setMSTAR(value1.getMSTAR() + value2.getMSTAR());
-        return value1;
+        PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
+
+        temp.setPER(value1.getPER() + value2.getPER());
+        temp.setTPLANET((value1.getTPLANET() + value2.getTPLANET()));
+        temp.setRSTAR(value1.getRSTAR() + value2.getRSTAR());
+        temp.setTSTAR((value1.getTSTAR() + value2.getTSTAR()));
+        temp.setMSTAR(value1.getMSTAR() + value2.getMSTAR());
+
+        return temp;
     }
 
     private PrecisionExoplanet SUBTRACT(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
-        value1.setPER(value1.getPER() - value2.getPER());
-        value1.setTPLANET((short) (value1.getTPLANET()- value2.getTPLANET()));
-        value1.setRSTAR(value1.getRSTAR() - value2.getRSTAR());
-        value1.setTSTAR((short) (value1.getTSTAR() - value2.getTSTAR()));
-        value1.setMSTAR(value1.getMSTAR() - value2.getMSTAR());
-        return value1;
+        PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
+
+        temp.setPER(value1.getPER() - value2.getPER());
+        temp.setTPLANET((value1.getTPLANET()- value2.getTPLANET()));
+        temp.setRSTAR(value1.getRSTAR() - value2.getRSTAR());
+        temp.setTSTAR((value1.getTSTAR() - value2.getTSTAR()));
+        temp.setMSTAR(value1.getMSTAR() - value2.getMSTAR());
+
+        return temp;
     }
 
     private PrecisionExoplanet DIVIDE(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {   //returns the score value for the 2 objects based on their features
-        value1.setPER(value1.getPER() / value2.getPER());
-        value1.setTPLANET((short) (value1.getTPLANET()/ value2.getTPLANET()));
-        value1.setRSTAR(value1.getRSTAR() / value2.getRSTAR());
-        value1.setTSTAR((short) (value1.getTSTAR() / value2.getTSTAR()));
-        value1.setMSTAR(value1.getMSTAR() / value2.getMSTAR());
-        return value1;
+        PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
+
+        temp.setPER(value1.getPER() / value2.getPER());
+        temp.setTPLANET((value1.getTPLANET()/ value2.getTPLANET()));
+        temp.setRSTAR(value1.getRSTAR() / value2.getRSTAR());
+        temp.setTSTAR((value1.getTSTAR() / value2.getTSTAR()));
+        temp.setMSTAR(value1.getMSTAR() / value2.getMSTAR());
+
+        return temp;
     }
 
-    public PrecisionExoplanet DIVIDE(PrecisionExoplanet e, int val) {
-        e.setPER(e.getPER() / val);
-        e.setTPLANET((short) (e.getTPLANET() / val));
-        e.setRSTAR(e.getRSTAR() / val);
-        e.setTSTAR((short) (e.getTSTAR() / val));
-        e.setMSTAR(e.getMSTAR() / val);
+    public PrecisionExoplanet DIVIDE(PrecisionExoplanet e, double val) {
+        PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
 
-        return e;
+        temp.setPER(e.getPER() / val);
+        temp.setTPLANET((e.getTPLANET() / val));
+        temp.setRSTAR(e.getRSTAR() / val);
+        temp.setTSTAR((e.getTSTAR() / val));
+        temp.setMSTAR(e.getMSTAR() / val);
+
+        return temp;
     }
 
     public PrecisionExoplanet SQUAREROOT(PrecisionExoplanet e) {
-        e.setPER((float) Math.sqrt(e.getPER()));
-        e.setTPLANET((short) (Math.sqrt(e.getTPLANET())));
-        e.setRSTAR((float) Math.sqrt(e.getRSTAR()));
-        e.setTSTAR((short) (Math.sqrt(e.getTSTAR())));
-        e.setMSTAR((float) Math.sqrt(e.getMSTAR()));
+        PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
 
-        return e;
+        temp.setPER(Math.sqrt(e.getPER()));
+        temp.setTPLANET((Math.sqrt(e.getTPLANET())));
+        temp.setRSTAR(Math.sqrt(e.getRSTAR()));
+        temp.setTSTAR((Math.sqrt(e.getTSTAR())));
+        temp.setMSTAR(Math.sqrt(e.getMSTAR()));
+
+        return temp;
     }
 
     public PrecisionExoplanet calcDiffOfSquares(PrecisionExoplanet value1, PrecisionExoplanet value2) {
-        value1.setPER((float) (Math.pow(value1.getPER() - value2.getPER(), 2)));
-        value1.setTPLANET((short) (Math.pow(value1.getTPLANET() - value2.getTPLANET(), 2)));
-        value1.setRSTAR((float) (Math.pow(value1.getRSTAR() - value2.getRSTAR(), 2)));
-        value1.setTSTAR((short) (Math.pow(value1.getTSTAR() - value2.getTSTAR(), 2)));
-        value1.setMSTAR((float) (Math.pow(value1.getMSTAR() - value2.getMSTAR(), 2)));
-        return value1;
+        PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
+
+        temp.setPER((Math.pow(value1.getPER() - value2.getPER(), 2)));
+        temp.setTPLANET((Math.pow(value1.getTPLANET() - value2.getTPLANET(), 2)));
+        temp.setRSTAR((Math.pow(value1.getRSTAR() - value2.getRSTAR(), 2)));
+        temp.setTSTAR((Math.pow(value1.getTSTAR() - value2.getTSTAR(), 2)));
+        temp.setMSTAR((Math.pow(value1.getMSTAR() - value2.getMSTAR(), 2)));
+
+        return temp;
     }
 }
