@@ -15,12 +15,16 @@ import static java.lang.Float.NaN;
 
 /**
  * @author Kyle Zeller
- * This project is about providing a GUI that interfaces with a custom implementation of a HashTable Algorithm,
+ * The first part of this project is about providing a GUI that interfaces with a custom implementation of a HashTable Algorithm,
  * different similarity metrics used in big data analytics and machine learning, and very large data sets from
  * the Kepler Object API. The GUI will allow the user to display all the Kepler Objects of Interest, display only
  * Kepler Objects of Interest with selected features, or finding the most similar Kepler Object of Interest to the
  * one selected. An additional feature was also added to find the 2 most similar Kepler Objects of Interest in the
  * entire data set if needed.
+ * The second part of this project is about implementing a custom persistent BTree structure, interfacing it with
+ * the current state of the program and utilize k-means-clustering and z-score normalization to display the clustering
+ * of the data to the user. The user may then select the number of clusters they want to make and which ones they want
+ * to see.
  */
 
 public class GUI extends JFrame {
@@ -435,6 +439,9 @@ public class GUI extends JFrame {
         deleteBadData();
     }
 
+    /**
+     * Deletes all the invalid Exoplanet data.
+     */
     public void deleteBadData() {
         for (int i = 0; i < exoplanetList.size(); i++) {
             if (exoplanetList.get(i).getPER() == 0 || exoplanetList.get(i).getTPLANET() == 0 || exoplanetList.get(i).getRSTAR() == 0 || exoplanetList.get(i).getTSTAR() == 0 || exoplanetList.get(i).getMSTAR() == 0 || exoplanetList.get(i).getPER() == NaN || exoplanetList.get(i).getTPLANET() == NaN || exoplanetList.get(i).getRSTAR() == NaN || exoplanetList.get(i).getTSTAR() == NaN || exoplanetList.get(i).getMSTAR() == NaN)
@@ -957,6 +964,12 @@ public class GUI extends JFrame {
         return temp;
     }
 
+    /**
+     * Calculates the difference of each feature from two PrecisionExoplanet objects
+     * @param value1 is an PrecisionExoplanet that is used to retrieve the features
+     * @param value2 is an PrecisionExoplanet that is used to retrieve the features
+     * @return returns the difference of each feature from two PrecisionExoplanet objects
+     */
     private PrecisionExoplanet SUBTRACT(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {
         PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
 
@@ -969,6 +982,12 @@ public class GUI extends JFrame {
         return temp;
     }
 
+    /**
+     * Calculates the division of each feature from two PrecisionExoplanet objects
+     * @param value1 is an PrecisionExoplanet that is used to retrieve the features
+     * @param value2 is an PrecisionExoplanet that is used to retrieve the features
+     * @return returns the division of each feature from two PrecisionExoplanet objects
+     */
     private PrecisionExoplanet DIVIDE(PrecisionExoplanet value1, PrecisionExoplanet value2) throws IOException, ClassNotFoundException {
         PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
 
@@ -981,6 +1000,12 @@ public class GUI extends JFrame {
         return temp;
     }
 
+    /**
+     * Calculates the division of a PrecisionExoplanet by a factor
+     * @param e is an PrecisionExoplanet that is used to retrieve the features
+     * @param val is a factor
+     * @return returns the division of a PrecisionExoplanet by a factor
+     */
     public PrecisionExoplanet DIVIDE(PrecisionExoplanet e, double val) {
         PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
 
@@ -993,6 +1018,11 @@ public class GUI extends JFrame {
         return temp;
     }
 
+    /**
+     * Calculates the square root of each feature in a PrecisionExoplanet
+     * @param e is an PrecisionExoplanet that is used to retrieve the features
+     * @return returns the square root of each feature in a PrecisionExoplanet
+     */
     public PrecisionExoplanet SQUAREROOT(PrecisionExoplanet e) {
         PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
 
@@ -1005,6 +1035,12 @@ public class GUI extends JFrame {
         return temp;
     }
 
+    /**
+     * Calculates the difference of squares of each feature from two Exoplanet objects
+     * @param value1 is an PrecisionExoplanet that is used to retrieve the features
+     * @param value2 is an PrecisionExoplanet that is used to retrieve the features
+     * @return returns the difference of squares of each feature from two Exoplanet objects
+     */
     public PrecisionExoplanet calcDiffOfSquares(PrecisionExoplanet value1, PrecisionExoplanet value2) {
         PrecisionExoplanet temp = new PrecisionExoplanet(0, 0 ,0,0, 0,0, 0, 0, 0, 0, 0, 0);
 
