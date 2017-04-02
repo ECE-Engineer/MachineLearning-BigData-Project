@@ -343,7 +343,7 @@ public class BTree implements Serializable {
     }
 
     /**
-     * Splits the nodes when they become full & readjusts the BTree afterwards.
+     * Splits the nodes when they become full and readjusts the BTree afterwards.
      * @param x is the node being split and readjusted.
      * @param i is the key value being stored in the node.
      * @throws IOException is used for the IO exceptions that might occur

@@ -104,7 +104,6 @@ public class JSONParser {
     /**
      * Creates and populates the tuple arrayList using the API response.
      * @param s is the API response.
-     * @throws Exception is used for the IO exceptions that might occur.
      */
     public void createTuples(String s) {
         //parse the data out of the JSON object
@@ -186,7 +185,6 @@ public class JSONParser {
     /**
      * Creates and populates the hashtable using the API response.
      * @param s is the API response.
-     * @throws Exception is used for the IO exceptions that might occur.
      */
     public void createHashTable(String s) {
         //parse the data out of the JSON object
