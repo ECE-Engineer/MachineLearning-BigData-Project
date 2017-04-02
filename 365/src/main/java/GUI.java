@@ -470,7 +470,7 @@ public class GUI extends JFrame {
         String text_key = textField2.getText();
 
         //set a limit for the user to give as an amount
-        int USER_MAX_AMOUNT = temp.size();
+        int USER_MAX_AMOUNT = exoplanetList.size();
 
         if (!text_amount.equalsIgnoreCase("") && Integer.parseInt(text_amount) < USER_MAX_AMOUNT) {
 
