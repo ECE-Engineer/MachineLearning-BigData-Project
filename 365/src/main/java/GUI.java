@@ -358,20 +358,20 @@ public class GUI extends JFrame {
             LocalDateTime pastTime = APIcache.readTimeStamp();
             //check to see if the timestamp is out of date
             if ((currentTime.getYear() > pastTime.getYear()) || (currentTime.getYear() == pastTime.getYear() && currentTime.getMonthValue() > pastTime.getMonthValue())) {
+                System.out.println("LOADING FROM API");
                 //run the API loader b/c the data is out of date
                 loadFromAPI();
-                System.out.println("LOADING FROM API");
             } else {
+                System.out.println("LOADING FROM FILE");
                 //run the file loader b/c the data is up to date
                 loadFromFile();
-                System.out.println("LOADING FROM FILE");
             }
         } else {
             //write a timestamp to file
             APIcache.writeTimeStamp(LocalDateTime.now());
+            System.out.println("LOADING FROM API");
             //create and write the API response and API call to file and populate the BTree
             loadFromAPI();
-            System.out.println("LOADING FROM API");
         }
     }
 

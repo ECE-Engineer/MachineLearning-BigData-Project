@@ -8,6 +8,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import com.google.gson.*;
@@ -57,41 +58,47 @@ public class JSONParser {
      */
     // HTTP GET request
     public void sendGet(String u) throws Exception {
-        URL obj = new URL(u);
-        HttpURLConnection con = (HttpURLConnection) obj.openConnection();
-
-        // optional default is GET
-        con.setRequestMethod("GET");
-
-        //add request header
-        con.setRequestProperty("User-Agent", USER_AGENT);
-
-        //take in the data
-        BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-        String inputLine;
-
-        StringBuffer response = new StringBuffer();
-
-        //handle any io exceptions that come up
         try {
-            //check for the data and store it here
-            while ((inputLine = in.readLine()) != null) {
-                response.append(inputLine);
-            }
-            in.close();
-        }catch (java.io.IOException e) {
-            System.out.println(e.getMessage());
-        }
+            URL obj = new URL(u);
+            HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 
-        //construct the api response
-        if (apiCounter == 1)
-            totalAPIResponse += "[" + response.toString().replace("[","").replaceAll("]","");
-        else if (apiCounter == MAX_API_CALLS)
-            totalAPIResponse += ", " + response.toString().replace("[","").replaceAll("]","") + "]";
-        else
-            totalAPIResponse += ", " + response.toString().replace("[","").replaceAll("]","");
-        //increment counter
-        apiCounter++;
+            // optional default is GET
+            con.setRequestMethod("GET");
+
+            //add request header
+            con.setRequestProperty("User-Agent", USER_AGENT);
+
+            //take in the data
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String inputLine;
+
+            StringBuffer response = new StringBuffer();
+
+            //handle any io exceptions that come up
+            try {
+                //check for the data and store it here
+                while ((inputLine = in.readLine()) != null) {
+                    response.append(inputLine);
+                }
+                in.close();
+            }catch (java.io.IOException e) {
+                System.out.println(e.getMessage());
+            }
+
+            //construct the api response
+            if (apiCounter == 1)
+                totalAPIResponse += "[" + response.toString().replace("[","").replaceAll("]","");
+            else if (apiCounter == MAX_API_CALLS)
+                totalAPIResponse += ", " + response.toString().replace("[","").replaceAll("]","") + "]";
+            else
+                totalAPIResponse += ", " + response.toString().replace("[","").replaceAll("]","");
+            //increment counter
+            apiCounter++;
+        }catch (UnknownHostException e) {
+            System.out.println("Currently cannot connect to online API.");
+            System.out.println("Please Try Again.");
+            Runtime.getRuntime().exit(1);
+        }
     }
 
     /**
