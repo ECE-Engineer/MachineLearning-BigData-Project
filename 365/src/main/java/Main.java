@@ -9,7 +9,7 @@ import java.io.*;
  * Kepler Objects of Interest with selected features, or finding the most similar Kepler Object of Interest to the
  * one selected. An additional feature was also added to find the 2 most similar Kepler Objects of Interest in the
  * entire data set if needed.
- * The second part of this project is about implementing a custom persistent BTree structure, interfacing it with
+ * The second part of this project is about implementing a custom persistent BTree structure as well as a hash-based cache, interfacing it with
  * the current state of the program and utilize k-means-clustering and z-score normalization to display the clustering
  * of the data to the user. The user may then select the number of clusters they want to make and which ones they want
  * to see.
